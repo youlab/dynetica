@@ -1,0 +1,31 @@
+Copyright (c) Lingchong You 1998-2005. 
+All rights reserved.
+
+
+DYNETICA Enduser License
+
+Lingchong You (Author) hereby grants to you (User) a non-exclusive
+license to use Dynetica version 1.0 (Software) and accompanying 
+documentation on the terms below.
+
+The User may use the Software on any computer, make an unlimited number
+of copies of the Software or redistribute the Software for academic research
+purposes. This license need be included when redistributing the software.
+
+The Software is distributed in binary format. The User may not translate, 
+reverse engineer, decompile, disassemble the Software or remove any proprietary 
+notices on the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY DAMAGES WHATSOEVER INCLUDING DIRECT,
+INDIRECT, INCIDENTAL, CONSEQUENTIAL, LOSS OF BUSINESS PROFITS OR SPECIAL
+DAMAGES, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES.
+
+The Software is not a supported product. The Author accepts no
+commitment or liability to address any problems that may be encountered
+in using it.
+
+NOTE: Different license policy will apply for developers.

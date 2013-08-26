@@ -1,0 +1,139 @@
+4/7/2001. (Lingchong You) 
+  1.Modified the setName() method of the Entity class. Now one can change the name of an
+    Entity properly without worrying about the reactions this entity is involved in.
+  2.Got rid of the property change support listeners in several classes, including Entity,
+    Reaction, and ProgressiveReaction.
+
+4/8/2001 - 4/13/2001 (Lingchong You)
+  1. moved all the reactions to the dynetica.reaction package.
+  2. moved Genome to system package
+  3. defined the interface AbstractSystem to represent anything that one may add things
+     to and get/remove things from. 
+  4. Implemented SimpleSystem as a trivial implementation of AbstractSystem.
+  5. Now, both Genome & ReactionSystem are children of SimpleSystem.
+  6. Changed some methods names in both Reaction class and its children:
+     rateExpression -> kinetics
+     get/setRateExpression -> get/setKinetics
+     reactionEquation -> stoichiometry
+     get/setReactionEquation -> get/setStoichiometry
+  
+  7. provided editors for each Entity class to facilitate the construction of 
+     system editor and genome editor.
+ 
+  8. the following methods in ReactiveSystem has been deprecated or removed
+     
+     setup(File f) removed
+     addEntity(Entity e) deprecated; use add(Entity e) instead
+     getEntity(String name) deprecated; use get(String name)
+     hasEntity(String name) deprecated; use contains(String name) 
+
+
+
+Pending modifications: 
+      will change the super system of any entity to AbstractSystem. currently 
+      the super system of an Entity is a ReactiveSystem.
+
+4/14/2001 (Lingchong You)
+   1. changed the super system of Entity to AbstractSystem instead of ReactiveSystem.
+      ReactiveSystem is used only when it is clear that the entity (e.g. a Reaction) is
+      only meaningful in a ReactiveSystem. The similar restriction applys to GeneticSystem:
+      a Genome only exists in a GeneticSystem.
+
+   2. improved the GeneEditor. Now a GeneEditor will be able edit the following attributes: start, end, RNAP, mRNAname, Protein name.
+   3. implemented TranscriptionRegulationElementEditor.
+   4. added toString() method to a number of Expression classes, including Min, Max, Log, Exp, Tan, Sin, Cos, and Sqrt.
+
+
+4/15-4/18/2001 (Lingchong You)
+
+  1. fixed/simplied the SystemEditor implemented by Yi-fan. Got rid of some redundant
+      code therein. The methods that have been removed include: updatetree(system),
+      initTree(), and all the actionPerformed methods associated with Add Substance button,
+      Add Parameter button, and Add Reaction button.
+ 
+      I simplified the updateTree() method, and put much of the initiation stuff
+      into the buildTreeModel() method.
+
+      I found the addition listener classes unnecessary and deleted them.
+
+      The child editor (of Entities) panel does NOT need to know its parent panel. To notify its
+      parent, all the child editor needs to do is fire a propertyChange event when 
+      the entity is modified. The parent can respond accordingly by add a propertyChangeListener
+      to itself.
+
+    I've created a comboBox to add any Entity, including Substance, Parameter,
+    and all sorts of reactions.
+
+
+  2. Implemented the SystemManager class (JFrame). The class is essentially the core
+   of the main program. It maintains a list of systems, and a list of algorithms. The
+   opened systems are displayed (using the SystemEditor class) in a TabbedPane(JTabbedPane).
+   The available algorithms are also displayed for the user to choose from. Buttons
+   are implemented to allow the user to run simulations on the selected system using
+   the selected algorithm.
+
+  3. To implement SystemManager, I've rewritten the editors for various algorithms, so
+    that these editors are JPanels, which can be plugged essentially anywhere. I also
+    cleaned up the code for the editors of various entities, so that the GUI actions
+    are correctly handled.
+
+  4. Remove method is now implemented in various system classes. Currently, I'm not checking
+  the dependency between the objects, and leave to the user of keeping the integrity of
+  the reactive systems.
+
+  5. Dynetica.java is now reduced to a one-line main method. To use the program, run the
+  following command:
+     java Dynetica <Dynetica_root_directory>
+
+...
+ many undocumented modifications between 2001-2003. Especially those made to improve the parsing ability.
+...
+
+ 4/19/2005   Lingchong You
+1) Added ExpressionVariable based on substance. Now complex expressions can be defined to faciliate 
+    analysis of simulation output. 
+    For example, if the model contains variable [X] and [Y], the user can now define an ExpressionVariable 
+    C = [X] + [Y]
+    so that C can be directly ploted over time.
+
+2) Updated other classes (especially the GUI) to handle this additional class
+3) Updated Entity classes so that they contain coordinate information. Future input files will be stored in a single file for each model
+4) GUI is not yet updated to handle coordinates stored in Entities. 
+
+
+4/20/2005 Lingchong You
+1) GUI is updated to handle coordinates information
+2) created a NetworkLayout class to store the overall layout information of network graph
+3) Updated various classes to make sure ExpressionVariables stored in the input file can be handled properly (GUI needs
+to be updated to input new ExpressionVariables.
+4) Current GUI is not completely compatible with the previous version of the input files (especially graph files).
+ The user needs to reconstruct the coordinate information manually or write a file filter to update the model files
+from version 1.0 to 1.2
+
+4/22/2005 Lingchong You
+1) Revised the Algorithm and Stochastic classes to allow multiple rounds of stochastic simulations.
+   Results can be stored in a file for later analysis.
+
+4/30/2005 Lingchong You
+1) Implemented & tested a new function normal(), which returns a value from the Normal (Gaussian) distribution with
+   a mean of 0 and a standard distribution of 1.0. The implementaiton is based on an algorithm presented in
+   Numerical Recipes in C.
+2) Implemented & tested a new function pulses(T, start, period, duration), which generates a continous squences of pulses. 
+   The user should always use Time as the first parameter.
+3) Implemented & tested a new function abs(x), which returns the absolute value of x.
+
+
+5/7/2005-5/8/2005 L. You
+1) Implemented the Gillespie's First Reaction method & Optimized direct method for stochastic simulation
+2) Fixed several minor bugs
+3) Expand the system to allow annotation of the overall model.
+4) Minor modification of the GUI in displaying selected items.
+
+
+5/14/2005 L You
+1) Bug fixes:
+    a) prevent renaming an entity if the new name has already been used by another entity [in SimpleSystem.java & SystemEditor.java].
+    b) fixed the problem where graph shrinks after "Print Graph" command. [in SystemGraph.java]
+2) Implemented a source editor to view/edit the input file of the system.
+    a) Created SourceEditor.java
+    b) Modified ReactiveSystem.java, SystemBuilder.java, SystemEditor.java
