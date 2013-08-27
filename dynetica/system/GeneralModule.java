@@ -14,19 +14,18 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 
-
 /**
- *
+ * 
  * @author Kanishk Asthana
  * 
- * Created 13 June 2013 1:06PM
+ *         Created 13 June 2013 1:06PM
  */
 public class GeneralModule extends AbstractModule {
-    
-    private static int GeneralModuleIndex=0;
-    
-    public GeneralModule(){
-    super("GeneralModule"+GeneralModuleIndex++);
-    }    
-  
+
+    private static int GeneralModuleIndex = 0;
+
+    public GeneralModule() {
+        super("GeneralModule" + GeneralModuleIndex++);
+    }
+
 }

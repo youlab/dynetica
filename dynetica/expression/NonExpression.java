@@ -1,4 +1,3 @@
-
 /**
  * NonExpression.java
  *
@@ -10,32 +9,35 @@
  */
 
 package dynetica.expression;
+
 import dynetica.entity.*;
 
-abstract public class NonExpression implements GeneralExpression{
-    protected int type = -1; // the precedence of an operator should be embodied here.
+abstract public class NonExpression implements GeneralExpression {
+    protected int type = -1; // the precedence of an operator should be embodied
+                             // here.
     protected double value;
 
-    public NonExpression() {	
+    public NonExpression() {
     }
 
     abstract public void compute(); // this should set the value.
+
     public double getValue() {
-	compute();
-	return value;
+        compute();
+        return value;
     }
 
-    public int getType() { return type; }
+    public int getType() {
+        return type;
+    }
 
-    //public Expression absorb(double f);
+    // public Expression absorb(double f);
 
     public String toString() {
-	StringBuffer sb = new StringBuffer(getClass().getName());
-	sb.append("()");
-	return sb.toString();
+        StringBuffer sb = new StringBuffer(getClass().getName());
+        sb.append("()");
+        return sb.toString();
     }
-    
-
 
 } // NonExpression
 

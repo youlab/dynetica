@@ -7,13 +7,12 @@
 package dynetica.event;
 
 /**
- *
- * @author  You
+ * 
+ * @author You
  * @version 0.1
  */
-public class SystemStructureChangeEvent extends StateChangeEvent{
+public class SystemStructureChangeEvent extends StateChangeEvent {
     public SystemStructureChangeEvent(Object source) {
         super(source);
     }
 }
-

@@ -7,11 +7,10 @@
 package dynetica.event;
 
 /**
- *
- * @author  You
- * @version 
+ * 
+ * @author You
+ * @version
  */
-public interface SizeChangeListener extends java.util.EventListener{
+public interface SizeChangeListener extends java.util.EventListener {
     void sizeChanged(SizeChangeEvent e);
 }
-

@@ -10,12 +10,17 @@
 package dynetica.expression;
 
 public class Sin extends Expression {
-    
+
     public Sin(GeneralExpression a) {
-	super(a);
-	type = ExpressionConstants.SIN;
+        super(a);
+        type = ExpressionConstants.SIN;
     }
-    
-    public void compute() { value = Math.sin(a.getValue()); }
-    public String toString () { return "sin(" + a.toString() + ")"; }
+
+    public void compute() {
+        value = Math.sin(a.getValue());
+    }
+
+    public String toString() {
+        return "sin(" + a.toString() + ")";
+    }
 } // Sin

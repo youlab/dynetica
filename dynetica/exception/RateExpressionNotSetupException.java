@@ -1,4 +1,3 @@
-
 /**
  * RateExpressionNotSetupException.java
  *
@@ -11,13 +10,13 @@
 package dynetica.exception;
 
 public class RateExpressionNotSetupException extends Exception {
-    
+
     public RateExpressionNotSetupException() {
-	
+
     }
 
     public RateExpressionNotSetupException(String message) {
-	super(message);
+        super(message);
     }
-    
+
 } // RateExpressionNotSetupException

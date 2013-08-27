@@ -1,19 +1,20 @@
 package dynetica.expression;
 
 public class EQ extends LogicalExpression {
-    
+
     public EQ(GeneralExpression a, GeneralExpression b) {
-	super(a, b);
-	type = ExpressionConstants.EQ;
+        super(a, b);
+        type = ExpressionConstants.EQ;
     }
-    
-    public void compute() { 
-	if(a.getValue() == b.getValue())
-		value = 1.0; 
-	else
-		value = 0.0;
+
+    public void compute() {
+        if (a.getValue() == b.getValue())
+            value = 1.0;
+        else
+            value = 0.0;
     }
-    public String toString () { 
-	return a.toString()  + " == " + b.toString(); 
+
+    public String toString() {
+        return a.toString() + " == " + b.toString();
     }
 } // EQ

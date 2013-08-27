@@ -5,7 +5,9 @@
  */
 
 package dynetica.reaction;
+
 import dynetica.system.*;
+
 /**
  *
  * @author  Lingchong You
@@ -15,23 +17,25 @@ import dynetica.system.*;
  * a trivial implementation of the interface Equilibrated
  */
 
-abstract public class EquilibratedReaction extends Reaction implements Equilibrated {
+abstract public class EquilibratedReaction extends Reaction implements
+        Equilibrated {
 
     /** Creates new EquilibratedReaction */
     public EquilibratedReaction() {
         super();
     }
-    
+
     public EquilibratedReaction(String name, ReactiveSystem system) {
         super(name, system);
-    }   
+    }
 
     public void update() {
     }
-    
+
     public dynetica.gui.visualization.AbstractNode getNode() {
-        if (this.node!=null) return this.node;
+        if (this.node != null)
+            return this.node;
         return new dynetica.gui.visualization.EquilibratedRNode(this);
     }
-    
+
 }

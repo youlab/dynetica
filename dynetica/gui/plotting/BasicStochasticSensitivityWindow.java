@@ -1,4 +1,3 @@
-
 package dynetica.gui.plotting;
 
 import dynetica.algorithm.*;
@@ -8,116 +7,122 @@ import java.io.File;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 
-
 /**
- * This is implemented to allow easy visualization of results from stochastic simulations, as one parameter is 
- * varied.
+ * This is implemented to allow easy visualization of results from stochastic
+ * simulations, as one parameter is varied.
  * 
  * @author lingchong
  */
 
 public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
     InteractiveFigure figure = new InteractiveFigure();
-    Histogram histogram = new Histogram(); 
-    
+    Histogram histogram = new Histogram();
+
     final DefaultListModel substanceListModel = new DefaultListModel();
     final DefaultListModel paraValueListModel = new DefaultListModel();
-    
+
     final dynetica.system.ReactiveSystem system;
     BasicStochasticSensitivityAnalysis bssa;
-    
+
     int numberTraces = 1;
     double startTime = 0.0;
     double endTime = 100.0;
-    
+
     FigureAxisModel figureAxisModel;
 
-    double [] xValues;
-    double [][] yValues;
+    double[] xValues;
+    double[][] yValues;
     String xLabel;
-    String [] yLabels;
+    String[] yLabels;
 
-    
-    boolean showTimeCourses = true; //by default show multiple time courses for each variable against the parameter.
-    
+    boolean showTimeCourses = true; // by default show multiple time courses for
+                                    // each variable against the parameter.
+
     //
     // Constructs a FigureWindow that plots data directly from
     // a ReactiveSystem
     //
-    public BasicStochasticSensitivityWindow( BasicStochasticSensitivityAnalysis bssa) {
-        super("Sensitivity Analysis For ReactiveSystem " + bssa.getSystem().getName());
+    public BasicStochasticSensitivityWindow(
+            BasicStochasticSensitivityAnalysis bssa) {
+        super("Sensitivity Analysis For ReactiveSystem "
+                + bssa.getSystem().getName());
         this.bssa = bssa;
         this.system = bssa.getSystem();
         endTime = bssa.getTime();
-        startTime = endTime/2.0;
-        
+        startTime = endTime / 2.0;
+
         java.util.List substances = bssa.getSubstances();
-        int nSubs = substances.size(); //substances.length;
+        int nSubs = substances.size(); // substances.length;
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances.get(i));
             substanceListModel.addElement(s.getName());
         }
-        
-        double [] paraValues = bssa.getXValues();
+
+        double[] paraValues = bssa.getXValues();
         System.out.println("# of parameter Values = " + paraValues.length);
         for (int i = 0; i < paraValues.length; i++) {
-            paraValueListModel.addElement(dynetica.util.Numerics.displayFormattedValue(paraValues[i]));
+            paraValueListModel.addElement(dynetica.util.Numerics
+                    .displayFormattedValue(paraValues[i]));
         }
-        
-        initComponents ();
-        timeCoursesPanel.add(figure.getPlotPanel(), java.awt.BorderLayout.CENTER);
+
+        initComponents();
+        timeCoursesPanel.add(figure.getPlotPanel(),
+                java.awt.BorderLayout.CENTER);
         plotTimeCourses();
         plotHistograms();
- 
-       pack ();
+
+        pack();
     }
-    
+
     public void setUpData() {
         endTime = bssa.getTime();
-        startTime = endTime/2.0;
+        startTime = endTime / 2.0;
         java.util.List substances = bssa.getSubstances();
         int nSubs = substances.size();
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances.get(i));
             substanceListModel.addElement(s.getName());
         }
-        
-        double [] paraValues = bssa.getXValues();
+
+        double[] paraValues = bssa.getXValues();
         System.out.println("# of parameter Values = " + paraValues.length);
         for (int i = 0; i < paraValues.length; i++) {
-            paraValueListModel.addElement(dynetica.util.Numerics.displayFormattedValue(paraValues[i]));
-        }      
+            paraValueListModel.addElement(dynetica.util.Numerics
+                    .displayFormattedValue(paraValues[i]));
+        }
     }
-    
-    private void plotTimeCourses() { 
+
+    private void plotTimeCourses() {
         System.out.println("Plotting data");
-        
+
         //
         // for now, only allow selection of one item
         //
         int sIndex = substanceList.getSelectedIndex();
         int pIndex = paraValueList.getSelectedIndex();
-        
+
         System.out.println("Index of the selected substance:" + sIndex);
         System.out.println("Index of the selected variable:" + pIndex);
-        
+
         xLabel = "Time";
         xValues = bssa.getTimePoints();
         yLabels = null;
-        yValues = new double [numberTraces][xValues.length];
-        
-        double [][][] yValuesForOneSubstance = bssa.getTimeCourses(sIndex);
-        for (int i = 0; i < numberTraces; i++ ) {
-            System.arraycopy(yValuesForOneSubstance[pIndex], 0, yValues, 0, yValues.length);
- //               yValues[i] = yValuesForOneSubstance [pIndex][i];                
+        yValues = new double[numberTraces][xValues.length];
+
+        double[][][] yValuesForOneSubstance = bssa.getTimeCourses(sIndex);
+        for (int i = 0; i < numberTraces; i++) {
+            System.arraycopy(yValuesForOneSubstance[pIndex], 0, yValues, 0,
+                    yValues.length);
+            // yValues[i] = yValuesForOneSubstance [pIndex][i];
         }
-       
-        if (showTimeCourses) xLabel = "Time";
-        
+
+        if (showTimeCourses)
+            xLabel = "Time";
+
         figure.plotData(xLabel, yLabels, xValues, yValues);
         figure.setLogX(logXItem.getState());
         figure.setLogY(logYItem.getState());
@@ -126,18 +131,19 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
             figureAxisModel = new FigureAxisModel();
             rangeTable.setModel(figureAxisModel);
         }
-        
+
         else
-           figureAxisModel.setFigure();
+            figureAxisModel.setFigure();
 
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed"
+    // desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jSeparator1 = new javax.swing.JSeparator();
@@ -206,13 +212,16 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         substanceNamePane.setPreferredSize(new java.awt.Dimension(60, 200));
 
         substanceList.setModel(substanceListModel);
-        substanceList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        substanceList
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         substanceList.setSelectedIndex(0);
-        substanceList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                substanceListValueChanged(evt);
-            }
-        });
+        substanceList
+                .addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                    public void valueChanged(
+                            javax.swing.event.ListSelectionEvent evt) {
+                        substanceListValueChanged(evt);
+                    }
+                });
         substanceNamePane.setViewportView(substanceList);
 
         jPanel6.add(substanceNamePane, java.awt.BorderLayout.CENTER);
@@ -228,13 +237,16 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         paraValuePane.setPreferredSize(new java.awt.Dimension(60, 200));
 
         paraValueList.setModel(paraValueListModel);
-        paraValueList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        paraValueList
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         paraValueList.setSelectedIndex(0);
-        paraValueList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                paraValueListValueChanged(evt);
-            }
-        });
+        paraValueList
+                .addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                    public void valueChanged(
+                            javax.swing.event.ListSelectionEvent evt) {
+                        paraValueListValueChanged(evt);
+                    }
+                });
         paraValuePane.setViewportView(paraValueList);
 
         jPanel7.add(paraValuePane, java.awt.BorderLayout.CENTER);
@@ -246,7 +258,8 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout(0, 3));
 
         jLabel6.setText("Figure Configuration");
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel6.setBorder(javax.swing.BorderFactory
+                .createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel6.setMaximumSize(new java.awt.Dimension(200, 18));
         jLabel6.setPreferredSize(new java.awt.Dimension(110, 18));
         jPanel3.add(jLabel6, java.awt.BorderLayout.NORTH);
@@ -259,7 +272,8 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         rangeTable.setRowSelectionAllowed(false);
         jPanel3.add(rangeTable, java.awt.BorderLayout.CENTER);
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1,
+                javax.swing.BoxLayout.Y_AXIS));
 
         logXbox.setText("Log Scale in X");
         logXbox.addActionListener(new java.awt.event.ActionListener() {
@@ -289,13 +303,16 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         histogramPanel.setLayout(new java.awt.BorderLayout());
 
         startTimeLabel.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
-        startTimeLabel.setText("Start:" + dynetica.util.Numerics.displayFormattedValue(startTime));
+        startTimeLabel.setText("Start:"
+                + dynetica.util.Numerics.displayFormattedValue(startTime));
         jPanel5.add(startTimeLabel);
 
         startTimeBar.setMaximum(bssa.getIterations());
         startTimeBar.setPaintLabels(true);
-        startTimeBar.setToolTipText("Adjust number of time points to be shown. \nThis is done by truncating the time series \nat various start time and/or end time");
-        startTimeBar.setValue((int) (Math.round(startTime * bssa.getIterations()/ bssa.getTime())));
+        startTimeBar
+                .setToolTipText("Adjust number of time points to be shown. \nThis is done by truncating the time series \nat various start time and/or end time");
+        startTimeBar.setValue((int) (Math.round(startTime
+                * bssa.getIterations() / bssa.getTime())));
         startTimeBar.setMinimumSize(new java.awt.Dimension(36, 20));
         startTimeBar.setPreferredSize(new java.awt.Dimension(80, 20));
         startTimeBar.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -306,11 +323,13 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         jPanel5.add(startTimeBar);
 
         endTimeLabel.setFont(new java.awt.Font("Lucida Grande", 0, 10)); // NOI18N
-        endTimeLabel.setText("End: "+ dynetica.util.Numerics.displayFormattedValue(endTime));
+        endTimeLabel.setText("End: "
+                + dynetica.util.Numerics.displayFormattedValue(endTime));
         jPanel5.add(endTimeLabel);
 
         endTimeBar.setMaximum(bssa.getIterations());
-        endTimeBar.setToolTipText("Adjust number of time points to be shown. This is done by truncating the time series at various start time and/or end time");
+        endTimeBar
+                .setToolTipText("Adjust number of time points to be shown. This is done by truncating the time series at various start time and/or end time");
         endTimeBar.setValue(bssa.getIterations());
         endTimeBar.setMinimumSize(new java.awt.Dimension(36, 20));
         endTimeBar.setPreferredSize(new java.awt.Dimension(80, 20));
@@ -354,11 +373,12 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         fileMenu.setText("File");
 
         saveSelectedDataItem.setText("Save Selected Data");
-        saveSelectedDataItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveSelectedDataItemActionPerformed(evt);
-            }
-        });
+        saveSelectedDataItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        saveSelectedDataItemActionPerformed(evt);
+                    }
+                });
         fileMenu.add(saveSelectedDataItem);
 
         closeItem.setText("Close");
@@ -418,122 +438,135 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
         setJMenuBar(jMenuBar1);
     }// </editor-fold>//GEN-END:initComponents
 
-  private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maxPointsSliderStateChanged
-  }//GEN-LAST:event_maxPointsSliderStateChanged
+    private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_maxPointsSliderStateChanged
+    }// GEN-LAST:event_maxPointsSliderStateChanged
 
-  private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYboxActionPerformed
-      boolean state = logYbox.isSelected();
-      logYItem.setSelected(state);
-      figure.setLogY(state);
-      timeCoursesPanel.repaint();
-  }//GEN-LAST:event_logYboxActionPerformed
+    private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYboxActionPerformed
+        boolean state = logYbox.isSelected();
+        logYItem.setSelected(state);
+        figure.setLogY(state);
+        timeCoursesPanel.repaint();
+    }// GEN-LAST:event_logYboxActionPerformed
 
-  private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXboxActionPerformed
-      boolean state = logXbox.isSelected();
-      logXItem.setSelected(state);
-      figure.setLogX(state);
-      timeCoursesPanel.repaint();
-  }//GEN-LAST:event_logXboxActionPerformed
+    private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXboxActionPerformed
+        boolean state = logXbox.isSelected();
+        logXItem.setSelected(state);
+        figure.setLogX(state);
+        timeCoursesPanel.repaint();
+    }// GEN-LAST:event_logXboxActionPerformed
 
-  private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllItemActionPerformed
-      int [] allIndices = new int [substanceListModel.size()];
-      for (int i = 0; i < allIndices.length; i++) allIndices[i] = i;
-      substanceList.setSelectedIndices(allIndices);
-  }//GEN-LAST:event_selectAllItemActionPerformed
+    private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectAllItemActionPerformed
+        int[] allIndices = new int[substanceListModel.size()];
+        for (int i = 0; i < allIndices.length; i++)
+            allIndices[i] = i;
+        substanceList.setSelectedIndices(allIndices);
+    }// GEN-LAST:event_selectAllItemActionPerformed
 
-  private void saveSelectedDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSelectedDataItemActionPerformed
-	JFileChooser fileChooser = new JFileChooser();
-	int returnVal = fileChooser.showSaveDialog (this);
-	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    File output = fileChooser.getSelectedFile();
-	    figure.saveData(output);
-	}
+    private void saveSelectedDataItemActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveSelectedDataItemActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File output = fileChooser.getSelectedFile();
+            figure.saveData(output);
+        }
 
-  }//GEN-LAST:event_saveSelectedDataItemActionPerformed
+    }// GEN-LAST:event_saveSelectedDataItemActionPerformed
 
-  private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exitItemActionPerformed
         System.exit(0);
-  }//GEN-LAST:event_exitItemActionPerformed
+    }// GEN-LAST:event_exitItemActionPerformed
 
-  private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
+    private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeItemActionPerformed
         this.dispose();
-  }//GEN-LAST:event_closeItemActionPerformed
+    }// GEN-LAST:event_closeItemActionPerformed
 
-  private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXItemActionPerformed
+    private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXItemActionPerformed
         figure.setLogX(logXItem.getState());
         logXbox.setSelected(logXItem.getState());
-  }//GEN-LAST:event_logXItemActionPerformed
+    }// GEN-LAST:event_logXItemActionPerformed
 
-  private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYItemActionPerformed
+    private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYItemActionPerformed
         figure.setLogY(logYItem.getState());
-  }//GEN-LAST:event_logYItemActionPerformed
+    }// GEN-LAST:event_logYItemActionPerformed
 
-  private void substanceListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_substanceListValueChanged
+    private void substanceListValueChanged(
+            javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_substanceListValueChanged
         plotTimeCourses();
         plotHistograms();
-  }//GEN-LAST:event_substanceListValueChanged
+    }// GEN-LAST:event_substanceListValueChanged
 
     /** Exit the Application */
-    private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
-         this.dispose();
-    }//GEN-LAST:event_exitForm
+    private void exitForm(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_exitForm
+        this.dispose();
+    }// GEN-LAST:event_exitForm
 
-    private void matlabplotItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matlabplotItemActionPerformed
-     try {
-           dynetica.gui.plotting.InteractiveFigure.matlabPlot(xLabel, yLabels, xValues, yValues, logXItem.isSelected(), logYItem.isSelected());
-       }
-       
-       catch (MatlabConnectionException MCE) {
-           System.out.println(MCE);
-       }
-       
-       catch (MatlabInvocationException MIE) {
-           System.out.println(MIE);
-       }
-     // TODO add your handling code here:
-    }//GEN-LAST:event_matlabplotItemActionPerformed
+    private void matlabplotItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_matlabplotItemActionPerformed
+        try {
+            dynetica.gui.plotting.InteractiveFigure.matlabPlot(xLabel, yLabels,
+                    xValues, yValues, logXItem.isSelected(),
+                    logYItem.isSelected());
+        }
 
-    private void startTimeBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_startTimeBarStateChanged
-       startTime = startTimeBar.getValue() * bssa.getTime() / bssa.getIterations();
-       startTimeLabel.setText("Start:" + dynetica.util.Numerics.displayFormattedValue(startTime));
-       plotHistograms();
-    }//GEN-LAST:event_startTimeBarStateChanged
+        catch (MatlabConnectionException MCE) {
+            System.out.println(MCE);
+        }
 
-    private void endTimeBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_endTimeBarStateChanged
-       endTime = endTimeBar.getValue() * bssa.getTime() / bssa.getIterations();
-       endTimeLabel.setText("End:" + dynetica.util.Numerics.displayFormattedValue(endTime));
-       plotHistograms();
-    }//GEN-LAST:event_endTimeBarStateChanged
+        catch (MatlabInvocationException MIE) {
+            System.out.println(MIE);
+        }
+        // TODO add your handling code here:
+    }// GEN-LAST:event_matlabplotItemActionPerformed
 
-    private void numTracesBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_numTracesBarStateChanged
-       numberTraces = numTracesBar.getValue();
-       tracesLabel.setText("Traces:" + numberTraces);
-       plotTimeCourses();
-    }//GEN-LAST:event_numTracesBarStateChanged
+    private void startTimeBarStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_startTimeBarStateChanged
+        startTime = startTimeBar.getValue() * bssa.getTime()
+                / bssa.getIterations();
+        startTimeLabel.setText("Start:"
+                + dynetica.util.Numerics.displayFormattedValue(startTime));
+        plotHistograms();
+    }// GEN-LAST:event_startTimeBarStateChanged
 
-    private void paraValueListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_paraValueListValueChanged
+    private void endTimeBarStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_endTimeBarStateChanged
+        endTime = endTimeBar.getValue() * bssa.getTime() / bssa.getIterations();
+        endTimeLabel.setText("End:"
+                + dynetica.util.Numerics.displayFormattedValue(endTime));
+        plotHistograms();
+    }// GEN-LAST:event_endTimeBarStateChanged
+
+    private void numTracesBarStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_numTracesBarStateChanged
+        numberTraces = numTracesBar.getValue();
+        tracesLabel.setText("Traces:" + numberTraces);
+        plotTimeCourses();
+    }// GEN-LAST:event_numTracesBarStateChanged
+
+    private void paraValueListValueChanged(
+            javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_paraValueListValueChanged
         plotTimeCourses();
         plotHistograms();
-    }//GEN-LAST:event_paraValueListValueChanged
+    }// GEN-LAST:event_paraValueListValueChanged
 
-    private void plotHistograms(){ 
+    private void plotHistograms() {
         int sIndex = substanceList.getSelectedIndex();
         int pIndex = paraValueList.getSelectedIndex();
         endTime = Math.max(startTime, endTime);
         System.out.println("Plotting histogram of truncated time courses:");
         System.out.print("Start time = " + startTime);
         System.out.println("; End time = " + endTime);
-        double [] aggregatedData = bssa.getAggregatedDataPoints(sIndex, startTime, endTime) [pIndex];
-        
+        double[] aggregatedData = bssa.getAggregatedDataPoints(sIndex,
+                startTime, endTime)[pIndex];
+
         if (histogram.getPlotPanel() == null) {
-            histogram.setData(aggregatedData, 20, (String) ( substanceListModel.get(sIndex)));
-            histogramPanel.add(histogram.getPlotPanel(), java.awt.BorderLayout.CENTER);
+            histogram.setData(aggregatedData, 20,
+                    (String) (substanceListModel.get(sIndex)));
+            histogramPanel.add(histogram.getPlotPanel(),
+                    java.awt.BorderLayout.CENTER);
         }
-        
+
         //
         // if histogram has already been initiated before, just update data.
         else {
-             histogram.setData(aggregatedData, 20, (String) ( substanceListModel.get(sIndex)));          
+            histogram.setData(aggregatedData, 20,
+                    (String) (substanceListModel.get(sIndex)));
         }
         //
         // update the graphics
@@ -580,65 +613,74 @@ public class BasicStochasticSensitivityWindow extends javax.swing.JFrame {
     private javax.swing.JPanel timeCoursesPanel;
     private javax.swing.JLabel tracesLabel;
     private javax.swing.JMenu viewMenu;
+
     // End of variables declaration//GEN-END:variables
-   
-      class FigureAxisModel extends javax.swing.table.AbstractTableModel {      
-       final Object[][] data = {
-            {"xmin",  new Double (figure.getXmin())},
-            {"xmax", new Double (figure.getXmax())},
-            {"ymin", new Double (figure.getYmin())},
-            {"ymax", new Double (figure.getYmax()) }
-            }; 
-            
-       public FigureAxisModel() {
-       }
-       
-       public void setFigure() {
-           data[0][1] = new Double(figure.getXmin());
-           data[1][1] = new Double(figure.getXmax());
-           data[2][1] = new Double(figure.getYmin());
-           data[3][1] = new Double(figure.getYmax());
-           
-           for (int i = 0; i < 4; i++) fireTableCellUpdated(i, 1);
-       }
-       
-       public int getColumnCount() { return data[0].length;}
-       public String getColumnName(int c) { return null;}
-       public int getRowCount() { return data.length;}
-       public Object getValueAt(int row, int col) {
+
+    class FigureAxisModel extends javax.swing.table.AbstractTableModel {
+        final Object[][] data = { { "xmin", new Double(figure.getXmin()) },
+                { "xmax", new Double(figure.getXmax()) },
+                { "ymin", new Double(figure.getYmin()) },
+                { "ymax", new Double(figure.getYmax()) } };
+
+        public FigureAxisModel() {
+        }
+
+        public void setFigure() {
+            data[0][1] = new Double(figure.getXmin());
+            data[1][1] = new Double(figure.getXmax());
+            data[2][1] = new Double(figure.getYmin());
+            data[3][1] = new Double(figure.getYmax());
+
+            for (int i = 0; i < 4; i++)
+                fireTableCellUpdated(i, 1);
+        }
+
+        public int getColumnCount() {
+            return data[0].length;
+        }
+
+        public String getColumnName(int c) {
+            return null;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public Object getValueAt(int row, int col) {
             return data[row][col];
-       }
-        
-       public Class getColumnClass(int c) {
-             return getValueAt(0, c).getClass();
-       }
-        
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
         public boolean isCellEditable(int row, int col) {
             return (col == 1);
         }
-        
+
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
-            
+
             double newValue = ((Double) value).doubleValue();
             if (row == 0) {
                 figure.setXmin(newValue);
-             }
-            
+            }
+
             else if (row == 1) {
                 figure.setXmax(newValue);
             }
-            
+
             else if (row == 2) {
                 figure.setYmin(newValue);
             }
-            
+
             else if (row == 3) {
                 figure.setYmax(newValue);
             }
-            
-        }    
-  }
+
+        }
+    }
 
 }

@@ -10,12 +10,17 @@
 package dynetica.expression;
 
 public class Exp extends Expression {
-    
+
     public Exp(GeneralExpression a) {
-	super(a);
-	type = ExpressionConstants.EXP;
+        super(a);
+        type = ExpressionConstants.EXP;
     }
-    
-    public void compute() { value = Math.exp(a.getValue()); }
-    public String toString () { return "exp(" + a.toString() +  ")"; }
+
+    public void compute() {
+        value = Math.exp(a.getValue());
+    }
+
+    public String toString() {
+        return "exp(" + a.toString() + ")";
+    }
 } // Exp

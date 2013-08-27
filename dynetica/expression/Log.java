@@ -10,12 +10,17 @@
 package dynetica.expression;
 
 public class Log extends Expression {
-    
+
     public Log(GeneralExpression a) {
-	super(a);
-	type = ExpressionConstants.LOG;
+        super(a);
+        type = ExpressionConstants.LOG;
     }
 
-    public void compute() { value = Math.log(a.getValue()); }
-    public String toString () { return "log(" + a.toString() + ")"; }
+    public void compute() {
+        value = Math.log(a.getValue());
+    }
+
+    public String toString() {
+        return "log(" + a.toString() + ")";
+    }
 } // Log

@@ -8,10 +8,10 @@ package dynetica.entity;
 
 /**
  * Editable contains a single method: editor()
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.1
  */
 public interface Editable {
     javax.swing.JPanel editor();
 }
-

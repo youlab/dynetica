@@ -5,9 +5,9 @@
 package dynetica.entity;
 
 /**
- *
+ * 
  * @author owner
  */
 public class SearchParameter {
-    
+
 }

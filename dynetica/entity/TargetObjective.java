@@ -1,4 +1,3 @@
-
 package dynetica.entity;
 
 import dynetica.entity.*;
@@ -13,20 +12,38 @@ public class TargetObjective {
     Substance substance;
     AbstractObjective objective;
     double weight;
-    
-    public TargetObjective (Substance s, AbstractObjective o, double w) {
+
+    public TargetObjective(Substance s, AbstractObjective o, double w) {
         substance = s;
         objective = o;
         weight = w;
     }
-    
-    public Substance getSubstance() {return substance;}
-    public AbstractObjective getObjectiveFunction() {return objective;}
-    public double getWeight() {return weight;}
-    
-    public double getScore() {return objective.score();}
-    
-    public void setWeight(double w) {weight = w;}
-    public void setObjectiveFunction(AbstractObjective o) {objective = o;}
-    public void setSubstance(Substance s) {substance = s;}
+
+    public Substance getSubstance() {
+        return substance;
+    }
+
+    public AbstractObjective getObjectiveFunction() {
+        return objective;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public double getScore() {
+        return objective.score();
+    }
+
+    public void setWeight(double w) {
+        weight = w;
+    }
+
+    public void setObjectiveFunction(AbstractObjective o) {
+        objective = o;
+    }
+
+    public void setSubstance(Substance s) {
+        substance = s;
+    }
 }

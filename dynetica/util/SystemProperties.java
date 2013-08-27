@@ -15,7 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 package dynetica.util;
+
 public interface SystemProperties {
     public final static String NEWLINE = System.getProperty("line.separator");
-    public final static String FILESEPARATOR = System.getProperty("file.separator");
+    public final static String FILESEPARATOR = System
+            .getProperty("file.separator");
 }

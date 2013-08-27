@@ -7,10 +7,9 @@
 package dynetica.reaction;
 
 /**
- *
+ * 
  * @author Lingchong You
  * @version 0.01
  */
 public interface Genetic {
 }
-

@@ -5,11 +5,12 @@
  */
 
 package dynetica.reaction;
+
 //import dynetica.exception.*;
 
 /**
- *
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.1
  */
 public interface Progressive {

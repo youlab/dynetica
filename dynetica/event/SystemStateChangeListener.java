@@ -7,11 +7,10 @@
 package dynetica.event;
 
 /**
- *
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.1
  */
-public interface SystemStateChangeListener extends java.util.EventListener{
+public interface SystemStateChangeListener extends java.util.EventListener {
     public void systemStateChanged(SystemStateChangeEvent e);
 }
-

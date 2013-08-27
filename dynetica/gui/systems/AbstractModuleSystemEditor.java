@@ -1,4 +1,4 @@
- /*
+/*
  * AbstractModuleSystemEditor.java
  *
  * Cloned from SystemEditor on 13 June 2013 11:41AM
@@ -6,7 +6,6 @@
  */
 
 package dynetica.gui.systems;
-
 
 import dynetica.entity.*;
 import dynetica.gui.entities.EntityEditorFrame;
@@ -20,88 +19,82 @@ import java.awt.event.*;
 import java.awt.print.*;
 
 public class AbstractModuleSystemEditor extends javax.swing.JPanel {
-    
+
     private ReactiveSystem system;
     private TreeModel treeModel;
     private AbstractModuleSystemGraph systemGraph;
     private SourceEditor sourceEditor;
     private int currentView = 0;
     private String currentNodeName;
-    
+
     private EntityEditorFrame editorFrame = new EntityEditorFrame();
-    
+
     private JPopupMenu currentPopupMenu = null;
-    
+
     private DefaultComboBoxModel entityTypes;
-    
+
     final static String[] typeNames_GeneticSystem = {
-      "dynetica.entity.Substance", 
-      "dynetica.entity.Parameter",
-      "dynetica.entity.ExpressionVariable",
-      "dynetica.entity.RNA",
-      "dynetica.entity.Protein",
-      "dynetica.entity.Ribosome",
-      "dynetica.entity.RNAPolymerase",
-      "dynetica.system.Genome",
-      "dynetica.reaction.ProgressiveReaction",
-      "dynetica.reaction.MassAction",
-      "dynetica.reaction.Generator", 
-      "dynetica.reaction.Decay", 
-      "dynetica.reaction.MichaelisMentenReaction",
-      //"dynetica.reaction.HillActivation",
-      "dynetica.reaction.EquilibratedMassAction", 
-      "dynetica.reaction.GenomeTranslocation"};
-      
+            "dynetica.entity.Substance", "dynetica.entity.Parameter",
+            "dynetica.entity.ExpressionVariable", "dynetica.entity.RNA",
+            "dynetica.entity.Protein", "dynetica.entity.Ribosome",
+            "dynetica.entity.RNAPolymerase", "dynetica.system.Genome",
+            "dynetica.reaction.ProgressiveReaction",
+            "dynetica.reaction.MassAction", "dynetica.reaction.Generator",
+            "dynetica.reaction.Decay",
+            "dynetica.reaction.MichaelisMentenReaction",
+            // "dynetica.reaction.HillActivation",
+            "dynetica.reaction.EquilibratedMassAction",
+            "dynetica.reaction.GenomeTranslocation" };
+
     final static String[] typeNames_AbstractModule = {
-      "dynetica.entity.Substance", 
-      "dynetica.entity.Parameter",
-      "dynetica.entity.ExpressionVariable",
-      "dynetica.reaction.ProgressiveReaction",
-      "dynetica.reaction.MassAction",
-      "dynetica.reaction.Generator", 
-      "dynetica.reaction.Decay", 
-      "dynetica.reaction.MichaelisMentenReaction",  
-      //"dynetica.reaction.HillActivation",
-      "dynetica.reaction.EquilibratedMassAction"
-    };
-    
-      static String[] typeNames;
-            
+            "dynetica.entity.Substance", "dynetica.entity.Parameter",
+            "dynetica.entity.ExpressionVariable",
+            "dynetica.reaction.ProgressiveReaction",
+            "dynetica.reaction.MassAction", "dynetica.reaction.Generator",
+            "dynetica.reaction.Decay",
+            "dynetica.reaction.MichaelisMentenReaction",
+            // "dynetica.reaction.HillActivation",
+            "dynetica.reaction.EquilibratedMassAction" };
+
+    static String[] typeNames;
+
     /** Creates new customizer SystemEditor */
-      public AbstractModuleSystemEditor(AbstractModule system) {
+    public AbstractModuleSystemEditor(AbstractModule system) {
         this.system = system;
-        
+
         treeModel = system.getTreeModel();
-        treeModel.addTreeModelListener(new SystemTreeModelListener()); 
+        treeModel.addTreeModelListener(new SystemTreeModelListener());
         buildEntityTypes();
-        
+
         System.out.println("Initializing the editor GUI ...");
-        initComponents ();
+        initComponents();
         currentPopupMenu = systemMenu;
         systemTree.addMouseListener(new PopupListener());
-        systemTree.putClientProperty("JTree.lineStyle", "Angled"); 
-        systemGraph = new AbstractModuleSystemGraph(system); 
+        systemTree.putClientProperty("JTree.lineStyle", "Angled");
+        systemGraph = new AbstractModuleSystemGraph(system);
         sourceEditor = new SourceEditor(system);
-        
+
         systemGraphPane.setViewportView(systemGraph);
-        systemGraph.addSizeChangeListener(new AbstractModuleSystemGraph.SizeChangeListener() {
-            public void sizeChanged(dynetica.event.SizeChangeEvent e){
-                graphSizeChanged(e);
-            }
-            
-        });
+        systemGraph
+                .addSizeChangeListener(new AbstractModuleSystemGraph.SizeChangeListener() {
+                    public void sizeChanged(dynetica.event.SizeChangeEvent e) {
+                        graphSizeChanged(e);
+                    }
+
+                });
     }
-    
+
     private void graphSizeChanged(dynetica.event.SizeChangeEvent e) {
         systemGraph.revalidate();
-   }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed"
+    // desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         entityMenu = new javax.swing.JPopupMenu();
@@ -285,11 +278,12 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         newExpressions.setText("New Expression");
 
         newExpressionItem.setText("Expression");
-        newExpressionItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newExpressionItemActionPerformed(evt);
-            }
-        });
+        newExpressionItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        newExpressionItemActionPerformed(evt);
+                    }
+                });
         newExpressions.add(newExpressionItem);
 
         newMenu.add(newExpressions);
@@ -431,11 +425,12 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         newExpressionMenu.setText("New");
 
         newExpressionMenuItem.setText("Expression");
-        newExpressionMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newExpressionMenuItemActionPerformed(evt);
-            }
-        });
+        newExpressionMenuItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        newExpressionMenuItemActionPerformed(evt);
+                    }
+                });
         newExpressionMenu.add(newExpressionMenuItem);
 
         expressionNodeMenu.add(newExpressionMenu);
@@ -494,11 +489,12 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
 
         newTranslocationItem.setText("Genome Translocation");
         newTranslocationItem.setEnabled(system instanceof GeneticSystem);
-        newTranslocationItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newTranslocationItemActionPerformed(evt);
-            }
-        });
+        newTranslocationItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        newTranslocationItemActionPerformed(evt);
+                    }
+                });
         newReactionMenu.add(newTranslocationItem);
 
         reactionNodeMenu.add(newReactionMenu);
@@ -537,7 +533,8 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
 
         printButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         printButton.setText("Print Graph");
-        printButton.setToolTipText("Print the system graph to a printer or a file.");
+        printButton
+                .setToolTipText("Print the system graph to a printer or a file.");
         printButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printButtonActionPerformed(evt);
@@ -547,7 +544,8 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
 
         infoButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         infoButton.setText("Module Information");
-        infoButton.setToolTipText("Display the detailed annotation of the system.");
+        infoButton
+                .setToolTipText("Display the detailed annotation of the system.");
         infoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 infoButtonActionPerformed(evt);
@@ -557,7 +555,8 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
 
         editButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         editButton.setText("Source");
-        editButton.setToolTipText("Switching between source and graph view of the system information");
+        editButton
+                .setToolTipText("Switching between source and graph view of the system information");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editButtonActionPerformed(evt);
@@ -578,7 +577,8 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         popInButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         popInButton.setText("PopIn");
         popInButton.setFocusable(false);
-        popInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        popInButton
+                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         popInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         popInButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -590,7 +590,8 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         popOutButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         popOutButton.setText("PopOut");
         popOutButton.setFocusable(false);
-        popOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        popOutButton
+                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         popOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         popOutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -602,25 +603,31 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         showConnectionsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         showConnectionsButton.setText("Show Connections");
         showConnectionsButton.setFocusable(false);
-        showConnectionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        showConnectionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        showConnectionsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showConnectionsButtonActionPerformed(evt);
-            }
-        });
+        showConnectionsButton
+                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        showConnectionsButton
+                .setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        showConnectionsButton
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        showConnectionsButtonActionPerformed(evt);
+                    }
+                });
         toolBar.add(showConnectionsButton);
 
         hideConnectionsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         hideConnectionsButton.setText("Hide Connections");
         hideConnectionsButton.setFocusable(false);
-        hideConnectionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        hideConnectionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        hideConnectionsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hideConnectionsButtonActionPerformed(evt);
-            }
-        });
+        hideConnectionsButton
+                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        hideConnectionsButton
+                .setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        hideConnectionsButton
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        hideConnectionsButtonActionPerformed(evt);
+                    }
+                });
         toolBar.add(hideConnectionsButton);
 
         add(toolBar, java.awt.BorderLayout.SOUTH);
@@ -643,11 +650,13 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
                 systemTreeMouseClicked(evt);
             }
         });
-        systemTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                subTreeValueChanged(evt);
-            }
-        });
+        systemTree
+                .addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+                    public void valueChanged(
+                            javax.swing.event.TreeSelectionEvent evt) {
+                        subTreeValueChanged(evt);
+                    }
+                });
         treeScrollPane.setViewportView(systemTree);
 
         treeSplitPane.setLeftComponent(treeScrollPane);
@@ -677,381 +686,391 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         add(systemPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_editButtonActionPerformed
+
         if (currentView == 0) {
-//            systemGraphPane.remove(systemGraph);
+            // systemGraphPane.remove(systemGraph);
             systemPane.remove(systemGraphPane);
             systemPane.add(sourceEditor);
             sourceEditor.resetText();
-//            sourceEditor.revalidate();
+            // sourceEditor.revalidate();
             currentView = 1;
             editButton.setText("Graph");
-        }
-        else {
-//            systemGraphPane.remove(sourceEditor);
+        } else {
+            // systemGraphPane.remove(sourceEditor);
             systemPane.remove(sourceEditor);
             systemPane.add(systemGraphPane);
-            currentView =0;
+            currentView = 0;
             editButton.setText("Source");
         }
-              
-    }//GEN-LAST:event_editButtonActionPerformed
 
-    private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
-      javax.swing.JFrame algoFrame = new JFrame("System Information");
-      javax.swing.JPanel annotationEditor = system.systemInformation.editor();
-      algoFrame.getContentPane().add(annotationEditor);
-      algoFrame.pack();
-      algoFrame.setLocation(400, 300);
-      algoFrame.show();     
+    }// GEN-LAST:event_editButtonActionPerformed
 
-    }//GEN-LAST:event_infoButtonActionPerformed
+    private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_infoButtonActionPerformed
+        javax.swing.JFrame algoFrame = new JFrame("System Information");
+        javax.swing.JPanel annotationEditor = system.systemInformation.editor();
+        algoFrame.getContentPane().add(annotationEditor);
+        algoFrame.pack();
+        algoFrame.setLocation(400, 300);
+        algoFrame.show();
+
+    }// GEN-LAST:event_infoButtonActionPerformed
 
     /* clone the selected item */
-    private void duplicateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicateItemActionPerformed
+    private void duplicateItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_duplicateItemActionPerformed
 
- DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree.getLastSelectedPathComponent();
-      if (node!= null && node.isLeaf() ){
-          Entity en = system.get((String) (node.getUserObject()));
-          system.cloneEntity(en);
-      }
-       
-    }//GEN-LAST:event_duplicateItemActionPerformed
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
+                .getLastSelectedPathComponent();
+        if (node != null && node.isLeaf()) {
+            Entity en = system.get((String) (node.getUserObject()));
+            system.cloneEntity(en);
+        }
 
-    private void addBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBoxActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_addBoxActionPerformed
+    }// GEN-LAST:event_duplicateItemActionPerformed
 
-    private void newExpressionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newExpressionItemActionPerformed
-     addEntity("dynetica.entity.ExpressionVariable");  
-    }//GEN-LAST:event_newExpressionItemActionPerformed
+    private void addBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addBoxActionPerformed
+    // TODO add your handling code here:
+    }// GEN-LAST:event_addBoxActionPerformed
 
-    private void newEntityBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEntityBoxActionPerformed
-      addEntity();
-    }//GEN-LAST:event_newEntityBoxActionPerformed
+    private void newExpressionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newExpressionItemActionPerformed
+        addEntity("dynetica.entity.ExpressionVariable");
+    }// GEN-LAST:event_newExpressionItemActionPerformed
 
-    private void newExpressionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newExpressionMenuItemActionPerformed
-     addEntity("dynetica.entity.ExpressionVariable");
-    }//GEN-LAST:event_newExpressionMenuItemActionPerformed
+    private void newEntityBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newEntityBoxActionPerformed
+        addEntity();
+    }// GEN-LAST:event_newEntityBoxActionPerformed
 
-    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+    private void newExpressionMenuItemActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newExpressionMenuItemActionPerformed
+        addEntity("dynetica.entity.ExpressionVariable");
+    }// GEN-LAST:event_newExpressionMenuItemActionPerformed
+
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_printButtonActionPerformed
         PrinterJob printJob = PrinterJob.getPrinterJob();
         PageFormat pf = printJob.pageDialog(printJob.defaultPage());
         printJob.setPrintable(systemGraph, pf);
         if (printJob.printDialog()) {
             try {
-                printJob.print(); 
-            } 
-            catch (Exception ex) {
+                printJob.print();
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
-    }//GEN-LAST:event_printButtonActionPerformed
+    }// GEN-LAST:event_printButtonActionPerformed
 
-    private void massActionItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_massActionItem2ActionPerformed
-    addEntity("dynetica.reaction.MassAction");
-    }//GEN-LAST:event_massActionItem2ActionPerformed
+    private void massActionItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_massActionItem2ActionPerformed
+        addEntity("dynetica.reaction.MassAction");
+    }// GEN-LAST:event_massActionItem2ActionPerformed
 
-    private void massActionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_massActionItemActionPerformed
-    addEntity("dynetica.reaction.MassAction");
-    }//GEN-LAST:event_massActionItemActionPerformed
+    private void massActionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_massActionItemActionPerformed
+        addEntity("dynetica.reaction.MassAction");
+    }// GEN-LAST:event_massActionItemActionPerformed
 
-  private void genomeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genomeItemActionPerformed
-    addEntity("dynetica.system.Genome");
-  }//GEN-LAST:event_genomeItemActionPerformed
+    private void genomeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_genomeItemActionPerformed
+        addEntity("dynetica.system.Genome");
+    }// GEN-LAST:event_genomeItemActionPerformed
 
-  private void rnapItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rnapItemActionPerformed
-    addEntity("dynetica.entity.RNAPolymerase");
-  }//GEN-LAST:event_rnapItemActionPerformed
+    private void rnapItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rnapItemActionPerformed
+        addEntity("dynetica.entity.RNAPolymerase");
+    }// GEN-LAST:event_rnapItemActionPerformed
 
-  private void ribosomeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ribosomeItemActionPerformed
-    addEntity("dynetica.entity.Ribosome");
-  }//GEN-LAST:event_ribosomeItemActionPerformed
+    private void ribosomeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ribosomeItemActionPerformed
+        addEntity("dynetica.entity.Ribosome");
+    }// GEN-LAST:event_ribosomeItemActionPerformed
 
-  private void proteinItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinItemActionPerformed
-    addEntity("dynetica.entity.Protein");
-  }//GEN-LAST:event_proteinItemActionPerformed
+    private void proteinItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_proteinItemActionPerformed
+        addEntity("dynetica.entity.Protein");
+    }// GEN-LAST:event_proteinItemActionPerformed
 
-  private void rnaItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rnaItemActionPerformed
-    addEntity("dynetica.entity.RNA");
-  }//GEN-LAST:event_rnaItemActionPerformed
+    private void rnaItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rnaItemActionPerformed
+        addEntity("dynetica.entity.RNA");
+    }// GEN-LAST:event_rnaItemActionPerformed
 
-  private void substanceItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_substanceItemActionPerformed
-    addEntity("dynetica.entity.Substance");
-  }//GEN-LAST:event_substanceItemActionPerformed
+    private void substanceItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_substanceItemActionPerformed
+        addEntity("dynetica.entity.Substance");
+    }// GEN-LAST:event_substanceItemActionPerformed
 
-  private void parameterItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parameterItemActionPerformed
-    addEntity("dynetica.entity.Parameter");
-  }//GEN-LAST:event_parameterItemActionPerformed
+    private void parameterItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_parameterItemActionPerformed
+        addEntity("dynetica.entity.Parameter");
+    }// GEN-LAST:event_parameterItemActionPerformed
 
-  private void emaItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emaItemActionPerformed
-     addEntity("dynetica.reaction.EquilibratedMassAction");
-  }//GEN-LAST:event_emaItemActionPerformed
+    private void emaItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_emaItemActionPerformed
+        addEntity("dynetica.reaction.EquilibratedMassAction");
+    }// GEN-LAST:event_emaItemActionPerformed
 
-  private void mmrItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mmrItemActionPerformed
-     addEntity("dynetica.reaction.MichaelisMentenReaction");
-  }//GEN-LAST:event_mmrItemActionPerformed
+    private void mmrItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mmrItemActionPerformed
+        addEntity("dynetica.reaction.MichaelisMentenReaction");
+    }// GEN-LAST:event_mmrItemActionPerformed
 
-  private void decayItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decayItemActionPerformed
-      addEntity("dynetica.reaction.Decay");
-  }//GEN-LAST:event_decayItemActionPerformed
+    private void decayItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_decayItemActionPerformed
+        addEntity("dynetica.reaction.Decay");
+    }// GEN-LAST:event_decayItemActionPerformed
 
-  private void generatorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatorItemActionPerformed
-     addEntity("dynetica.reaction.Generator");
-  }//GEN-LAST:event_generatorItemActionPerformed
+    private void generatorItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_generatorItemActionPerformed
+        addEntity("dynetica.reaction.Generator");
+    }// GEN-LAST:event_generatorItemActionPerformed
 
-  private void progressiveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressiveItemActionPerformed
-     addEntity("dynetica.reaction.ProgressiveReaction");
-  }//GEN-LAST:event_progressiveItemActionPerformed
+    private void progressiveItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_progressiveItemActionPerformed
+        addEntity("dynetica.reaction.ProgressiveReaction");
+    }// GEN-LAST:event_progressiveItemActionPerformed
 
-  private void newGenomeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGenomeItemActionPerformed
-    addEntity("dynetica.system.Genome");
-  }//GEN-LAST:event_newGenomeItemActionPerformed
+    private void newGenomeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newGenomeItemActionPerformed
+        addEntity("dynetica.system.Genome");
+    }// GEN-LAST:event_newGenomeItemActionPerformed
 
-  private void newTranslocationItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTranslocationItemActionPerformed
-    addEntity("dynetica.reaction.GenomeTranslocation");
-  }//GEN-LAST:event_newTranslocationItemActionPerformed
+    private void newTranslocationItemActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newTranslocationItemActionPerformed
+        addEntity("dynetica.reaction.GenomeTranslocation");
+    }// GEN-LAST:event_newTranslocationItemActionPerformed
 
-  private void newEMAItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEMAItemActionPerformed
-    addEntity("dynetica.reaction.EquilibratedMassAction");
-  }//GEN-LAST:event_newEMAItemActionPerformed
+    private void newEMAItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newEMAItemActionPerformed
+        addEntity("dynetica.reaction.EquilibratedMassAction");
+    }// GEN-LAST:event_newEMAItemActionPerformed
 
-  private void newMentenItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMentenItemActionPerformed
-    addEntity("dynetica.reaction.MichaelisMentenReaction");
-  }//GEN-LAST:event_newMentenItemActionPerformed
+    private void newMentenItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMentenItemActionPerformed
+        addEntity("dynetica.reaction.MichaelisMentenReaction");
+    }// GEN-LAST:event_newMentenItemActionPerformed
 
-  private void newDecayItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDecayItemActionPerformed
-    addEntity("dynetica.reaction.Decay");
-  }//GEN-LAST:event_newDecayItemActionPerformed
+    private void newDecayItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newDecayItemActionPerformed
+        addEntity("dynetica.reaction.Decay");
+    }// GEN-LAST:event_newDecayItemActionPerformed
 
-  private void newGeneratorItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGeneratorItemActionPerformed
-    addEntity("dynetica.reaction.Generator");
-  }//GEN-LAST:event_newGeneratorItemActionPerformed
+    private void newGeneratorItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newGeneratorItemActionPerformed
+        addEntity("dynetica.reaction.Generator");
+    }// GEN-LAST:event_newGeneratorItemActionPerformed
 
-  private void newPReactionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPReactionItemActionPerformed
-    addEntity("dynetica.reaction.ProgressiveReaction");
-  }//GEN-LAST:event_newPReactionItemActionPerformed
+    private void newPReactionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newPReactionItemActionPerformed
+        addEntity("dynetica.reaction.ProgressiveReaction");
+    }// GEN-LAST:event_newPReactionItemActionPerformed
 
-  private void newParameterItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newParameterItemActionPerformed
-    addEntity("dynetica.entity.Parameter");
-  }//GEN-LAST:event_newParameterItemActionPerformed
+    private void newParameterItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newParameterItemActionPerformed
+        addEntity("dynetica.entity.Parameter");
+    }// GEN-LAST:event_newParameterItemActionPerformed
 
-  private void newRNAPItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRNAPItemActionPerformed
-    addEntity("dynetica.entity.RNAPolymerase");
-  }//GEN-LAST:event_newRNAPItemActionPerformed
+    private void newRNAPItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newRNAPItemActionPerformed
+        addEntity("dynetica.entity.RNAPolymerase");
+    }// GEN-LAST:event_newRNAPItemActionPerformed
 
-  private void newRibosomeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRibosomeItemActionPerformed
-    addEntity("dynetica.entity.Ribosome");
-  }//GEN-LAST:event_newRibosomeItemActionPerformed
+    private void newRibosomeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newRibosomeItemActionPerformed
+        addEntity("dynetica.entity.Ribosome");
+    }// GEN-LAST:event_newRibosomeItemActionPerformed
 
-  private void newProteinItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProteinItemActionPerformed
-    addEntity("dynetica.entity.Protein");
-  }//GEN-LAST:event_newProteinItemActionPerformed
+    private void newProteinItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newProteinItemActionPerformed
+        addEntity("dynetica.entity.Protein");
+    }// GEN-LAST:event_newProteinItemActionPerformed
 
-  private void newRNAItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRNAItemActionPerformed
-    addEntity("dynetica.entity.RNA");
-  }//GEN-LAST:event_newRNAItemActionPerformed
+    private void newRNAItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newRNAItemActionPerformed
+        addEntity("dynetica.entity.RNA");
+    }// GEN-LAST:event_newRNAItemActionPerformed
 
-  private void newSubstanceItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubstanceItemActionPerformed
-    addEntity("dynetica.entity.Substance");
-  }//GEN-LAST:event_newSubstanceItemActionPerformed
+    private void newSubstanceItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newSubstanceItemActionPerformed
+        addEntity("dynetica.entity.Substance");
+    }// GEN-LAST:event_newSubstanceItemActionPerformed
 
-  private void systemTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_systemTreeMouseClicked
-      if (evt.getClickCount() == 2 && currentNodeName != null) editEntity(currentNodeName);
-  }//GEN-LAST:event_systemTreeMouseClicked
+    private void systemTreeMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_systemTreeMouseClicked
+        if (evt.getClickCount() == 2 && currentNodeName != null)
+            editEntity(currentNodeName);
+    }// GEN-LAST:event_systemTreeMouseClicked
 
-  private void deleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteItemActionPerformed
-      deleteEntity();
-  }//GEN-LAST:event_deleteItemActionPerformed
-
-  private void renameItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renameItemActionPerformed
-      renameEntity();
-  }//GEN-LAST:event_renameItemActionPerformed
-
-  private void editItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editItemActionPerformed
-       editEntity(currentNodeName);
-  }//GEN-LAST:event_editItemActionPerformed
-
-  private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+    private void deleteItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteItemActionPerformed
         deleteEntity();
-  }//GEN-LAST:event_deleteButtonActionPerformed
+    }// GEN-LAST:event_deleteItemActionPerformed
 
-  private void subTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_subTreeValueChanged
-        
-     try{
-        
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree.getLastSelectedPathComponent();
-        if (node != null ) {
-           currentNodeName = (String) (node.getUserObject());
+    private void renameItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_renameItemActionPerformed
+        renameEntity();
+    }// GEN-LAST:event_renameItemActionPerformed
 
-    //the following code is provided to display instantaneously the information about the selected node.       
-           Entity e = system.getEntity(currentNodeName);
-           String text;
-           if (e instanceof Substance)
-               text = ((Substance) e).getCompleteInfo();
-           else if (e instanceof Parameter)
-               text = ((Parameter) e).getCompleteInfo();
-           else 
-               text = e.toString();
-           
-           if (text!=null) informationArea.setText(text);
-           currentPopupMenu = entityMenu; // default case.
+    private void editItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_editItemActionPerformed
+        editEntity(currentNodeName);
+    }// GEN-LAST:event_editItemActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteButtonActionPerformed
+        deleteEntity();
+    }// GEN-LAST:event_deleteButtonActionPerformed
+
+    private void subTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {// GEN-FIRST:event_subTreeValueChanged
+
+        try {
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
+                    .getLastSelectedPathComponent();
+            if (node != null) {
+                currentNodeName = (String) (node.getUserObject());
+
+                // the following code is provided to display instantaneously the
+                // information about the selected node.
+                Entity e = system.getEntity(currentNodeName);
+                String text;
+                if (e instanceof Substance)
+                    text = ((Substance) e).getCompleteInfo();
+                else if (e instanceof Parameter)
+                    text = ((Parameter) e).getCompleteInfo();
+                else
+                    text = e.toString();
+
+                if (text != null)
+                    informationArea.setText(text);
+                currentPopupMenu = entityMenu; // default case.
+            } else {
+                currentNodeName = null;
+                return;
+            }
+
+            if (node.isRoot()) {
+                currentPopupMenu = systemMenu;
+                return;
+            }
+
+            //
+            // if the node is at the first level
+            //
+            //
+            if (((DefaultMutableTreeNode) node.getParent()).isRoot()) {
+                if (currentNodeName.compareTo("Substances") == 0)
+                    currentPopupMenu = substanceNodeMenu;
+                else if (currentNodeName.compareTo("Parameters") == 0)
+                    currentPopupMenu = parameterNodeMenu;
+                else if (currentNodeName.compareTo("Expressions") == 0)
+                    currentPopupMenu = expressionNodeMenu;
+                else if (currentNodeName.compareTo("Reactions") == 0)
+                    currentPopupMenu = reactionNodeMenu;
+                else if (currentNodeName.compareTo("Genomes") == 0)
+                    currentPopupMenu = genomeNodeMenu;
+                else {
+                    System.out
+                            .println("Warning: Unknown node name! This shouldn't happen.");
+                    currentPopupMenu = entityMenu;
+                }
+                return;
+            }
+
+            if (currentNodeName.compareTo("Progressive Reactions") == 0
+                    || currentNodeName.compareTo("Equilibrated Reactions") == 0) {
+                currentPopupMenu = reactionNodeMenu;
+                return;
+            }
+        } catch (Exception subTreeExp) {
+            System.out
+                    .println("Warning: You either clicked a node and not an entity or the entity is empty!");
         }
-        else {
-           currentNodeName = null;
-           return;
-        }
-        
-        if (node.isRoot()) {
-           currentPopupMenu = systemMenu;
-           return;
-        }
-        
-        //
-        // if the node is at the first level
-        //
-        //
-        if (((DefaultMutableTreeNode) node.getParent()).isRoot()) {
-           if (currentNodeName.compareTo("Substances")  == 0)
-               currentPopupMenu = substanceNodeMenu;
-           else if (currentNodeName.compareTo("Parameters") == 0)
-               currentPopupMenu = parameterNodeMenu;
-           else if (currentNodeName.compareTo("Expressions")==0)
-               currentPopupMenu = expressionNodeMenu;
-           else if (currentNodeName.compareTo("Reactions") == 0)
-               currentPopupMenu = reactionNodeMenu;
-           else if (currentNodeName.compareTo("Genomes") == 0)
-               currentPopupMenu = genomeNodeMenu;
-           else {
-               System.out.println("Warning: Unknown node name! This shouldn't happen.");
-               currentPopupMenu = entityMenu;
-           }
-           return;
-        }
-        
-        if (currentNodeName.compareTo("Progressive Reactions") == 0 ||
-        currentNodeName.compareTo("Equilibrated Reactions") == 0) {
-            currentPopupMenu = reactionNodeMenu;
+
+    }// GEN-LAST:event_subTreeValueChanged
+
+    private void popInButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_popInButtonActionPerformed
+        ((AbstractModule) system).setPopOut(false);
+        system.fireSystemStructureChange();
+    }// GEN-LAST:event_popInButtonActionPerformed
+
+    private void popOutButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_popOutButtonActionPerformed
+        ((AbstractModule) system).setPopOut(true);
+        system.fireSystemStructureChange();
+    }// GEN-LAST:event_popOutButtonActionPerformed
+
+    private void showConnectionsButtonActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_showConnectionsButtonActionPerformed
+
+        ((AbstractModule) system).setConnections(true);
+        system.fireSystemStructureChange();
+
+    }// GEN-LAST:event_showConnectionsButtonActionPerformed
+
+    private void hideConnectionsButtonActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_hideConnectionsButtonActionPerformed
+
+        ((AbstractModule) system).setConnections(false);
+        system.fireSystemStructureChange();
+
+    }// GEN-LAST:event_hideConnectionsButtonActionPerformed
+
+    private void renameEntity() {
+        String newNodeName = (String) JOptionPane.showInputDialog(this,
+                "Enter the new name", "Input", JOptionPane.QUESTION_MESSAGE,
+                null, null, currentNodeName);
+        if (system.contains(newNodeName.trim()))
             return;
+        system.get(currentNodeName).setName(newNodeName);
+        currentNodeName = newNodeName;
+    }
+
+    private void editEntity(String name) {
+        if (system.contains(name)) {
+            JPanel editor = system.get(name).editor();
+
+            editorFrame.addEditor(name, editor);
+            editorFrame.pack();
+
+            if (editorFrame.getComponentCount() == 1) {
+                editorFrame.setLocation(this.getLocationOnScreen());
+            }
+
+            if (!editorFrame.isVisible())
+                editorFrame.setVisible(true);
         }
-     } catch(Exception subTreeExp){
-           System.out.println("Warning: You either clicked a node and not an entity or the entity is empty!");
-        }              
-   
-               
-  }//GEN-LAST:event_subTreeValueChanged
+    }
 
-    private void popInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popInButtonActionPerformed
-     ((AbstractModule)system).setPopOut(false);
-     system.fireSystemStructureChange();
-    }//GEN-LAST:event_popInButtonActionPerformed
+    private void deleteEntity() {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
+                .getLastSelectedPathComponent();
+        if (node != null && node.isLeaf()) {
+            String entityName = (String) (node.getUserObject());
+            // System.out.println("deleting" + entityName);
+            system.remove(entityName);
+            editorFrame.removeEditor(entityName);
+        }
+    }
 
-    private void popOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popOutButtonActionPerformed
-     ((AbstractModule)system).setPopOut(true); 
-     system.fireSystemStructureChange();
-    }//GEN-LAST:event_popOutButtonActionPerformed
+    //
+    // this method is used by newEntityBox.
+    //
+    private void addEntity() {
+        addEntity(typeNames[newEntityBox.getSelectedIndex()]);
 
-    private void showConnectionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showConnectionsButtonActionPerformed
+    }
 
-       ((AbstractModule)system).setConnections(true);
-       system.fireSystemStructureChange();
-       
-    }//GEN-LAST:event_showConnectionsButtonActionPerformed
+    public void addEntity(String className) {
+        try {
+            Entity e = (Entity) (Class.forName(className).newInstance());
 
-    private void hideConnectionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideConnectionsButtonActionPerformed
-       
-       ((AbstractModule) system).setConnections(false);
-       system.fireSystemStructureChange();
-       
-    }//GEN-LAST:event_hideConnectionsButtonActionPerformed
- 
- private void renameEntity() {
-          String newNodeName = (String) JOptionPane.showInputDialog(this, "Enter the new name", "Input", 
-          JOptionPane.QUESTION_MESSAGE, null, null, currentNodeName);
-          if (system.contains(newNodeName.trim())) return;
-          system.get(currentNodeName).setName(newNodeName); 
-          currentNodeName = newNodeName;
- }
-  
-  private void editEntity(String name) {
-      if (system.contains(name)) {
-          JPanel editor = system.get(name).editor();
-          
-          editorFrame.addEditor(name, editor);
-          editorFrame.pack();
-          
-          if (editorFrame.getComponentCount() == 1) {
-              editorFrame.setLocation(this.getLocationOnScreen());
-          }
+            String newName = e.getName();
+            do {
+                newName = (String) JOptionPane
+                        .showInputDialog(
+                                this,
+                                "Enter the name for the new "
+                                        + (className.substring(className
+                                                .lastIndexOf('.') + 1) + "\n" + "Please make sure there are no spaces or curly brackets in the name."),
+                                "Input", JOptionPane.QUESTION_MESSAGE, null,
+                                null, e.getName());// i don't get the last
+                                                   // statement e.getName();
+                                                   // shouldn't it be setname
+            } while (newName.contains(" ") || newName.contains("{")
+                    || newName.contains("}"));
 
-          if (! editorFrame.isVisible())
-              editorFrame.setVisible(true);
-      }
-  }
-  
-  private void deleteEntity() {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree.getLastSelectedPathComponent();
-      if (node!= null && node.isLeaf() ){
-          String entityName = (String) (node.getUserObject());
-  //        System.out.println("deleting" + entityName);
-          system.remove(entityName);
-          editorFrame.removeEditor(entityName);
-      }
-  }
-  
-  //
-  // this method is used by newEntityBox.
-  //
-  private void addEntity(){
-       addEntity(typeNames[newEntityBox.getSelectedIndex()]);
-       
-  }
-  
-  public void addEntity(String className) {
-          try {
-            Entity e = (Entity) (Class.forName(className).newInstance());           
-
-            String newName=e.getName();
-            do 
-           {       
-            newName = (String) JOptionPane.showInputDialog(this, 
-                        "Enter the name for the new " +  (className.substring(className.lastIndexOf('.') + 1)+"\n"+
-                        "Please make sure there are no spaces or curly brackets in the name."), 
-                        "Input", 
-                        JOptionPane.QUESTION_MESSAGE, 
-                        null, 
-                        null, 
-                        e.getName());//i don't get the last statement e.getName(); shouldn't it be setname
-           }while(newName.contains(" ")|| newName.contains("{") || newName.contains("}"));
-           
             if (newName.length() > 0)
                 e.setName(newName);
             e.setSystem(system);
             editEntity(e.getName());
-          }
-          catch (Exception e) {
-              e.printStackTrace();
-              
-          }
-  }
-  
-  private void buildEntityTypes() {
-      entityTypes = new DefaultComboBoxModel();
-      if (system instanceof GeneticSystem) {
-          typeNames = typeNames_GeneticSystem;
-      }
-      else {
-          typeNames = typeNames_AbstractModule;
-      }
-      
-      for (int i = 0; i < typeNames.length; i++)
-          entityTypes.addElement(typeNames[i].substring(typeNames[i].lastIndexOf('.') + 1));
-        
-  }
+        } catch (Exception e) {
+            e.printStackTrace();
 
-  
+        }
+    }
+
+    private void buildEntityTypes() {
+        entityTypes = new DefaultComboBoxModel();
+        if (system instanceof GeneticSystem) {
+            typeNames = typeNames_GeneticSystem;
+        } else {
+            typeNames = typeNames_AbstractModule;
+        }
+
+        for (int i = 0; i < typeNames.length; i++)
+            entityTypes.addElement(typeNames[i].substring(typeNames[i]
+                    .lastIndexOf('.') + 1));
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem decayItem;
     private javax.swing.JButton deleteButton;
@@ -1132,35 +1151,40 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
     private javax.swing.JMenuItem translocationItem;
     private javax.swing.JScrollPane treeScrollPane;
     private javax.swing.JSplitPane treeSplitPane;
+
     // End of variables declaration//GEN-END:variables
 
-  //
-  // added by Lingchong You.
-  // the following code is needed to handle the changes in the Entity names.
-  //
-  class SystemTreeModelListener implements TreeModelListener {
+    //
+    // added by Lingchong You.
+    // the following code is needed to handle the changes in the Entity names.
+    //
+    class SystemTreeModelListener implements TreeModelListener {
         public void treeNodesChanged(TreeModelEvent e) {
-            DefaultMutableTreeNode node =  (DefaultMutableTreeNode) systemTree.getLastSelectedPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
+                    .getLastSelectedPathComponent();
             String newNodeName = (String) (node.getUserObject());
             if (system.contains(currentNodeName)) {
-                system.get(currentNodeName).setName(newNodeName); 
+                system.get(currentNodeName).setName(newNodeName);
                 currentNodeName = newNodeName;
-            }
-            else {
+            } else {
                 //
-                // ignore attempts to change the name of nodes that don't correspond to Entities
+                // ignore attempts to change the name of nodes that don't
+                // correspond to Entities
                 // in the System.
                 //
-               node.setUserObject(currentNodeName);
+                node.setUserObject(currentNodeName);
             }
-       }
+        }
+
         public void treeNodesInserted(TreeModelEvent e) {
         }
+
         public void treeNodesRemoved(TreeModelEvent e) {
         }
+
         public void treeStructureChanged(TreeModelEvent e) {
         }
-    }  
+    }
 
     class PopupListener extends MouseAdapter {
         public void mousePressed(MouseEvent e) {
@@ -1174,7 +1198,7 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         private void showPopup(MouseEvent e) {
             if (e.isPopupTrigger()) {
                 currentPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-             }
+            }
         }
     }
 

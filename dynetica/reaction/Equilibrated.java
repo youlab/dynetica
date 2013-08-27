@@ -7,9 +7,9 @@
 package dynetica.reaction;
 
 /**
- *
- * @author  you
- * @version 
+ * 
+ * @author you
+ * @version
  */
 public interface Equilibrated {
     public void update();

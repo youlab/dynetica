@@ -18,17 +18,21 @@ import java.io.*;
 
 public class FunctionEditor extends JPanel {
     static String root = dynetica.util.DyneticaProperties.HOME + "/Dynetica";
-    static java.io.File funNameFile = new java.io.File (dynetica.util.DyneticaProperties.HOME + "/Dynetica/function.d");
-    static BufferedReader reader ; // = new BufferedReader( new FileReader(funNameFile));
-    static PrintWriter writer ; // = new PrintWriter(new FileWriter(funNameFile));
+    static java.io.File funNameFile = new java.io.File(
+            dynetica.util.DyneticaProperties.HOME + "/Dynetica/function.d");
+    static BufferedReader reader; // = new BufferedReader( new
+                                  // FileReader(funNameFile));
+    static PrintWriter writer; // = new PrintWriter(new
+                               // FileWriter(funNameFile));
     static DefaultListModel funListModel = new DefaultListModel();
-    
+
     /** Creates new form FunctionEditor */
     public FunctionEditor() {
-//        super("Define new function");
-        initComponents ();
+        // super("Define new function");
+        initComponents();
         buildListModel();
-        if (funListModel.getSize() > 0) funList.setSelectedIndex(0);
+        if (funListModel.getSize() > 0)
+            funList.setSelectedIndex(0);
         System.out.println(root);
     }
 
@@ -36,106 +40,108 @@ public class FunctionEditor extends JPanel {
         if (reader == null) {
             try {
                 reader = new BufferedReader(new FileReader(funNameFile));
-            }
-            catch (Exception e)  {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }   
+            }
         }
-        
+
         if (reader != null) {
             while (true) {
                 try {
                     String line = reader.readLine();
-                    if (line == null) break;
+                    if (line == null)
+                        break;
                     line = line.trim();
                     String funName;
                     if (line.length() > 0) {
-                        funName = line.substring(0, line.lastIndexOf(".d")).trim();
- //                       System.out.println(funName);
+                        funName = line.substring(0, line.lastIndexOf(".d"))
+                                .trim();
+                        // System.out.println(funName);
                         funListModel.addElement(funName);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-    
+
     private void setFunction(File in) {
         try {
-            BufferedReader funReader = new BufferedReader (new FileReader(in));
+            BufferedReader funReader = new BufferedReader(new FileReader(in));
             StringBuffer str = new StringBuffer(funReader.readLine());
             while (true) {
                 String line = funReader.readLine();
-                if (line == null) break;
+                if (line == null)
+                    break;
                 str.append(line);
             }
             String funString = str.toString();
             StringTokenizer tokenizer = new StringTokenizer(funString);
             String funName = tokenizer.nextToken("(").trim();
             String arguments = tokenizer.nextToken("()").trim();
-            String expr = funString.substring(funString.indexOf('{') + 1, funString.indexOf("}//end")).trim();
+            String expr = funString.substring(funString.indexOf('{') + 1,
+                    funString.indexOf("}//end")).trim();
 
             nameField.setText(funName);
             argumentsArea.setText(arguments);
             exprArea.setText(expr);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     private void saveFunction() {
         String name = nameField.getText().trim();
-        if (!funListModel.contains(name)) funListModel.addElement(name);
-        
+        if (!funListModel.contains(name))
+            funListModel.addElement(name);
+
         StringBuffer function = new StringBuffer(name);
         function.append('(');
-        java.util.StringTokenizer argumentsTokenizer = 
-            new java.util.StringTokenizer(argumentsArea.getText(), " ,\t\n");
+        java.util.StringTokenizer argumentsTokenizer = new java.util.StringTokenizer(
+                argumentsArea.getText(), " ,\t\n");
         for (;;) {
-             function.append(argumentsTokenizer.nextToken());
-             if (argumentsTokenizer.hasMoreTokens()) 
-                 function.append(", ");
-             else
-                 break;
+            function.append(argumentsTokenizer.nextToken());
+            if (argumentsTokenizer.hasMoreTokens())
+                function.append(", ");
+            else
+                break;
         }
-        
+
         function.append(')');
         function.append(" {" + SystemProperties.NEWLINE);
         function.append(exprArea.getText() + SystemProperties.NEWLINE);
         function.append("}//end");
         try {
             java.io.File file = new java.io.File(root + name + ".d");
-            java.io.PrintWriter out = new java.io.PrintWriter ( new 
-                java.io.FileOutputStream(file) );
-                out.println (function);
-                out.close();
-                
-            java.io.PrintWriter pw = new java.io.PrintWriter ( 
-               new java.io.FileWriter(
-                new java.io.File(root + "/function.d")));
-            
+            java.io.PrintWriter out = new java.io.PrintWriter(
+                    new java.io.FileOutputStream(file));
+            out.println(function);
+            out.close();
+
+            java.io.PrintWriter pw = new java.io.PrintWriter(
+                    new java.io.FileWriter(new java.io.File(root
+                            + "/function.d")));
+
             for (int i = 0; i < funListModel.getSize(); i++) {
                 pw.println("\t" + funListModel.get(i) + ".d");
             }
-            
+
             pw.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-                
+
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed"
+    // desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
@@ -211,7 +217,8 @@ public class FunctionEditor extends JPanel {
         Expression.setPreferredSize(new java.awt.Dimension(100, 25));
         Expression.setMinimumSize(new java.awt.Dimension(100, 25));
         Expression.setText("Expression");
-        Expression.setToolTipText("A mathematical expression using the listed symbols");
+        Expression
+                .setToolTipText("A mathematical expression using the listed symbols");
         Expression.setMaximumSize(new java.awt.Dimension(100, 25));
         jPanel1.add(Expression);
 
@@ -243,48 +250,46 @@ public class FunctionEditor extends JPanel {
         add(jSplitPane2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-  private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-    int index = funList.getSelectedIndex();
-    String funName = (String) (funListModel.get(index));
-    funListModel.remove(index);
-    if (funListModel.getSize() > 0)
-        index = Math.min(index, funListModel.getSize() - 1);
-    funList.setSelectedIndex(index);
-    try {
-         System.out.println(root + funName + ".d");
-         java.io.File file = new java.io.File(root + funName + ".d");
-         file.delete();
-         java.io.PrintWriter pw = new java.io.PrintWriter ( 
-            new java.io.FileWriter(
-            new java.io.File(root + "/function.d")));
-        for (int i = 0; i < funListModel.getSize(); i++) {
-             pw.println("\t" + funListModel.get(i) + ".d");
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteButtonActionPerformed
+        int index = funList.getSelectedIndex();
+        String funName = (String) (funListModel.get(index));
+        funListModel.remove(index);
+        if (funListModel.getSize() > 0)
+            index = Math.min(index, funListModel.getSize() - 1);
+        funList.setSelectedIndex(index);
+        try {
+            System.out.println(root + funName + ".d");
+            java.io.File file = new java.io.File(root + funName + ".d");
+            file.delete();
+            java.io.PrintWriter pw = new java.io.PrintWriter(
+                    new java.io.FileWriter(new java.io.File(root
+                            + "/function.d")));
+            for (int i = 0; i < funListModel.getSize(); i++) {
+                pw.println("\t" + funListModel.get(i) + ".d");
+            }
+            pw.close();
+        } catch (Exception e) {
         }
-        pw.close();    
-    }
-    catch (Exception e) {
-    }
-    
-  }//GEN-LAST:event_deleteButtonActionPerformed
 
-  private void funListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_funListValueChanged
-    int index = funList.getSelectedIndex();
-    String fileName = root + ( funListModel.get(index)) + ".d";
-    try {
-        File in = new File(fileName);
-        setFunction(in);
-    }
-    
-    catch (Exception e) {
-        e.printStackTrace();
-    }
-    
-  }//GEN-LAST:event_funListValueChanged
+    }// GEN-LAST:event_deleteButtonActionPerformed
 
-  private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-    saveFunction();
-  }//GEN-LAST:event_saveButtonActionPerformed
+    private void funListValueChanged(javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_funListValueChanged
+        int index = funList.getSelectedIndex();
+        String fileName = root + (funListModel.get(index)) + ".d";
+        try {
+            File in = new File(fileName);
+            setFunction(in);
+        }
 
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }// GEN-LAST:event_funListValueChanged
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveButtonActionPerformed
+        saveFunction();
+    }// GEN-LAST:event_saveButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Expression;

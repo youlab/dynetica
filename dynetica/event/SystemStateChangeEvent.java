@@ -7,9 +7,9 @@
 package dynetica.event;
 
 /**
- *
- * @author  You
- * @version 
+ * 
+ * @author You
+ * @version
  */
 public class SystemStateChangeEvent extends StateChangeEvent {
 

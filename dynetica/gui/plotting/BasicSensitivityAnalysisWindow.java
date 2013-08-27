@@ -20,103 +20,111 @@ import matlabcontrol.MatlabInvocationException;
 
 public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
     InteractiveFigure figure = new InteractiveFigure();
-    
+
     final DefaultListModel substanceNames = new DefaultListModel();
     final dynetica.system.ReactiveSystem system;
     BasicSensitivityAnalysis algorithm;
     FigureAxisModel figureAxisModel;
-    double [] xValues;
-    double [][] yValues;
+    double[] xValues;
+    double[][] yValues;
     String xLabel;
-    String [] yLabels;
+    String[] yLabels;
 
-    
-    boolean showTimeCourses = true; //by default show multiple time courses for each variable against the parameter.
-    
+    boolean showTimeCourses = true; // by default show multiple time courses for
+                                    // each variable against the parameter.
+
     //
     // Constructs a FigureWindow that plots data directly from
     // a ReactiveSystem
     //
     public BasicSensitivityAnalysisWindow(BasicSensitivityAnalysis algorithm) {
-        super("Sensitivity Analysis For ReactiveSystem " + algorithm.getSystem().getName());
+        super("Sensitivity Analysis For ReactiveSystem "
+                + algorithm.getSystem().getName());
         this.algorithm = algorithm;
         this.system = algorithm.getSystem();
         Substance[] substances = algorithm.getSubstances();
-        int nSubs = substances.length; //substances.length;
+        int nSubs = substances.length; // substances.length;
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances[i]);
             substanceNames.addElement(s.getName());
         }
-        initComponents ();
+        initComponents();
         figurePanel.add(figure.getPlotPanel(), java.awt.BorderLayout.CENTER);
         updateFigure();
- 
-       pack ();
+
+        pack();
     }
-    
+
     public void setUpData() {
         Substance[] substances = algorithm.getSubstances();
-        int nSubs = substances.length; //substances.length;
+        int nSubs = substances.length; // substances.length;
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances[i]);
             substanceNames.addElement(s.getName());
         }
         figurePanel.setSize(400, 300);
     }
-    
+
     public void updateFigure() {
-        int [] indices = substanceList.getSelectedIndices();
+        int[] indices = substanceList.getSelectedIndices();
         xLabel = algorithm.getVariable().getName();
-        
+
         if (!showTimeCourses) {
             xValues = algorithm.getXValues();
             yValues = new double[indices.length][xValues.length];
             yLabels = new String[indices.length];
 
-            for (int i = 0; i < indices.length; i ++) {
-                yValues[i] = algorithm.getYValues()[indices[i]];                
-                yLabels[i] = (String) ( substanceNames.get(indices[i]));
+            for (int i = 0; i < indices.length; i++) {
+                yValues[i] = algorithm.getYValues()[indices[i]];
+                yLabels[i] = (String) (substanceNames.get(indices[i]));
             }
         }
-        
+
         else {
-            xValues = ((dynetica.system.ReactiveSystem) system).getTimer().getTimePoints();
-            double [] parameterValues = algorithm.getXValues();
-            yLabels = new String [parameterValues.length * indices.length];
+            xValues = ((dynetica.system.ReactiveSystem) system).getTimer()
+                    .getTimePoints();
+            double[] parameterValues = algorithm.getXValues();
+            yLabels = new String[parameterValues.length * indices.length];
             yValues = new double[parameterValues.length * indices.length][xValues.length];
-            
-            for (int j = 0; j < indices.length; j ++) {
+
+            for (int j = 0; j < indices.length; j++) {
                 int selectedIndex = indices[j];
-                for (int i = 0; i < parameterValues.length; i++ ) {
-                     int valueIndex = i + j * parameterValues.length;
-                     yValues[valueIndex] = algorithm.getTimeCourses()[selectedIndex][i];
-                     
-                     if (indices.length > 1) {
-                        yLabels[valueIndex] = (String) ( substanceNames.get(selectedIndex));
+                for (int i = 0; i < parameterValues.length; i++) {
+                    int valueIndex = i + j * parameterValues.length;
+                    yValues[valueIndex] = algorithm.getTimeCourses()[selectedIndex][i];
+
+                    if (indices.length > 1) {
+                        yLabels[valueIndex] = (String) (substanceNames
+                                .get(selectedIndex));
                         if (algorithm.getMin() != algorithm.getMax())
-                        yLabels[valueIndex] += ":" 
-                             + xLabel + "=" 
-                             + dynetica.util.Numerics.displayFormattedValue(parameterValues[i]);
-                     }
-                     
-                     else { 
-                       if (algorithm.getMin() != algorithm.getMax())
-                       yLabels[valueIndex] = xLabel + "=" 
-                               + dynetica.util.Numerics.displayFormattedValue(parameterValues[i]);
-                     }
-                 }
+                            yLabels[valueIndex] += ":"
+                                    + xLabel
+                                    + "="
+                                    + dynetica.util.Numerics
+                                            .displayFormattedValue(parameterValues[i]);
+                    }
+
+                    else {
+                        if (algorithm.getMin() != algorithm.getMax())
+                            yLabels[valueIndex] = xLabel
+                                    + "="
+                                    + dynetica.util.Numerics
+                                            .displayFormattedValue(parameterValues[i]);
+                    }
+                }
             }
-            
-           
-        } 
-        
-        if (showTimeCourses) xLabel = "Time";
-        if (algorithm.getMin() == algorithm.getMax() && indices.length == 1) yLabels = null; // suppress labeling if the variable is not changed.
-        
+
+        }
+
+        if (showTimeCourses)
+            xLabel = "Time";
+        if (algorithm.getMin() == algorithm.getMax() && indices.length == 1)
+            yLabels = null; // suppress labeling if the variable is not changed.
+
         figure.plotData(xLabel, yLabels, xValues, yValues);
         figure.setLogX(logXItem.getState());
         figure.setLogY(logYItem.getState());
@@ -124,17 +132,17 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
         if (figureAxisModel == null) {
             figureAxisModel = new FigureAxisModel();
             rangeTable.setModel(figureAxisModel);
-        }
-        else
-           figureAxisModel.setFigure();
-     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+        } else
+            figureAxisModel.setFigure();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed"
+    // desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         mainPane = new javax.swing.JSplitPane();
@@ -185,11 +193,13 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
 
         substanceList.setModel(substanceNames);
         substanceList.setSelectedIndex(0);
-        substanceList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                substanceListValueChanged(evt);
-            }
-        });
+        substanceList
+                .addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                    public void valueChanged(
+                            javax.swing.event.ListSelectionEvent evt) {
+                        substanceListValueChanged(evt);
+                    }
+                });
         jScrollPane1.setViewportView(substanceList);
 
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -202,7 +212,8 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout(0, 3));
 
         jLabel6.setText("Figure Configuration");
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel6.setBorder(javax.swing.BorderFactory
+                .createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel6.setMaximumSize(new java.awt.Dimension(200, 18));
         jLabel6.setPreferredSize(new java.awt.Dimension(110, 18));
         jPanel3.add(jLabel6, java.awt.BorderLayout.NORTH);
@@ -215,7 +226,8 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
         rangeTable.setRowSelectionAllowed(false);
         jPanel3.add(rangeTable, java.awt.BorderLayout.CENTER);
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1,
+                javax.swing.BoxLayout.Y_AXIS));
 
         logXbox.setText("Log Scale in X");
         logXbox.addActionListener(new java.awt.event.ActionListener() {
@@ -249,11 +261,12 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
         fileMenu.setText("File");
 
         saveSelectedDataItem.setText("Save Selected Data");
-        saveSelectedDataItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveSelectedDataItemActionPerformed(evt);
-            }
-        });
+        saveSelectedDataItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        saveSelectedDataItemActionPerformed(evt);
+                    }
+                });
         fileMenu.add(saveSelectedDataItem);
 
         closeItem.setText("Close");
@@ -302,11 +315,12 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
 
         timeCoursesCheckBox.setSelected(true);
         timeCoursesCheckBox.setText("Show Time Courses ");
-        timeCoursesCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                timeCoursesCheckBoxActionPerformed(evt);
-            }
-        });
+        timeCoursesCheckBox
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        timeCoursesCheckBoxActionPerformed(evt);
+                    }
+                });
         viewMenu.add(timeCoursesCheckBox);
 
         matlabplotItem.setText("Plot in Matlab");
@@ -322,86 +336,89 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
         setJMenuBar(jMenuBar1);
     }// </editor-fold>//GEN-END:initComponents
 
-  private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maxPointsSliderStateChanged
-  }//GEN-LAST:event_maxPointsSliderStateChanged
+    private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_maxPointsSliderStateChanged
+    }// GEN-LAST:event_maxPointsSliderStateChanged
 
-  private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYboxActionPerformed
-      boolean state = logYbox.isSelected();
-      logYItem.setSelected(state);
-      figure.setLogY(state);
-      figurePanel.repaint();
-  }//GEN-LAST:event_logYboxActionPerformed
+    private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYboxActionPerformed
+        boolean state = logYbox.isSelected();
+        logYItem.setSelected(state);
+        figure.setLogY(state);
+        figurePanel.repaint();
+    }// GEN-LAST:event_logYboxActionPerformed
 
-  private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXboxActionPerformed
-      boolean state = logXbox.isSelected();
-      logXItem.setSelected(state);
-      figure.setLogX(state);
-      figurePanel.repaint();
-  }//GEN-LAST:event_logXboxActionPerformed
+    private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXboxActionPerformed
+        boolean state = logXbox.isSelected();
+        logXItem.setSelected(state);
+        figure.setLogX(state);
+        figurePanel.repaint();
+    }// GEN-LAST:event_logXboxActionPerformed
 
-  private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllItemActionPerformed
-      int [] allIndices = new int [substanceNames.size()];
-      for (int i = 0; i < allIndices.length; i++) allIndices[i] = i;
-      substanceList.setSelectedIndices(allIndices);
-  }//GEN-LAST:event_selectAllItemActionPerformed
+    private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectAllItemActionPerformed
+        int[] allIndices = new int[substanceNames.size()];
+        for (int i = 0; i < allIndices.length; i++)
+            allIndices[i] = i;
+        substanceList.setSelectedIndices(allIndices);
+    }// GEN-LAST:event_selectAllItemActionPerformed
 
-  private void saveSelectedDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSelectedDataItemActionPerformed
-	JFileChooser fileChooser = new JFileChooser();
-	int returnVal = fileChooser.showSaveDialog (this);
-	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    File output = fileChooser.getSelectedFile();
-	    figure.saveData(output);
-	}
+    private void saveSelectedDataItemActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveSelectedDataItemActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File output = fileChooser.getSelectedFile();
+            figure.saveData(output);
+        }
 
-  }//GEN-LAST:event_saveSelectedDataItemActionPerformed
+    }// GEN-LAST:event_saveSelectedDataItemActionPerformed
 
-  private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exitItemActionPerformed
         System.exit(0);
-  }//GEN-LAST:event_exitItemActionPerformed
+    }// GEN-LAST:event_exitItemActionPerformed
 
-  private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
+    private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeItemActionPerformed
         this.dispose();
-  }//GEN-LAST:event_closeItemActionPerformed
+    }// GEN-LAST:event_closeItemActionPerformed
 
-  private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXItemActionPerformed
+    private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXItemActionPerformed
         figure.setLogX(logXItem.getState());
         logXbox.setSelected(logXItem.getState());
-  }//GEN-LAST:event_logXItemActionPerformed
+    }// GEN-LAST:event_logXItemActionPerformed
 
-  private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYItemActionPerformed
+    private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYItemActionPerformed
         figure.setLogY(logYItem.getState());
-  }//GEN-LAST:event_logYItemActionPerformed
+    }// GEN-LAST:event_logYItemActionPerformed
 
-  private void substanceListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_substanceListValueChanged
+    private void substanceListValueChanged(
+            javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_substanceListValueChanged
         updateFigure();
-  }//GEN-LAST:event_substanceListValueChanged
+    }// GEN-LAST:event_substanceListValueChanged
 
     /** Exit the Application */
-    private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
-       this.dispose();
-    }//GEN-LAST:event_exitForm
+    private void exitForm(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_exitForm
+        this.dispose();
+    }// GEN-LAST:event_exitForm
 
-    private void timeCoursesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeCoursesCheckBoxActionPerformed
+    private void timeCoursesCheckBoxActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_timeCoursesCheckBoxActionPerformed
         showTimeCourses = timeCoursesCheckBox.isSelected();
         updateFigure();
-    }//GEN-LAST:event_timeCoursesCheckBoxActionPerformed
+    }// GEN-LAST:event_timeCoursesCheckBoxActionPerformed
 
-    private void matlabplotItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matlabplotItemActionPerformed
-     try {
-           InteractiveFigure.matlabPlot(xLabel, yLabels, xValues, yValues, logXItem.isSelected(), logYItem.isSelected());
-       }
-       
-       catch (MatlabConnectionException MCE) {
-           System.out.println(MCE);
-       }
-       
-       catch (MatlabInvocationException MIE) {
-           System.out.println(MIE);
-       }
-     // TODO add your handling code here:
-    }//GEN-LAST:event_matlabplotItemActionPerformed
+    private void matlabplotItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_matlabplotItemActionPerformed
+        try {
+            InteractiveFigure.matlabPlot(xLabel, yLabels, xValues, yValues,
+                    logXItem.isSelected(), logYItem.isSelected());
+        }
 
-    
+        catch (MatlabConnectionException MCE) {
+            System.out.println(MCE);
+        }
+
+        catch (MatlabInvocationException MIE) {
+            System.out.println(MIE);
+        }
+        // TODO add your handling code here:
+    }// GEN-LAST:event_matlabplotItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem closeItem;
@@ -429,65 +446,74 @@ public class BasicSensitivityAnalysisWindow extends javax.swing.JFrame {
     private javax.swing.JLabel substanceListLabel;
     private javax.swing.JCheckBoxMenuItem timeCoursesCheckBox;
     private javax.swing.JMenu viewMenu;
+
     // End of variables declaration//GEN-END:variables
 
-      class FigureAxisModel extends javax.swing.table.AbstractTableModel {      
-       final Object[][] data = {
-            {"xmin",  new Double (figure.getXmin())},
-            {"xmax", new Double (figure.getXmax())},
-            {"ymin", new Double (figure.getYmin())},
-            {"ymax", new Double (figure.getYmax()) }
-            }; 
-            
-       public FigureAxisModel() {
-       }
-       
-       public void setFigure() {
-           data[0][1] = new Double(figure.getXmin());
-           data[1][1] = new Double(figure.getXmax());
-           data[2][1] = new Double(figure.getYmin());
-           data[3][1] = new Double(figure.getYmax());
-           
-           for (int i = 0; i < 4; i++) fireTableCellUpdated(i, 1);
-       }
-       
-       public int getColumnCount() { return data[0].length;}
-       public String getColumnName(int c) { return null;}
-       public int getRowCount() { return data.length;}
-       public Object getValueAt(int row, int col) {
+    class FigureAxisModel extends javax.swing.table.AbstractTableModel {
+        final Object[][] data = { { "xmin", new Double(figure.getXmin()) },
+                { "xmax", new Double(figure.getXmax()) },
+                { "ymin", new Double(figure.getYmin()) },
+                { "ymax", new Double(figure.getYmax()) } };
+
+        public FigureAxisModel() {
+        }
+
+        public void setFigure() {
+            data[0][1] = new Double(figure.getXmin());
+            data[1][1] = new Double(figure.getXmax());
+            data[2][1] = new Double(figure.getYmin());
+            data[3][1] = new Double(figure.getYmax());
+
+            for (int i = 0; i < 4; i++)
+                fireTableCellUpdated(i, 1);
+        }
+
+        public int getColumnCount() {
+            return data[0].length;
+        }
+
+        public String getColumnName(int c) {
+            return null;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public Object getValueAt(int row, int col) {
             return data[row][col];
-       }
-        
-       public Class getColumnClass(int c) {
-             return getValueAt(0, c).getClass();
-       }
-        
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
         public boolean isCellEditable(int row, int col) {
             return (col == 1);
         }
-        
+
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
-            
+
             double newValue = ((Double) value).doubleValue();
             if (row == 0) {
                 figure.setXmin(newValue);
-             }
-            
+            }
+
             else if (row == 1) {
                 figure.setXmax(newValue);
             }
-            
+
             else if (row == 2) {
                 figure.setYmin(newValue);
             }
-            
+
             else if (row == 3) {
                 figure.setYmax(newValue);
             }
-            
-        }    
-  }
+
+        }
+    }
 
 }

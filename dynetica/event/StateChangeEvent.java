@@ -6,16 +6,15 @@
 
 package dynetica.event;
 
-
 /**
- *
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.1
  */
-public class StateChangeEvent extends java.util.EventObject{
+public class StateChangeEvent extends java.util.EventObject {
     /** Creates new StateChangeEvent */
     public StateChangeEvent(Object source) {
         super(source);
     }
-   
+
 }

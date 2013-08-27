@@ -7,8 +7,8 @@
 package dynetica.exception;
 
 /**
- *
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.01
  */
 public class InvalidPropertyValueException extends Exception {
@@ -21,5 +21,5 @@ public class InvalidPropertyValueException extends Exception {
     public InvalidPropertyValueException(java.lang.String message) {
         super(message);
     }
-    
+
 }

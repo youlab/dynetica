@@ -1,4 +1,3 @@
-
 /**
  * IllegalExpressionException.java
  *
@@ -11,12 +10,12 @@
 package dynetica.exception;
 
 public class UnknownPropertyException extends Exception {
-    
+
     public UnknownPropertyException() {
-	super();
+        super();
     }
-    
+
     public UnknownPropertyException(String message) {
-	super(message);
+        super(message);
     }
 } // IllegalExpressionException

@@ -25,7 +25,7 @@ public class FigureWindow extends javax.swing.JFrame {
     final dynetica.system.ReactiveSystem system;
     FigureAxisModel figureAxisModel;
     AutoUpdateThread autoUpdateThread = new AutoUpdateThread();
-    
+
     //
     // Constructs a FigureWindow that plots data directly from
     // a ReactiveSystem
@@ -34,80 +34,80 @@ public class FigureWindow extends javax.swing.JFrame {
         super("Time courses for ReactiveSystem " + system.getName());
         this.system = system;
         List substances = system.getSubstances();
-        int nSubs = substances.size(); //substances.length;
+        int nSubs = substances.size(); // substances.length;
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances.get(i));
             substanceNames.addElement(s.getName());
         }
-        initComponents ();
+        initComponents();
         figurePanel.add(figure, java.awt.BorderLayout.CENTER);
         if (autoUpdateBox.getState()) {
-           autoUpdateThread.start();
-       }
-       else {
-          updateFigure();
-       }
-       pack ();
+            autoUpdateThread.start();
+        } else {
+            updateFigure();
+        }
+        pack();
     }
-    
+
     public void setUpData() {
         List substances = system.getSubstances();
-        int nSubs = substances.size(); //substances.length;
+        int nSubs = substances.size(); // substances.length;
         System.out.println("# of substances = " + nSubs);
         Substance s;
-        for (int i = 0; i < nSubs; i ++) {
+        for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances.get(i));
             substanceNames.addElement(s.getName());
         }
         figure.setSize(400, 300);
     }
-    
+
     public void updateFigure() {
         List substances = system.getSubstances();
-        double [] completeXvalues = system.getTimer().getTimePoints();
+        double[] completeXvalues = system.getTimer().getTimePoints();
         int nTotalPoints = completeXvalues.length;
-        int [] indices = substanceList.getSelectedIndices();
-        
+        int[] indices = substanceList.getSelectedIndices();
+
         //
         // if the total number of time points exceeds maxDataPoints, sample only
         // maxDataPoints of data points out the time courses.
         //
-        int dataPoints = Math.min (nTotalPoints, maxDataPoints);
-        
+        int dataPoints = Math.min(nTotalPoints, maxDataPoints);
+
         double samplingStep = (double) nTotalPoints / dataPoints;
-        
-        double [] xValues = new double [dataPoints];
-        double [][] yValues = new double[indices.length][dataPoints];
-        String [] labels = new String[indices.length];
-        
+
+        double[] xValues = new double[dataPoints];
+        double[][] yValues = new double[indices.length][dataPoints];
+        String[] labels = new String[indices.length];
+
         for (int j = 0; j < dataPoints; j++) {
             xValues[j] = completeXvalues[(int) Math.floor(j * samplingStep)];
         }
-        
-        for (int i = 0; i < indices.length; i ++) {
-//            System.out.println(indices[i]);
-            Substance s = (Substance) ( substances.get(indices[i]));
-            for (int j = 0; j < dataPoints; j ++) {
-                double sj =  s.getValues() [(int) Math.floor(j * samplingStep)];
-                yValues[i][j] = sj;                
+
+        for (int i = 0; i < indices.length; i++) {
+            // System.out.println(indices[i]);
+            Substance s = (Substance) (substances.get(indices[i]));
+            for (int j = 0; j < dataPoints; j++) {
+                double sj = s.getValues()[(int) Math.floor(j * samplingStep)];
+                yValues[i][j] = sj;
             }
             //
             // the following code may result in corrupted data
             //
             // yValues[i] = s.getValues();
             //
-            // The reason is as follows: while this method is attempting to get data
-            // from system, the running simulation may have changed the system in
-            // the meantime. As a result, the length of s.getValues() may be longer
+            // The reason is as follows: while this method is attempting to get
+            // data
+            // from system, the running simulation may have changed the system
+            // in
+            // the meantime. As a result, the length of s.getValues() may be
+            // longer
             // than nPoints.
             //
-            labels[i] = (String) ( substanceNames.get(indices[i]));
+            labels[i] = (String) (substanceNames.get(indices[i]));
         }
-        
-        
-        
+
         figure.setData("Time", labels, xValues, yValues);
         figure.setLogX(logXItem.getState());
         figure.setLogY(logYItem.getState());
@@ -115,19 +115,19 @@ public class FigureWindow extends javax.swing.JFrame {
         if (figureAxisModel == null) {
             figureAxisModel = new FigureAxisModel();
             rangeTable.setModel(figureAxisModel);
-        }
-        else
-           figureAxisModel.setFigure();
-        
+        } else
+            figureAxisModel.setFigure();
+
         processBar.setValue(nTotalPoints);
-     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed"
+    // desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         mainPane = new javax.swing.JSplitPane();
@@ -185,11 +185,13 @@ public class FigureWindow extends javax.swing.JFrame {
 
         substanceList.setModel(substanceNames);
         substanceList.setSelectedIndex(0);
-        substanceList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                substanceListValueChanged(evt);
-            }
-        });
+        substanceList
+                .addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                    public void valueChanged(
+                            javax.swing.event.ListSelectionEvent evt) {
+                        substanceListValueChanged(evt);
+                    }
+                });
         jScrollPane1.setViewportView(substanceList);
 
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -202,7 +204,8 @@ public class FigureWindow extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout(0, 3));
 
         jLabel6.setText("Figure Configuration");
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel6.setBorder(javax.swing.BorderFactory
+                .createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel6.setMaximumSize(new java.awt.Dimension(200, 18));
         jLabel6.setPreferredSize(new java.awt.Dimension(110, 18));
         jPanel3.add(jLabel6, java.awt.BorderLayout.NORTH);
@@ -215,7 +218,8 @@ public class FigureWindow extends javax.swing.JFrame {
         rangeTable.setRowSelectionAllowed(false);
         jPanel3.add(rangeTable, java.awt.BorderLayout.CENTER);
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1,
+                javax.swing.BoxLayout.Y_AXIS));
 
         logXbox.setText("Log Scale in X");
         logXbox.addActionListener(new java.awt.event.ActionListener() {
@@ -266,7 +270,8 @@ public class FigureWindow extends javax.swing.JFrame {
         jPanel5.add(jLabel1);
 
         maxPointsSlider.setFont(new java.awt.Font("Arial", 0, 8)); // NOI18N
-        maxPointsSlider.setMajorTickSpacing(system.getAlgorithm().getIterations() / 4);
+        maxPointsSlider.setMajorTickSpacing(system.getAlgorithm()
+                .getIterations() / 4);
         maxPointsSlider.setMaximum(system.getAlgorithm().getIterations());
         maxPointsSlider.setPaintLabels(true);
         maxPointsSlider.setPaintTicks(true);
@@ -276,11 +281,12 @@ public class FigureWindow extends javax.swing.JFrame {
         maxPointsSlider.setMinimumSize(new java.awt.Dimension(40, 40));
         maxPointsSlider.setName(""); // NOI18N
         maxPointsSlider.setPreferredSize(new java.awt.Dimension(200, 50));
-        maxPointsSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                maxPointsSliderStateChanged(evt);
-            }
-        });
+        maxPointsSlider
+                .addChangeListener(new javax.swing.event.ChangeListener() {
+                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                        maxPointsSliderStateChanged(evt);
+                    }
+                });
         jPanel5.add(maxPointsSlider);
 
         figurePanel.add(jPanel5, java.awt.BorderLayout.SOUTH);
@@ -292,11 +298,12 @@ public class FigureWindow extends javax.swing.JFrame {
         fileMenu.setText("File");
 
         saveSelectedDataItem.setText("Save Selected Data");
-        saveSelectedDataItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveSelectedDataItemActionPerformed(evt);
-            }
-        });
+        saveSelectedDataItem
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        saveSelectedDataItemActionPerformed(evt);
+                    }
+                });
         fileMenu.add(saveSelectedDataItem);
 
         closeItem.setText("Close");
@@ -385,122 +392,131 @@ public class FigureWindow extends javax.swing.JFrame {
         setJMenuBar(jMenuBar1);
     }// </editor-fold>//GEN-END:initComponents
 
-  private void resumeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resumeItemActionPerformed
+    private void resumeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resumeItemActionPerformed
         system.getAlgorithm().resume();
         autoUpdate();
-  }//GEN-LAST:event_resumeItemActionPerformed
+    }// GEN-LAST:event_resumeItemActionPerformed
 
-  private void pauseItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseItemActionPerformed
-       system.getAlgorithm().pause();
-       autoUpdateThread.pause();
-  }//GEN-LAST:event_pauseItemActionPerformed
+    private void pauseItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_pauseItemActionPerformed
+        system.getAlgorithm().pause();
+        autoUpdateThread.pause();
+    }// GEN-LAST:event_pauseItemActionPerformed
 
-  private void startItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startItemActionPerformed
+    private void startItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startItemActionPerformed
         system.getAlgorithm().start();
         autoUpdate();
-  }//GEN-LAST:event_startItemActionPerformed
+    }// GEN-LAST:event_startItemActionPerformed
 
-  private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maxPointsSliderStateChanged
-        setMaxDataPoints( maxPointsSlider.getValue());
-  }//GEN-LAST:event_maxPointsSliderStateChanged
+    private void maxPointsSliderStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_maxPointsSliderStateChanged
+        setMaxDataPoints(maxPointsSlider.getValue());
+    }// GEN-LAST:event_maxPointsSliderStateChanged
 
-  private void autoUpdateBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoUpdateBoxActionPerformed
+    private void autoUpdateBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_autoUpdateBoxActionPerformed
         autoUpdate();
-  }//GEN-LAST:event_autoUpdateBoxActionPerformed
+    }// GEN-LAST:event_autoUpdateBoxActionPerformed
 
-  private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYboxActionPerformed
-      boolean state = logYbox.isSelected();
-      logYItem.setSelected(state);
-      figure.setLogY(state);
-      figure.repaint();
-  }//GEN-LAST:event_logYboxActionPerformed
+    private void logYboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYboxActionPerformed
+        boolean state = logYbox.isSelected();
+        logYItem.setSelected(state);
+        figure.setLogY(state);
+        figure.repaint();
+    }// GEN-LAST:event_logYboxActionPerformed
 
-  private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXboxActionPerformed
-      boolean state = logXbox.isSelected();
-      logXItem.setSelected(state);
-      figure.setLogX(state);
-      figure.repaint();
-  }//GEN-LAST:event_logXboxActionPerformed
+    private void logXboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXboxActionPerformed
+        boolean state = logXbox.isSelected();
+        logXItem.setSelected(state);
+        figure.setLogX(state);
+        figure.repaint();
+    }// GEN-LAST:event_logXboxActionPerformed
 
-  private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllItemActionPerformed
-      int [] allIndices = new int [substanceNames.size()];
-      for (int i = 0; i < allIndices.length; i++) allIndices[i] = i;
-      substanceList.setSelectedIndices(allIndices);
-  }//GEN-LAST:event_selectAllItemActionPerformed
+    private void selectAllItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectAllItemActionPerformed
+        int[] allIndices = new int[substanceNames.size()];
+        for (int i = 0; i < allIndices.length; i++)
+            allIndices[i] = i;
+        substanceList.setSelectedIndices(allIndices);
+    }// GEN-LAST:event_selectAllItemActionPerformed
 
-  //
-  // The following method is updated 4/19/2005 by LY
-  // not quite working yet.
-  //
-  private void saveSelectedDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSelectedDataItemActionPerformed
-       String outDir =  DyneticaProperties.getProperty("outputDirectory");
-       JFileChooser fileChooser = new JFileChooser(outDir);
-        int returnVal = fileChooser.showSaveDialog (this);
-	if (returnVal == JFileChooser.APPROVE_OPTION) {
+    //
+    // The following method is updated 4/19/2005 by LY
+    // not quite working yet.
+    //
+    private void saveSelectedDataItemActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveSelectedDataItemActionPerformed
+        String outDir = DyneticaProperties.getProperty("outputDirectory");
+        JFileChooser fileChooser = new JFileChooser(outDir);
+        int returnVal = fileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File output = fileChooser.getSelectedFile();
-             outDir = output.getParentFile().getAbsolutePath();
+            outDir = output.getParentFile().getAbsolutePath();
             //
             System.out.println(outDir);
             //
-             dynetica.util.DyneticaProperties.setProperty("outputDirectory", outDir);
-            if (fileChooser.getFileFilter().equals(fileChooser.getAcceptAllFileFilter()))
-                    figure.saveData(output);
-	}
+            dynetica.util.DyneticaProperties.setProperty("outputDirectory",
+                    outDir);
+            if (fileChooser.getFileFilter().equals(
+                    fileChooser.getAcceptAllFileFilter()))
+                figure.saveData(output);
+        }
 
-  }//GEN-LAST:event_saveSelectedDataItemActionPerformed
+    }// GEN-LAST:event_saveSelectedDataItemActionPerformed
 
-  private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exitItemActionPerformed
         System.exit(0);
-  }//GEN-LAST:event_exitItemActionPerformed
+    }// GEN-LAST:event_exitItemActionPerformed
 
-  private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
+    private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeItemActionPerformed
         this.dispose();
-  }//GEN-LAST:event_closeItemActionPerformed
+    }// GEN-LAST:event_closeItemActionPerformed
 
-  private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logXItemActionPerformed
+    private void logXItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logXItemActionPerformed
         figure.setLogX(logXItem.getState());
         logXbox.setSelected(logXItem.getState());
-  }//GEN-LAST:event_logXItemActionPerformed
+    }// GEN-LAST:event_logXItemActionPerformed
 
-  private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logYItemActionPerformed
+    private void logYItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_logYItemActionPerformed
         figure.setLogY(logYItem.getState());
-  }//GEN-LAST:event_logYItemActionPerformed
+    }// GEN-LAST:event_logYItemActionPerformed
 
-  private void substanceListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_substanceListValueChanged
+    private void substanceListValueChanged(
+            javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_substanceListValueChanged
         updateFigure();
-  }//GEN-LAST:event_substanceListValueChanged
+    }// GEN-LAST:event_substanceListValueChanged
 
     /** Exit the Application */
-    private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
+    private void exitForm(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_exitForm
         autoUpdateThread = null;
         this.dispose();
-    }//GEN-LAST:event_exitForm
+    }// GEN-LAST:event_exitForm
 
     public void autoUpdate() {
-      if (autoUpdateBox.getState()) {
-         autoUpdateThread.start();
-      }
-      else {
-           autoUpdateThread.pause();
-      }
-      
+        if (autoUpdateBox.getState()) {
+            autoUpdateThread.start();
+        } else {
+            autoUpdateThread.pause();
+        }
+
     }
-    
-    /** Getter for property maxDataPoints.
+
+    /**
+     * Getter for property maxDataPoints.
+     * 
      * @return Value of property maxDataPoints.
- */
+     */
     public int getMaxDataPoints() {
         return maxDataPoints;
-    }    
-    
-    /** Setter for property maxDataPoints.
-     * @param maxDataPoints New value of property maxDataPoints.
- */
+    }
+
+    /**
+     * Setter for property maxDataPoints.
+     * 
+     * @param maxDataPoints
+     *            New value of property maxDataPoints.
+     */
     public void setMaxDataPoints(int maxDataPoints) {
         this.maxDataPoints = Math.max(maxDataPoints, 1);
         updateFigure();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBoxMenuItem autoUpdateBox;
     private javax.swing.JMenuItem closeItem;
@@ -538,39 +554,37 @@ public class FigureWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     /** Holds value of property maxDataPoints. */
-    private int maxDataPoints = 100;    
+    private int maxDataPoints = 100;
 
-    
     class AutoUpdateThread extends Thread {
         Thread controlThread = null;
-        
+
         public void run() {
             dynetica.algorithm.Algorithm algo = system.getAlgorithm();
             while (controlThread != null) {
-              if (! algo.isFinished() && !algo.isInterrupted()) {
+                if (!algo.isFinished() && !algo.isInterrupted()) {
                     try {
-                            updateFigure();
-                            sleep(100);
-                        }
-                    catch (Exception e) {
+                        updateFigure();
+                        sleep(100);
+                    } catch (Exception e) {
                         break;
                     }
-              }
-              else if (algo.isFinished()) {
+                } else if (algo.isFinished()) {
                     updateFigure();
                     break;
-              };
+                }
+                ;
             }
             //
             // stop the thread at the end of run
             //
             controlThread = null;
         }
-        
+
         public void pause() {
             controlThread = null;
         }
-        
+
         public void start() {
             if (controlThread == null) {
                 controlThread = new Thread(this);
@@ -578,64 +592,72 @@ public class FigureWindow extends javax.swing.JFrame {
             }
         }
     }
-    
-      class FigureAxisModel extends javax.swing.table.AbstractTableModel {      
-       final Object[][] data = {
-            {"xmin",  new Double (figure.getXmin())},
-            {"xmax", new Double (figure.getXmax())},
-            {"ymin", new Double (figure.getYmin())},
-            {"ymax", new Double (figure.getYmax()) }
-            }; 
-            
-       public FigureAxisModel() {
-       }
-       
-       public void setFigure() {
-           data[0][1] = new Double(figure.getXmin());
-           data[1][1] = new Double(figure.getXmax());
-           data[2][1] = new Double(figure.getYmin());
-           data[3][1] = new Double(figure.getYmax());
-           
-           for (int i = 0; i < 4; i++) fireTableCellUpdated(i, 1);
-       }
-       
-       public int getColumnCount() { return data[0].length;}
-       public String getColumnName(int c) { return null;}
-       public int getRowCount() { return data.length;}
-       public Object getValueAt(int row, int col) {
+
+    class FigureAxisModel extends javax.swing.table.AbstractTableModel {
+        final Object[][] data = { { "xmin", new Double(figure.getXmin()) },
+                { "xmax", new Double(figure.getXmax()) },
+                { "ymin", new Double(figure.getYmin()) },
+                { "ymax", new Double(figure.getYmax()) } };
+
+        public FigureAxisModel() {
+        }
+
+        public void setFigure() {
+            data[0][1] = new Double(figure.getXmin());
+            data[1][1] = new Double(figure.getXmax());
+            data[2][1] = new Double(figure.getYmin());
+            data[3][1] = new Double(figure.getYmax());
+
+            for (int i = 0; i < 4; i++)
+                fireTableCellUpdated(i, 1);
+        }
+
+        public int getColumnCount() {
+            return data[0].length;
+        }
+
+        public String getColumnName(int c) {
+            return null;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public Object getValueAt(int row, int col) {
             return data[row][col];
-       }
-        
-       public Class getColumnClass(int c) {
-             return getValueAt(0, c).getClass();
-       }
-        
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
         public boolean isCellEditable(int row, int col) {
             return (col == 1);
         }
-        
+
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
-            
+
             double newValue = ((Double) value).doubleValue();
             if (row == 0) {
                 figure.setXmin(newValue);
-             }
-            
+            }
+
             else if (row == 1) {
                 figure.setXmax(newValue);
             }
-            
+
             else if (row == 2) {
                 figure.setYmin(newValue);
             }
-            
+
             else if (row == 3) {
                 figure.setYmax(newValue);
             }
-            
-        }    
-  }
+
+        }
+    }
 
 }

@@ -1,4 +1,3 @@
-
 /**
  * Multiply.java
  *
@@ -10,13 +9,15 @@
  */
 package dynetica.expression;
 
-public class Multiply extends SimpleOperator{
-    
+public class Multiply extends SimpleOperator {
+
     public Multiply(GeneralExpression a, GeneralExpression b) {
-	super('*', a, b);
-	type = ExpressionConstants.MULTIPLY;
+        super('*', a, b);
+        type = ExpressionConstants.MULTIPLY;
     }
 
-    public void compute() { value = a.getValue() * b.getValue(); }
-    
+    public void compute() {
+        value = a.getValue() * b.getValue();
+    }
+
 } // Multiply

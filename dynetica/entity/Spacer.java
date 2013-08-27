@@ -1,4 +1,3 @@
-
 /**
  * Spacer.java
  *
@@ -10,24 +9,26 @@
  */
 
 package dynetica.entity;
+
 import dynetica.system.*;
 
-/** 
+/**
  * Spacer is an GeneticElement that has no known function
  */
 
 public class Spacer extends GeneticElement {
     private static int spacerIndex = 0;
+
     public Spacer() {
-        this("Spacer" + spacerIndex++, null);	
+        this("Spacer" + spacerIndex++, null);
     }
 
     public Spacer(String name, Genome genome) {
-	this(name, genome, 0, 0);
+        this(name, genome, 0, 0);
     }
 
     public Spacer(String name, Genome genome, int start, int end) {
-	super(name, genome, start, end);
+        super(name, genome, start, end);
     }
-    
+
 } // Spacer

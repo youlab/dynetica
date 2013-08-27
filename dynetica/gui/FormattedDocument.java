@@ -1,7 +1,7 @@
 package dynetica.gui;
 
-import javax.swing.*; 
-import javax.swing.text.*; 
+import javax.swing.*;
+import javax.swing.text.*;
 
 import java.awt.Toolkit;
 import java.text.*;
@@ -18,8 +18,8 @@ public class FormattedDocument extends PlainDocument {
         return format;
     }
 
-    public void insertString(int offs, String str, AttributeSet a) 
-        throws BadLocationException {
+    public void insertString(int offs, String str, AttributeSet a)
+            throws BadLocationException {
 
         String currentText = getText(0, getLength());
         String beforeOffset = currentText.substring(0, offs);
@@ -32,7 +32,7 @@ public class FormattedDocument extends PlainDocument {
         } catch (ParseException e) {
             Toolkit.getDefaultToolkit().beep();
             System.err.println("insertString: could not parse: "
-                               + proposedResult);
+                    + proposedResult);
         }
     }
 
@@ -40,7 +40,7 @@ public class FormattedDocument extends PlainDocument {
         String currentText = getText(0, getLength());
         String beforeOffset = currentText.substring(0, offs);
         String afterOffset = currentText.substring(len + offs,
-                                                   currentText.length());
+                currentText.length());
         String proposedResult = beforeOffset + afterOffset;
 
         try {

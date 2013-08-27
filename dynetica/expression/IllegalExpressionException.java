@@ -1,4 +1,3 @@
-
 /**
  * IllegalExpressionException.java
  *
@@ -11,12 +10,12 @@
 package dynetica.expression;
 
 public class IllegalExpressionException extends Exception {
-    
+
     public IllegalExpressionException() {
-	super();
+        super();
     }
-    
+
     public IllegalExpressionException(String message) {
-	super(message);
+        super(message);
     }
 } // IllegalExpressionException

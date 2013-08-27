@@ -6,13 +6,18 @@
     email                : you@cae.wisc.edu
  ***************************************************************************/
 package dynetica.expression;
+
 import java.util.*;
 import dynetica.system.*;
 
-public interface Variable extends GeneralExpression {  
+public interface Variable extends GeneralExpression {
     public void setValue(double v);
+
     public double getMax();
+
     public void setMax(double max);
+
     public double getMin();
+
     public void setMin(double min);
 }

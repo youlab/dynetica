@@ -10,14 +10,18 @@
 package dynetica.expression;
 
 public class Tan extends Expression {
-    
+
     public Tan(GeneralExpression a) {
-	super(a);
-	type = ExpressionConstants.TAN;
+        super(a);
+        type = ExpressionConstants.TAN;
     }
-    
-    public void compute() { value = Math.tan(a.getValue()); }
-    
+
+    public void compute() {
+        value = Math.tan(a.getValue());
+    }
+
     @Override
-    public String toString () { return "tan(" + a.toString()  + ")"; }
+    public String toString() {
+        return "tan(" + a.toString() + ")";
+    }
 } // Tan

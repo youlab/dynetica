@@ -1,4 +1,3 @@
-
 /**
  * Max.java
  *
@@ -11,12 +10,17 @@
 package dynetica.expression;
 
 public class Max extends Expression {
-    
+
     public Max(GeneralExpression a, GeneralExpression b) {
-	super(a,b);
-	type = ExpressionConstants.MAX;
+        super(a, b);
+        type = ExpressionConstants.MAX;
     }
-    
-    public void compute() {value = Math.max(a.getValue(), b.getValue()); }
-    public String toString () { return "max(" + a.toString() + ", " + b.toString() + ")"; }
+
+    public void compute() {
+        value = Math.max(a.getValue(), b.getValue());
+    }
+
+    public String toString() {
+        return "max(" + a.toString() + ", " + b.toString() + ")";
+    }
 } // Max

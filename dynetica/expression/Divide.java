@@ -10,12 +10,14 @@
 package dynetica.expression;
 
 public class Divide extends SimpleOperator {
-    
+
     public Divide(GeneralExpression a, GeneralExpression b) {
-	super('/', a, b);
-	type = ExpressionConstants.DIVIDE;
+        super('/', a, b);
+        type = ExpressionConstants.DIVIDE;
     }
 
-    public void compute() { value = a.getValue() / b.getValue(); }
-    
+    public void compute() {
+        value = a.getValue() / b.getValue();
+    }
+
 } // Divide

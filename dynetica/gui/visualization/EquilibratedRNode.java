@@ -7,10 +7,11 @@
 package dynetica.gui.visualization;
 
 import java.awt.*;
+
 /**
- *
- * @author  You
- * @version 
+ * 
+ * @author You
+ * @version
  */
 public class EquilibratedRNode extends RNode {
 
@@ -18,7 +19,7 @@ public class EquilibratedRNode extends RNode {
     public EquilibratedRNode(dynetica.reaction.EquilibratedReaction r) {
         super(r);
     }
-    
+
     public void draw(java.awt.Graphics2D g) {
         java.awt.Color c = g.getColor();
         g.setColor(g.getBackground());
@@ -28,11 +29,17 @@ public class EquilibratedRNode extends RNode {
         g.draw(getShape());
         g.setStroke(new java.awt.BasicStroke(interiorWidth));
         Font f = g.getFont();
-        g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f.getSize() * relativeFontSize)));
-        if (textVisible) 
-            g.drawString(getNodeName(), (float) (getX() + getWidth()), (float) getY());
-        g.draw(new java.awt.geom.Line2D.Double(getX() + getWidth()*0.2, getY() + 0.35 * getHeight(), getX() + getWidth() * 0.8, getY() + 0.35 * getHeight()));
-        g.draw(new java.awt.geom.Line2D.Double(getX() + getWidth()*0.2, getY() + 0.65 * getHeight(), getX() + getWidth() * 0.8, getY() + 0.65 * getHeight()));
+        g.setFont(new Font(f.getFontName(), f.getStyle(),
+                (int) (f.getSize() * relativeFontSize)));
+        if (textVisible)
+            g.drawString(getNodeName(), (float) (getX() + getWidth()),
+                    (float) getY());
+        g.draw(new java.awt.geom.Line2D.Double(getX() + getWidth() * 0.2,
+                getY() + 0.35 * getHeight(), getX() + getWidth() * 0.8, getY()
+                        + 0.35 * getHeight()));
+        g.draw(new java.awt.geom.Line2D.Double(getX() + getWidth() * 0.2,
+                getY() + 0.65 * getHeight(), getX() + getWidth() * 0.8, getY()
+                        + 0.65 * getHeight()));
         g.setFont(f);
     }
 }

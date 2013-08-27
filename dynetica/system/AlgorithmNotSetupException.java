@@ -1,4 +1,3 @@
-
 /**
  * AlgorithmNotSetupException.java
  *
@@ -9,13 +8,14 @@
  * @version 0.01
  */
 package dynetica.system;
+
 public class AlgorithmNotSetupException extends Exception {
-    
+
     public AlgorithmNotSetupException() {
-	
+
     }
-    
+
     public AlgorithmNotSetupException(String message) {
-	super(message);
+        super(message);
     }
 } // AlgorithmNotSetupException

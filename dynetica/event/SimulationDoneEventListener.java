@@ -7,11 +7,10 @@
 package dynetica.event;
 
 /**
- *
+ * 
  * @author Lingchong You
  * @version 0.1
  */
 public interface SimulationDoneEventListener extends java.util.EventListener {
     public void simulationDone(SimulationDoneEvent e);
 }
-

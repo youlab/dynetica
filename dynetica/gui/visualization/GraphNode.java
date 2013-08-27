@@ -7,14 +7,14 @@
 package dynetica.gui.visualization;
 
 /**
- *
- * @author  Lingchong You
+ * 
+ * @author Lingchong You
  * @version 0.1
  */
-public interface GraphNode extends dynetica.entity.Editable{
+public interface GraphNode extends dynetica.entity.Editable {
     String getNodeName();
-    void setLocation(double x, double y);
-   // void draw(java.awt.Graphics2D g);
-   // void redraw();
-}
 
+    void setLocation(double x, double y);
+    // void draw(java.awt.Graphics2D g);
+    // void redraw();
+}

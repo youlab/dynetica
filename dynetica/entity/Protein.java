@@ -15,11 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 package dynetica.entity;
+
 import dynetica.system.GeneticSystem;
 import java.util.*;
 
 public class Protein extends LinearSubstance {
     private static int proteinIndex = 0;
+
     /**
      * Protein class
      */
@@ -27,19 +29,22 @@ public class Protein extends LinearSubstance {
     public Protein() {
         this("Protein" + proteinIndex++);
     }
-    public Protein(String name) { 
-        this(name, null); 
+
+    public Protein(String name) {
+        this(name, null);
     }
+
     public Protein(String name, GeneticSystem system) {
         this(name, system, 0, 0);
     }
+
     public Protein(String name, GeneticSystem system, int start, int end) {
-	super(name, system, start, end);
+        super(name, system, start, end);
         setVisible(false);
     }
 
     public Protein(Gene g) {
-	this(g.getProteinName(), g.getGeneticSystem(), g.getStart(), g.getEnd());
+        this(g.getProteinName(), g.getGeneticSystem(), g.getStart(), g.getEnd());
     }
-    
+
 }

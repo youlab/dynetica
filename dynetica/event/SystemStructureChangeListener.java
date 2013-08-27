@@ -7,11 +7,10 @@
 package dynetica.event;
 
 /**
- *
- * @author  You
- * @version 
+ * 
+ * @author You
+ * @version
  */
-public interface SystemStructureChangeListener extends java.util.EventListener{
+public interface SystemStructureChangeListener extends java.util.EventListener {
     public void systemStructureChanged(SystemStructureChangeEvent e);
 }
-

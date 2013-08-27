@@ -9,16 +9,16 @@
  */
 package dynetica.expression;
 
-public class Sum extends SimpleOperator{
-    
+public class Sum extends SimpleOperator {
+
     public Sum(GeneralExpression a, GeneralExpression b) {
-	super('+', a, b);
-	type = ExpressionConstants.SUM;
+        super('+', a, b);
+        type = ExpressionConstants.SUM;
     }
 
     @Override
     public void compute() {
-	value = a.getValue() + b.getValue();
+        value = a.getValue() + b.getValue();
     }
-    
+
 } // Sum

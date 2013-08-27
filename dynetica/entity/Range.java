@@ -7,16 +7,17 @@
  *  @author email: you@cae.wisc.edu
  *  @version 0.01
  */
- /**   This program is free software; you can redistribute it and/or modify 
-  *   it under the terms of the GNU General Public License as published by 
-  *   the Free Software Foundation; either version 2 of the License, or   
-  *   (at your option) any later version.                                
-  */
+/**   This program is free software; you can redistribute it and/or modify 
+ *   it under the terms of the GNU General Public License as published by 
+ *   the Free Software Foundation; either version 2 of the License, or   
+ *   (at your option) any later version.                                
+ */
 package dynetica.entity;
+
 public interface Range {
     /**
-     * provides a common interface for all objects which can be specified by
-     * a start point and an end point.      
+     * provides a common interface for all objects which can be specified by a
+     * start point and an end point.
      */
 
     /**
@@ -30,10 +31,9 @@ public interface Range {
     void setStart(int start);
 
     /**
-     * aligns the range with the start point reset to a new position
-     * (optional)
+     * aligns the range with the start point reset to a new position (optional)
      */
-    void align(int start); 
+    void align(int start);
 
     /**
      * gets the end point of the range.
@@ -57,7 +57,7 @@ public interface Range {
 
     /**
      * returns true is <it> this <\it> contains r.
-     */    
+     */
     boolean contains(Range r);
 
     /**
