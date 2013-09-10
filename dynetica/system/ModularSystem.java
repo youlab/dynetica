@@ -26,12 +26,18 @@ public class ModularSystem extends ReactiveSystem {
 
     protected DefaultMutableTreeNode moduleNode = null;
 
+    protected Map moduleNodesMap = new HashMap();
+
     public ModularSystem(String name) {
         super(name);
     }
 
     public ModularSystem() {
         super();
+    }
+
+    public Map getModuleNodesMap() {
+        return moduleNodesMap;
     }
 
     @Override
@@ -177,9 +183,12 @@ public class ModularSystem extends ReactiveSystem {
                 treeModel.insertNodeInto(moduleNode, systemNode,
                         Math.min(systemNode.getChildCount(), 4));
             }
-            treeModel.insertNodeInto(
-                    new DefaultMutableTreeNode(entity.getName()), moduleNode,
+            DefaultMutableTreeNode modNode = new DefaultMutableTreeNode(
+                    entity.getName());
+            treeModel.insertNodeInto(modNode, moduleNode,
                     moduleNode.getChildCount());
+            moduleNodesMap.put(entity, modNode);
+
             return true;
 
         } else
@@ -188,25 +197,34 @@ public class ModularSystem extends ReactiveSystem {
 
     public boolean removeEntityFromTreeModel(Entity entity) {
         Enumeration e;
+        List mainNodes = new ArrayList();
+        mainNodes.add(systemNode);
         if (entity instanceof Substance) {
-            if (entity instanceof ExpressionVariable)
+            if (entity instanceof ExpressionVariable) {
                 e = expressionNode.children();
-            else
+                mainNodes.add(expressionNode);
+            } else {
                 e = substanceNode.children();
+                mainNodes.add(substanceNode);
+            }
         }
 
         else if (entity instanceof Progressive) {
             e = progressiveNode.children();
+            mainNodes.add(progressiveNode);
         }
 
         else if (entity instanceof Equilibrated) {
             e = equilibratedNode.children();
+            mainNodes.add(equilibratedNode);
         }
 
         else if (entity instanceof Parameter) {
             e = parameterNode.children();
+            mainNodes.add(parameterNode);
         } else if (entity instanceof AbstractModule) {
             e = moduleNode.children();
+            mainNodes.add(moduleNode);
         } else
             return false;
 
@@ -214,7 +232,8 @@ public class ModularSystem extends ReactiveSystem {
         while (e.hasMoreElements()) {
             node = (DefaultMutableTreeNode) e.nextElement();
             String nodeName = node.getUserObject().toString();
-            if (nodeName.compareTo(entity.getName()) == 0) {
+            if (nodeName.compareTo(entity.getName()) == 0
+                    && mainNodes.contains(node.getParent())) {
                 TreeNode[] pathToRoot = treeModel.getPathToRoot(node);
                 //
                 // remove the node first

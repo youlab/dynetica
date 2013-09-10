@@ -728,7 +728,7 @@ public class ModularSystemEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_duplicateItemActionPerformed
 
     private void addBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addBoxActionPerformed
-    // TODO add your handling code here:
+        // TODO add your handling code here:
     }// GEN-LAST:event_addBoxActionPerformed
 
     private void newExpressionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newExpressionItemActionPerformed
@@ -989,7 +989,7 @@ public class ModularSystemEditor extends javax.swing.JPanel {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
                 .getLastSelectedPathComponent();
-        if (node != null && node.isLeaf()) {
+        if (node != null) {
             String entityName = (String) (node.getUserObject());
             Entity ent = system.get(entityName);
             if (ent instanceof AbstractModule) {
@@ -1003,7 +1003,7 @@ public class ModularSystemEditor extends javax.swing.JPanel {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) systemTree
                 .getLastSelectedPathComponent();
-        if (node != null && node.isLeaf()) {
+        if (node != null) {
             String entityName = (String) (node.getUserObject());
             Entity ent = system.get(entityName);
             if (ent instanceof AbstractModule) {

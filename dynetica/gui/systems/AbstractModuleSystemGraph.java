@@ -77,6 +77,8 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
 
     AbstractNode currentNode = null;
 
+    // Added by Kanishk Asthana 28 August 2013 10:06pm
+    AbstractNode currentHoverNode = null;
     Graphics2D graph;
 
     //
@@ -263,6 +265,33 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
             }
         }
 
+        for (int i = 0; i < dottedsubstanceNodes.length; i++) {
+            if (((AbstractNode) (dottedsubstanceNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (dottedsubstanceNodes[i]);
+                node.setSelected(true);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < dottedreactionNodes.length; i++) {
+            if (((AbstractNode) (dottedreactionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (dottedreactionNodes[i]);
+                node.setSelected(true);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < dottedexpressionNodes.length; i++) {
+            if (((AbstractNode) (dottedexpressionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) dottedexpressionNodes[i];
+                node.setSelected(true);
+                return node;
+            }
+        }
+
         return null;
     }
 
@@ -304,8 +333,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
         expressionNodes = expressionNodeMap.values().toArray();
         expressionNodesForSuperSystem = expressionNodeMapForSuperSystem
                 .values().toArray();
-        dottedexpressionNodes = dottedexpressionNodeMap.values().toArray();
-        dottedsubstanceNodes = dottedsubstanceNodeMap.values().toArray();
 
         dynetica.reaction.Reaction r;
 
@@ -330,6 +357,125 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
         reactionNodes = reactionNodeMap.values().toArray();
         reactionNodesForSuperSystem = reactionNodeMapForSuperSystem.values()
                 .toArray();
+
+        for (int i = 0; i < reactionNodes.length; i++) {
+            RNode rn = (RNode) reactionNodes[i];
+
+            java.util.List reactants = rn.getReaction().getReactants();
+            java.util.List products = rn.getReaction().getProducts();
+            java.util.List catalysts = rn.getReaction().getCatalysts();
+
+            for (int j = 0; j < reactants.size(); j++) {
+                Substance sub = (Substance) (reactants.get(j));
+                AbstractNode sn = (AbstractNode) sub.getNode();
+                if (sn != null) {
+                    if (sub.getSystem().equals(system) == false
+                            && ((AbstractModule) system).showConnections() == true) {
+                        dottedsubstanceNodeMap.put(sub, sn);
+                    }
+
+                }
+            }
+            for (int j = 0; j < products.size(); j++) {
+                Substance sub = (Substance) (products.get(j));
+                AbstractNode sn = (AbstractNode) sub.getNode();
+                if (sn != null) {
+                    if (sub.getSystem().equals(system) == false
+                            && ((AbstractModule) system).showConnections() == true) {
+                        dottedsubstanceNodeMap.put(sub, sn);
+                    }
+
+                }
+
+            }
+
+            for (int j = 0; j < catalysts.size(); j++) {
+                Substance sub = (Substance) (catalysts.get(j));
+                AbstractNode sn = (AbstractNode) sub.getNode();
+                if (sn != null) {
+                    if (sub.getSystem().equals(system) == false
+                            && ((AbstractModule) system).showConnections() == true) {
+                        dottedsubstanceNodeMap.put(sub, sn);
+                    }
+
+                }
+            }
+
+        }
+
+        for (int i = 0; i < expressionNodes.length; i++) {
+            ENode en = (ENode) expressionNodes[i];
+            if (en != null && en.getEntity().getSystem().equals(system)) {
+
+                java.util.List substances = ((ExpressionVariable) (en
+                        .getEntity())).getSubstances();
+
+                for (int j = 0; j < substances.size(); j++) {
+                    Substance sub = (Substance) (substances.get(j));
+                    AbstractNode sn = (AbstractNode) sub.getNode();
+                    if (sn != null) {
+                        if (sub.getSystem().equals(system) == false
+                                && ((AbstractModule) system).showConnections() == true) {
+                            dottedsubstanceNodeMap.put(sub, sn);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < reactionNodesForSuperSystem.length; i++) {
+
+            RNode rn = (RNode) reactionNodesForSuperSystem[i];
+
+            java.util.List reactants = rn.getReaction().getReactants();
+            java.util.List products = rn.getReaction().getProducts();
+            java.util.List catalysts = rn.getReaction().getCatalysts();
+
+            for (int j = 0; j < reactants.size(); j++) {
+                Substance sub = (Substance) (reactants.get(j));
+                if (sub.getSystem().equals(system) == true
+                        && ((AbstractModule) system).showConnections() == true) {
+                    dottedreactionNodeMap.put(rn.getReaction(), rn);
+                }
+            }
+
+            for (int j = 0; j < products.size(); j++) {
+                Substance sub = (Substance) products.get(j);
+                if (sub.getSystem().equals(system) == true
+                        && ((AbstractModule) system).showConnections() == true) {
+                    dottedreactionNodeMap.put(rn.getReaction(), rn);
+                }
+            }
+            for (int j = 0; j < catalysts.size(); j++) {
+                Substance sub = (Substance) (catalysts.get(j));
+                if (sub.getSystem().equals(system) == true
+                        && ((AbstractModule) system).showConnections() == true) {
+                    dottedreactionNodeMap.put(rn.getReaction(), rn);
+                }
+            }
+
+        }
+
+        for (int i = 0; i < expressionNodesForSuperSystem.length; i++) {
+            ENode en = (ENode) expressionNodesForSuperSystem[i];
+            if (en != null) {
+
+                java.util.List substances = ((ExpressionVariable) (en
+                        .getEntity())).getSubstances();
+
+                for (int j = 0; j < substances.size(); j++) {
+                    Substance sub = (Substance) (substances.get(j));
+                    if (sub.getSystem().equals(system) == true
+                            && ((AbstractModule) system).showConnections() == true) {
+                        dottedexpressionNodeMap.put(en.getEntity(), en);
+                    }
+
+                }
+            }
+        }
+
+        dottedexpressionNodes = dottedexpressionNodeMap.values().toArray();
+        dottedsubstanceNodes = dottedsubstanceNodeMap.values().toArray();
         dottedreactionNodes = dottedreactionNodeMap.values().toArray();
 
         // Kanishk Asthana
@@ -628,7 +774,7 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
             AbstractNode n = (AbstractNode) substanceNodes[i];
             n.draw(g2);
         }
-
+        g2.setColor(Color.GRAY);
         for (int i = 0; i < dottedsubstanceNodes.length; i++) {
             AbstractNode n = (AbstractNode) dottedsubstanceNodes[i];
             n.draw(g2);
@@ -639,6 +785,7 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
             ((AbstractNode) (expressionNodes[i])).draw(g2);
         }
 
+        g2.setColor(Color.GRAY);
         for (int i = 0; i < dottedexpressionNodes.length; i++) {
             ((AbstractNode) (dottedexpressionNodes[i])).draw(g2);
         }
@@ -647,6 +794,7 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
         for (int i = 0; i < reactionNodes.length; i++)
             ((AbstractNode) (reactionNodes[i])).draw(g2);
 
+        g2.setColor(Color.GRAY);
         for (int i = 0; i < dottedreactionNodes.length; i++)
             ((AbstractNode) (dottedreactionNodes[i])).draw(g2);
 
@@ -708,20 +856,19 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                     if (sn != null) {
                         double x2 = 0.0;
                         double y2 = layout.height;
-                        new ArrowedLine(x2, y2, x1, y1, layout.arrowSize, 0.4,
-                                drawArrows, false).draw(g);
+                        if (((AbstractModule) system).showImmigrants() == true)
+                            new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
+                                    0.4, drawArrows, false).draw(g);
                     }
 
-                } else {
+                }
+
+                else {
                     if (sn != null) {
                         double x2 = sn.getCenterX();
                         double y2 = sn.getCenterY();
                         new ArrowedLine(x2, y2, x1, y1, layout.arrowSize, 0.4,
                                 drawArrows, true).draw(g);
-                        dottedsubstanceNodeMap.put(s, sn);
-                        dottedsubstanceNodes = dottedsubstanceNodeMap.values()
-                                .toArray();
-
                     }
                 }
             }
@@ -742,8 +889,9 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                     if (sn != null) {
                         double x2 = 0.0;
                         double y2 = 0.0;
-                        new ArrowedLine(x1, y1, x2, y2, layout.arrowSize, 0.4,
-                                drawArrows, false).draw(g);
+                        if (((AbstractModule) system).showImmigrants() == true)
+                            new ArrowedLine(x1, y1, x2, y2, layout.arrowSize,
+                                    0.4, drawArrows, false).draw(g);
                     }
                 }
 
@@ -753,9 +901,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         double y2 = sn.getCenterY();
                         new ArrowedLine(x1, y1, x2, y2, layout.arrowSize, 0.4,
                                 drawArrows, true).draw(g);
-                        dottedsubstanceNodeMap.put(s, sn);
-                        dottedsubstanceNodes = dottedsubstanceNodeMap.values()
-                                .toArray();
                     }
                 }
 
@@ -779,8 +924,9 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                     if (sn != null) {
                         double x2 = layout.width;
                         double y2 = 0.0;
-                        new ArrowedLine(x2, y2, x1, y1, layout.arrowSize, 0.4,
-                                drawArrows, false).draw(g);
+                        if (((AbstractModule) system).showImmigrants() == true)
+                            new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
+                                    0.4, drawArrows, false).draw(g);
                     }
                 }
 
@@ -790,11 +936,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         double y2 = sn.getCenterY();
                         new ArrowedLine(x2, y2, x1, y1, layout.arrowSize, 0.4,
                                 drawArrows, true).draw(g);
-
-                        dottedsubstanceNodeMap.put(s, sn);
-                        dottedsubstanceNodes = dottedsubstanceNodeMap.values()
-                                .toArray();
-
                     }
                 }
 
@@ -828,8 +969,10 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         if (sn != null) {
                             double x2 = layout.width;
                             double y2 = layout.height;
-                            new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
-                                    0.4, drawArrows, false).draw(g);
+                            if (((AbstractModule) system).showImmigrants() == true)
+                                new ArrowedLine(x2, y2, x1, y1,
+                                        layout.arrowSize, 0.4, drawArrows,
+                                        false).draw(g);
                         }
 
                     } else {
@@ -838,10 +981,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                             double y2 = sn.getCenterY();
                             new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
                                     0.4, drawArrows, true).draw(g);
-
-                            dottedsubstanceNodeMap.put(s, sn);
-                            dottedsubstanceNodes = dottedsubstanceNodeMap
-                                    .values().toArray();
 
                         }
                     }
@@ -875,8 +1014,10 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         if (sn != null) {
                             double x2 = sn.getCenterX();
                             double y2 = sn.getCenterY();
-                            new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
-                                    0.4, drawArrows, false).draw(g);
+                            if (((AbstractModule) system).showImmigrants() == true)
+                                new ArrowedLine(x2, y2, x1, y1,
+                                        layout.arrowSize, 0.4, drawArrows,
+                                        false).draw(g);
                         }
                     } else {
                         x1 = rn.getCenterX();
@@ -886,9 +1027,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                             double y2 = sn.getCenterY();
                             new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
                                     0.4, drawArrows, true).draw(g);
-                            dottedreactionNodeMap.put(rn.getReaction(), rn);
-                            dottedreactionNodes = dottedreactionNodeMap
-                                    .values().toArray();
 
                         }
 
@@ -896,6 +1034,7 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                 }
 
             }
+
             g.setColor(productLineColor);
 
             for (int j = 0; j < products.size(); j++) {
@@ -909,8 +1048,10 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         if (sn != null) {
                             double x2 = sn.getCenterX();
                             double y2 = sn.getCenterY();
-                            new ArrowedLine(x1, y1, x2, y2, layout.arrowSize,
-                                    0.4, drawArrows, false).draw(g);
+                            if (((AbstractModule) system).showImmigrants() == true)
+                                new ArrowedLine(x1, y1, x2, y2,
+                                        layout.arrowSize, 0.4, drawArrows,
+                                        false).draw(g);
                         }
                     } else {
                         x1 = rn.getCenterX();
@@ -920,10 +1061,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                             double y2 = sn.getCenterY();
                             new ArrowedLine(x1, y1, x2, y2, layout.arrowSize,
                                     0.4, drawArrows, true).draw(g);
-                            dottedreactionNodeMap.put(rn.getReaction(), rn);
-                            dottedreactionNodes = dottedreactionNodeMap
-                                    .values().toArray();
-
                         }
 
                     }
@@ -943,8 +1080,10 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                         if (sn != null) {
                             double x2 = sn.getCenterX();
                             double y2 = sn.getCenterY();
-                            new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
-                                    0.4, drawArrows, false).draw(g);
+                            if (((AbstractModule) system).showImmigrants() == true)
+                                new ArrowedLine(x2, y2, x1, y1,
+                                        layout.arrowSize, 0.4, drawArrows,
+                                        false).draw(g);
                         }
                     } else {
                         x1 = rn.getCenterX();
@@ -954,10 +1093,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                             double y2 = sn.getCenterY();
                             new ArrowedLine(x2, y2, x1, y1, layout.arrowSize,
                                     0.4, drawArrows, true).draw(g);
-                            dottedreactionNodeMap.put(rn.getReaction(), rn);
-                            dottedreactionNodes = dottedreactionNodeMap
-                                    .values().toArray();
-
                         }
 
                     }
@@ -985,9 +1120,11 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                                 if (sn != null) {
                                     double x2 = sn.getCenterX();
                                     double y2 = sn.getCenterY();
-                                    new ArrowedLine(x2, y2, x1, y1,
-                                            layout.arrowSize, 0.4, drawArrows,
-                                            false).draw(g);
+                                    if (((AbstractModule) system)
+                                            .showImmigrants() == true)
+                                        new ArrowedLine(x2, y2, x1, y1,
+                                                layout.arrowSize, 0.4,
+                                                drawArrows, false).draw(g);
                                 }
                             } else {
                                 x1 = en.getCenterX();
@@ -998,11 +1135,6 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                                     new ArrowedLine(x2, y2, x1, y1,
                                             layout.arrowSize, 0.4, drawArrows,
                                             true).draw(g);
-                                    dottedexpressionNodeMap.put(en.getEntity(),
-                                            en);
-                                    dottedexpressionNodes = dottedexpressionNodeMap
-                                            .values().toArray();
-
                                 }
 
                             }
@@ -1455,7 +1587,9 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
                     // in a circle
                     x = -1.0 * x;
 
-                    if (currentNode.isSelected()) {
+                    if (currentNode.isSelected()
+                            && currentNode.getEntity().getSystem()
+                                    .equals(system)) {
                         removeGesture();
                         currentNode.setSelected(false);
                         System.out.println("Addition is only once!");
@@ -1479,9 +1613,79 @@ public class AbstractModuleSystemGraph extends javax.swing.JPanel implements
         }
 
         public void mouseMoved(MouseEvent e) {
+            AbstractNode hoverNode = getHoverNode(e);
+
+            if (hoverNode != null) {
+                if (currentHoverNode == null) {
+                    currentHoverNode = hoverNode;
+                    currentHoverNode.drawInformationBox(true);
+                    repaint();
+                    // System.out.println("This is executed once.");
+                }
+            } else {
+                if (currentHoverNode != null) {
+                    currentHoverNode.drawInformationBox(false);
+                    currentHoverNode = null;
+                    repaint();
+                    // System.out.println("This is also executed only once!");
+                }
+            }
 
         }
 
+    }
+
+    private AbstractNode getHoverNode(MouseEvent e) {
+        AbstractNode node = null;
+        for (int i = 0; i < substanceNodes.length; i++) {
+            if (((AbstractNode) (substanceNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (substanceNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < reactionNodes.length; i++) {
+            if (((AbstractNode) (reactionNodes[i])).contains((double) e.getX(),
+                    (double) e.getY())) {
+                node = (AbstractNode) (reactionNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < expressionNodes.length; i++) {
+            if (((AbstractNode) (expressionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) expressionNodes[i];
+                return node;
+            }
+        }
+
+        for (int i = 0; i < dottedsubstanceNodes.length; i++) {
+            if (((AbstractNode) (dottedsubstanceNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (dottedsubstanceNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < dottedreactionNodes.length; i++) {
+            if (((AbstractNode) (dottedreactionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (dottedreactionNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < dottedexpressionNodes.length; i++) {
+            if (((AbstractNode) (dottedexpressionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) dottedexpressionNodes[i];
+                return node;
+            }
+        }
+
+        return null;
     }
 
     protected void removeGesture() {

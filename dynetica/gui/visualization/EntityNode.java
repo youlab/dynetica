@@ -26,6 +26,7 @@ abstract public class EntityNode implements AbstractNode {
     protected dynetica.entity.Entity entity;
     protected boolean textVisible = true;
     protected boolean selected = false;
+    protected boolean drawInformationBox = false;
 
     /** Creates new EntityNode */
     public EntityNode(dynetica.entity.Entity entity) {
@@ -76,5 +77,15 @@ abstract public class EntityNode implements AbstractNode {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    // Added by Kanishk Asthana 28 August 2013 9:54pm
+    public void drawInformationBox(boolean draw) {
+        drawInformationBox = draw;
+    }
+
+    // Added by Kanishk Asthana 28 August 2013 9:54pm
+    public boolean showInformationBox() {
+        return drawInformationBox;
     }
 }

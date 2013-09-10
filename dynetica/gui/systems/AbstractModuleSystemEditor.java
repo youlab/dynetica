@@ -74,6 +74,25 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         systemGraph = new AbstractModuleSystemGraph(system);
         sourceEditor = new SourceEditor(system);
 
+        if (((AbstractModule) system).showConnections() == false) {
+            showImmigrantsButton.setVisible(true);
+
+            if (((AbstractModule) system).showImmigrants() == true)
+                showImmigrantsButton.setText("Hide Global Ties");
+            else
+                showImmigrantsButton.setText("Show Global Ties");
+
+            showConnectionsButton.setText("Show Connections");
+        } else {
+            showImmigrantsButton.setVisible(false);
+            showConnectionsButton.setText("Hide Connections");
+        }
+
+        if (((AbstractModule) system).isPopedOut() == true)
+            popOutButton.setText("Pop In");
+        else
+            popOutButton.setText("Pop Out");
+
         systemGraphPane.setViewportView(systemGraph);
         systemGraph
                 .addSizeChangeListener(new AbstractModuleSystemGraph.SizeChangeListener() {
@@ -162,10 +181,9 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         infoButton = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        popInButton = new javax.swing.JButton();
         popOutButton = new javax.swing.JButton();
         showConnectionsButton = new javax.swing.JButton();
-        hideConnectionsButton = new javax.swing.JButton();
+        showImmigrantsButton = new javax.swing.JButton();
         systemPane = new javax.swing.JSplitPane();
         systemViewPanel = new javax.swing.JPanel();
         treeSplitPane = new javax.swing.JSplitPane();
@@ -574,19 +592,6 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
         });
         toolBar.add(deleteButton);
 
-        popInButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        popInButton.setText("PopIn");
-        popInButton.setFocusable(false);
-        popInButton
-                .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        popInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        popInButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                popInButtonActionPerformed(evt);
-            }
-        });
-        toolBar.add(popInButton);
-
         popOutButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         popOutButton.setText("PopOut");
         popOutButton.setFocusable(false);
@@ -615,20 +620,20 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
                 });
         toolBar.add(showConnectionsButton);
 
-        hideConnectionsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        hideConnectionsButton.setText("Hide Connections");
-        hideConnectionsButton.setFocusable(false);
-        hideConnectionsButton
+        showImmigrantsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        showImmigrantsButton.setText("Hide Global Ties");
+        showImmigrantsButton.setFocusable(false);
+        showImmigrantsButton
                 .setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        hideConnectionsButton
+        showImmigrantsButton
                 .setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        hideConnectionsButton
+        showImmigrantsButton
                 .addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        hideConnectionsButtonActionPerformed(evt);
+                        showImmigrantsButtonActionPerformed(evt);
                     }
                 });
-        toolBar.add(hideConnectionsButton);
+        toolBar.add(showImmigrantsButton);
 
         add(toolBar, java.awt.BorderLayout.SOUTH);
 
@@ -729,7 +734,7 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_duplicateItemActionPerformed
 
     private void addBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addBoxActionPerformed
-    // TODO add your handling code here:
+        // TODO add your handling code here:
     }// GEN-LAST:event_addBoxActionPerformed
 
     private void newExpressionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newExpressionItemActionPerformed
@@ -957,31 +962,46 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
 
     }// GEN-LAST:event_subTreeValueChanged
 
-    private void popInButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_popInButtonActionPerformed
-        ((AbstractModule) system).setPopOut(false);
-        system.fireSystemStructureChange();
-    }// GEN-LAST:event_popInButtonActionPerformed
-
     private void popOutButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_popOutButtonActionPerformed
-        ((AbstractModule) system).setPopOut(true);
+        if (((AbstractModule) system).isPopedOut() == false) {
+            ((AbstractModule) system).setPopOut(true);
+            this.popOutButton.setText("Pop In");
+        } else {
+            ((AbstractModule) system).setPopOut(false);
+            this.popOutButton.setText("Pop Out");
+        }
         system.fireSystemStructureChange();
     }// GEN-LAST:event_popOutButtonActionPerformed
 
     private void showConnectionsButtonActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_showConnectionsButtonActionPerformed
 
-        ((AbstractModule) system).setConnections(true);
+        if (((AbstractModule) system).showConnections() == false) {
+            ((AbstractModule) system).setConnections(true);
+            showConnectionsButton.setText("Hide Connections");
+            showImmigrantsButton.setVisible(false);
+        } else {
+            ((AbstractModule) system).setConnections(false);
+            showConnectionsButton.setText("Show Connections");
+            showImmigrantsButton.setVisible(true);
+        }
         system.fireSystemStructureChange();
 
     }// GEN-LAST:event_showConnectionsButtonActionPerformed
 
-    private void hideConnectionsButtonActionPerformed(
-            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_hideConnectionsButtonActionPerformed
+    private void showImmigrantsButtonActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_showImmigrantsButtonActionPerformed
 
-        ((AbstractModule) system).setConnections(false);
+        if (((AbstractModule) system).showImmigrants() == false) {
+            ((AbstractModule) system).setImmigrantsVisible(true);
+            showImmigrantsButton.setText("Hide Global Ties");
+        } else {
+            ((AbstractModule) system).setImmigrantsVisible(false);
+            showImmigrantsButton.setText("Show Global Ties");
+        }
         system.fireSystemStructureChange();
 
-    }// GEN-LAST:event_hideConnectionsButtonActionPerformed
+    }// GEN-LAST:event_showImmigrantsButtonActionPerformed
 
     private void renameEntity() {
         String newNodeName = (String) JOptionPane.showInputDialog(this,
@@ -1084,7 +1104,6 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
     private javax.swing.JMenuItem generatorItem;
     private javax.swing.JMenuItem genomeItem;
     private javax.swing.JPopupMenu genomeNodeMenu;
-    private javax.swing.JButton hideConnectionsButton;
     private javax.swing.JButton infoButton;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JTextArea informationArea;
@@ -1129,7 +1148,6 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
     private javax.swing.JMenuItem newTranslocationItem;
     private javax.swing.JMenuItem parameterItem;
     private javax.swing.JPopupMenu parameterNodeMenu;
-    private javax.swing.JButton popInButton;
     private javax.swing.JButton popOutButton;
     private javax.swing.JButton printButton;
     private javax.swing.JMenuItem progressiveItem;
@@ -1140,6 +1158,7 @@ public class AbstractModuleSystemEditor extends javax.swing.JPanel {
     private javax.swing.JMenuItem rnaItem;
     private javax.swing.JMenuItem rnapItem;
     private javax.swing.JButton showConnectionsButton;
+    private javax.swing.JButton showImmigrantsButton;
     private javax.swing.JMenuItem substanceItem;
     private javax.swing.JPopupMenu substanceNodeMenu;
     private javax.swing.JScrollPane systemGraphPane;

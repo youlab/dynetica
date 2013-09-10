@@ -52,6 +52,17 @@ public class ENode extends EntityNode {
         if (textVisible)
             g.drawString(getNodeName(), (float) (getX() + getWidth()),
                     (float) getY());
+
+        if (drawInformationBox == true) {
+            g.setColor(Color.BLACK);
+            g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f
+                    .getSize() * 1.25 * relativeFontSize)));
+            dynetica.entity.ExpressionVariable exp = (ExpressionVariable) getEntity();
+            g.drawString("Expression: " + exp.getExpressionString(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - getHeight()));
+        }
+
         g.setFont(f);
         g.setColor(c); // reset the color
 

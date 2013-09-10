@@ -79,7 +79,8 @@ public class ModularSystemGraph extends javax.swing.JPanel implements
 
     protected boolean firstTime;
     AbstractNode currentNode = null;
-
+    // Added by Kanishk Asthana 28 August 2013 10:06pm
+    AbstractNode currentHoverNode = null;
     Graphics2D graph;
 
     //
@@ -1364,7 +1365,13 @@ public class ModularSystemGraph extends javax.swing.JPanel implements
             node.setChangeRatio(ratio);
         }
 
+        for (int i = 0; i < moduleNodes.length; i++) {
+            node = (AbstractNode) (moduleNodes[i]);
+            node.setChangeRatio(ratio);
+        }
+
         fireSizeChange();
+
     }
 
     public class GraphMouseListener implements MouseListener {
@@ -1438,10 +1445,15 @@ public class ModularSystemGraph extends javax.swing.JPanel implements
                     AbstractModule mod = (AbstractModule) ((AbstractNode) moduleNodes[i])
                             .getEntity();
                     Entity entityToTransfer = currentNode.getEntity();
-
+                    AbstractSystem transferingFromSystem = currentNode
+                            .getEntity().getSystem();
                     entityToTransfer.setSystem(mod);
-                    ((ModularSystem) system)
-                            .removeEntityFromTreeModel(entityToTransfer);
+                    if (transferingFromSystem instanceof AbstractModule)
+                        ((AbstractModule) transferingFromSystem)
+                                .removeEntityFromTreeModel(entityToTransfer);
+                    else if (transferingFromSystem instanceof ModularSystem)
+                        ((ModularSystem) transferingFromSystem)
+                                .removeEntityFromTreeModel(entityToTransfer);
                     mod.insertEntityIntoTreeModel(entityToTransfer);
                     // Setting a negative value of X repositions the entity
                     // automatically
@@ -1489,9 +1501,63 @@ public class ModularSystemGraph extends javax.swing.JPanel implements
         }
 
         public void mouseMoved(MouseEvent e) {
+            AbstractNode hoverNode = getHoverNode(e);
+
+            if (hoverNode != null) {
+                if (currentHoverNode == null) {
+                    currentHoverNode = hoverNode;
+                    currentHoverNode.drawInformationBox(true);
+                    repaint();
+                    // System.out.println("This is executed once.");
+                }
+            } else {
+                if (currentHoverNode != null) {
+                    currentHoverNode.drawInformationBox(false);
+                    currentHoverNode = null;
+                    repaint();
+                    // System.out.println("This is also executed only once!");
+                }
+            }
 
         }
 
+    }
+
+    private AbstractNode getHoverNode(MouseEvent e) {
+        AbstractNode node = null;
+        for (int i = 0; i < substanceNodes.length; i++) {
+            if (((AbstractNode) (substanceNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) (substanceNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < reactionNodes.length; i++) {
+            if (((AbstractNode) (reactionNodes[i])).contains((double) e.getX(),
+                    (double) e.getY())) {
+                node = (AbstractNode) (reactionNodes[i]);
+                return node;
+            }
+        }
+
+        for (int i = 0; i < expressionNodes.length; i++) {
+            if (((AbstractNode) (expressionNodes[i])).contains(
+                    (double) e.getX(), (double) e.getY())) {
+                node = (AbstractNode) expressionNodes[i];
+                return node;
+            }
+        }
+
+        for (int i = 0; i < moduleNodes.length; i++) {
+            if (((AbstractNode) (moduleNodes[i])).contains((double) e.getX(),
+                    (double) e.getY())) {
+                node = (AbstractNode) moduleNodes[i];
+                return node;
+            }
+        }
+
+        return null;
     }
 
     public int print(Graphics g, PageFormat pf, int pi) throws PrinterException {

@@ -52,6 +52,8 @@ public class ModularSystemManager extends javax.swing.JFrame {
         toolBarPanel.setVisible(true);
         fileToolBar.setVisible(true);
         simulationToolBar.setVisible(true);
+        mergeButton.setVisible(false);
+        addAsModuleButton.setVisible(false);
         mergeButton.setEnabled(false);
         addAsModuleButton.setEnabled(false);
         setSize(600, 500);
@@ -61,16 +63,26 @@ public class ModularSystemManager extends javax.swing.JFrame {
 
                 if (index >= 0) {
                     currentSystem = (ReactiveSystem) (openedSystems.get(index));
+                    currentSystemType.setText("System Type: ReactiveSystem");
+                    if (currentSystem instanceof ModularSystem)
+                        currentSystemType.setText("System Type: ModularSystem");
+                    else if (currentSystem instanceof GeneticSystem)
+                        currentSystemType.setText("System Type: GeneticSystem");
                 }
 
                 else {
                     currentSystem = null;
+                    currentSystemType.setText("System Type:");
                 }
 
                 if (currentSystem instanceof ModularSystem) {
+                    mergeButton.setVisible(true);
+                    addAsModuleButton.setVisible(true);
                     mergeButton.setEnabled(true);
                     addAsModuleButton.setEnabled(true);
                 } else {
+                    mergeButton.setVisible(false);
+                    addAsModuleButton.setVisible(false);
                     mergeButton.setEnabled(false);
                     addAsModuleButton.setEnabled(false);
                 }
@@ -173,6 +185,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         algorithmBox = new javax.swing.JComboBox();
         systemPane = new javax.swing.JTabbedPane();
+        currentSystemType = new javax.swing.JLabel();
 
         fileMenu.setMnemonic('F');
         fileMenu.setText("File");
@@ -820,6 +833,11 @@ public class ModularSystemManager extends javax.swing.JFrame {
             }
         });
         getContentPane().add(systemPane, java.awt.BorderLayout.CENTER);
+
+        currentSystemType.setText("System Type:");
+        currentSystemType
+                .setToolTipText("If current system is a ReactiveSystem; it can be used to create a new Module.");
+        getContentPane().add(currentSystemType, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
     private void sdeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sdeItemActionPerformed
@@ -1456,12 +1474,22 @@ public class ModularSystemManager extends javax.swing.JFrame {
                 public void systemStateChanged(SystemStateChangeEvent e) {
                     saveButton.setEnabled(true);
                     saveItem.setEnabled(true);
+                    currentSystemType.setText("System Type: ReactiveSystem");
                     if (currentSystem instanceof ModularSystem) {
+                        mergeButton.setVisible(true);
+                        addAsModuleButton.setVisible(true);
                         mergeButton.setEnabled(true);
                         addAsModuleButton.setEnabled(true);
+
+                        currentSystemType.setText("System Type: ModularSystem");
                     } else {
+                        mergeButton.setVisible(false);
+                        addAsModuleButton.setVisible(false);
                         mergeButton.setEnabled(false);
                         addAsModuleButton.setEnabled(false);
+                        if (currentSystem instanceof GeneticSystem)
+                            currentSystemType
+                                    .setText("System Type: GeneticSystem");
                     }
                 }
             });
@@ -1704,6 +1732,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
     private javax.swing.JMenuItem bssaMenuItem;
     private javax.swing.JButton closeButton;
     private javax.swing.JMenuItem closeItem;
+    private javax.swing.JLabel currentSystemType;
     private javax.swing.JMenuItem directMethodItem;
     private javax.swing.JMenuItem editMath;
     private javax.swing.JMenu editMenu;

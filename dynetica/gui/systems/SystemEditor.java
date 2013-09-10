@@ -671,7 +671,7 @@ public class SystemEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_duplicateItemActionPerformed
 
     private void addBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addBoxActionPerformed
-    // TODO add your handling code here:
+        // TODO add your handling code here:
     }// GEN-LAST:event_addBoxActionPerformed
 
     private void newExpressionItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newExpressionItemActionPerformed

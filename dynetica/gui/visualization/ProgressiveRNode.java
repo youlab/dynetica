@@ -8,6 +8,7 @@ package dynetica.gui.visualization;
 
 import dynetica.gui.visualization.ArrowedLine;
 import java.awt.*;
+import dynetica.reaction.*;//Kanishk Asthana August 28 2013 11:55pm
 
 /**
  * 
@@ -46,6 +47,20 @@ public class ProgressiveRNode extends RNode {
         new ArrowedLine(getX() + getWidth() * 0.15, getCenterY(), getX()
                 + getWidth() * 0.85, getCenterY(), height / 2, 0.4, 1.0, true)
                 .draw(g);
+
+        if (drawInformationBox == true) {
+            ProgressiveReaction rx = (ProgressiveReaction) getEntity();
+            g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f
+                    .getSize() * 1.25 * relativeFontSize)));
+            g.setColor(Color.BLACK);
+            g.drawString("Stoichiometry: " + rx.getStoichiometry(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - 2 * getHeight()));
+            g.drawString("Kinetics: " + rx.getKinetics(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - getHeight()));
+        }
+
         g.setFont(f);
         // Added by Kanishk Asthana 23 July 2013 to reset the color
         g.setColor(c);

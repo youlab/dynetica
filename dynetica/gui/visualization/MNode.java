@@ -12,6 +12,8 @@ import java.awt.geom.*;
  */
 public class MNode extends EntityNode {
 
+    double relativeNodeSize = 1.0;
+
     public MNode(AbstractModule m) {
         super(m);
         width = 45;
@@ -56,7 +58,7 @@ public class MNode extends EntityNode {
 
         java.awt.BasicStroke stroke = (BasicStroke) g.getStroke();
 
-        g.setStroke(new java.awt.BasicStroke(3.0f));
+        g.setStroke(new java.awt.BasicStroke((float) relativeNodeSize * 3.0f));
 
         g.setColor(g.getBackground());
 
@@ -81,7 +83,7 @@ public class MNode extends EntityNode {
         // very interesting!
 
         // Coordinates for Internal Circles
-        double len = 15.0;
+        double len = 15.0 * relativeNodeSize;
 
         double x1 = getCenterX();
         double y1 = getCenterY() - len;
@@ -93,7 +95,7 @@ public class MNode extends EntityNode {
         double x3 = getCenterX() - len * rootThreeByTwo;
         double y3 = getCenterY() + len / 2;
 
-        g.setStroke(new java.awt.BasicStroke(1.5f));
+        g.setStroke(new java.awt.BasicStroke((float) relativeNodeSize * 1.5f));
         g.setColor(new Color(0.12f, 0.68f, 0.26f));
         g.draw(new Line2D.Double(x1, y1, x2, y2));
         g.draw(new Line2D.Double(x2, y2, x3, y3));
@@ -104,9 +106,12 @@ public class MNode extends EntityNode {
         else
             g.setColor(new Color(0.26f, 0.10f, 0.92f));
 
-        g.fill(new Ellipse2D.Double(x1 - 5, y1 - 5, 10, 10));
-        g.fill(new Ellipse2D.Double(x2 - 5, y2 - 5, 10, 10));
-        g.fill(new Ellipse2D.Double(x3 - 5, y3 - 5, 10, 10));
+        g.fill(new Ellipse2D.Double(x1 - 5, y1 - 5, 10 * relativeNodeSize,
+                10 * relativeNodeSize));
+        g.fill(new Ellipse2D.Double(x2 - 5, y2 - 5, 10 * relativeNodeSize,
+                10 * relativeNodeSize));
+        g.fill(new Ellipse2D.Double(x3 - 5, y3 - 5, 10 * relativeNodeSize,
+                10 * relativeNodeSize));
 
         g.setFont(f);
         g.setColor(c); // reset the color
@@ -122,7 +127,12 @@ public class MNode extends EntityNode {
     }
 
     public void setChangeRatio(double r) {
-        super.setChangeRatio(r);
+        width *= r;
+        height *= r;
+        outlineWidth *= r;
+        interiorWidth *= r;
+        relativeFontSize *= r;
+        relativeNodeSize *= r;
         getShape().setFrame(getX(), getY(), width, height);
     }
 

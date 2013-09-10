@@ -50,4 +50,10 @@ public interface AbstractNode extends dynetica.entity.Editable,
     boolean isSelected();
 
     void setSelected(boolean s);
+
+    // Following methods were added by Kanishk Asthana on 28 August 2013 9:55pm
+    boolean showInformationBox();
+
+    void drawInformationBox(boolean draw);
+
 }

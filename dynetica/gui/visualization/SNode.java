@@ -19,6 +19,7 @@ import java.awt.geom.*;
 public class SNode extends EntityNode {
 
     /** Creates new SNode */
+
     public SNode(Substance s) {
         super(s);
         width = 15;
@@ -45,7 +46,13 @@ public class SNode extends EntityNode {
             g.setColor(Color.green);
         }
         g.fill(getShape());
+        g.setColor(Color.BLACK);
+        g.setStroke(new java.awt.BasicStroke(outlineWidth));
         g.draw(getShape());
+        g.setColor(c);
+        if (selected) {
+            g.setColor(Color.green);
+        }
 
         Font f = g.getFont();
         g.setFont(new Font(f.getFontName(), f.getStyle(),
@@ -53,6 +60,20 @@ public class SNode extends EntityNode {
         if (textVisible)
             g.drawString(getNodeName(), (float) (getX() + getWidth()),
                     (float) getY());
+
+        if (drawInformationBox == true) {
+            Substance sub = (Substance) getEntity();
+            g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f
+                    .getSize() * 1.25 * relativeFontSize)));
+            g.setColor(Color.BLACK);
+            g.drawString("Initial Value: " + sub.getInitialValue(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - 2 * getHeight()));
+            g.drawString("Current Value: " + sub.getValue(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - getHeight()));
+        }
+
         g.setFont(f);
         g.setColor(c); // reset the color
 

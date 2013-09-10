@@ -34,6 +34,15 @@ public class EquilibratedRNode extends RNode {
         if (textVisible)
             g.drawString(getNodeName(), (float) (getX() + getWidth()),
                     (float) getY());
+        if (drawInformationBox == true) {
+            dynetica.reaction.EquilibratedReaction rx = (dynetica.reaction.EquilibratedReaction) getEntity();
+            g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f
+                    .getSize() * 1.25 * relativeFontSize)));
+            g.setColor(Color.BLACK);
+            g.drawString("Stoichiometry: " + rx.getStoichiometry(),
+                    (float) (getX() + getWidth()),
+                    (float) (getY() - getHeight()));
+        }
         g.draw(new java.awt.geom.Line2D.Double(getX() + getWidth() * 0.2,
                 getY() + 0.35 * getHeight(), getX() + getWidth() * 0.8, getY()
                         + 0.35 * getHeight()));
