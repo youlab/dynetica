@@ -8,14 +8,24 @@
  ***************************************************************************/
 package dynetica.system;
 
+import dynetica.entity.Annotation;
+import dynetica.entity.Parameter;
 import dynetica.gui.visualization.NetworkLayout;
 import dynetica.entity.*;
 import dynetica.algorithm.*;
+import dynetica.expression.FunctionExpression;
+import dynetica.expression.GeneralExpression;
+import dynetica.expression.SimpleOperator;
 import dynetica.reaction.*;
 import dynetica.gui.*;
 import java.util.*;
 import java.io.*;
+
 import javax.swing.tree.*;
+import javax.xml.stream.XMLStreamException;
+
+import dynetica.reaction.Reaction;
+import org.sbml.jsbml.*;
 
 /**
  * The following fields are added 4/19/2005 --expresions --expressionNode
@@ -623,8 +633,146 @@ public class ReactiveSystem extends SimpleSystem {
     @Override
     public void save() {
         if (!isSaved()) {
-            super.save();
+            switch (fileType) {
+            case "dyn":
+                super.save();
+            case "sbml":
+                saveAsSBML();
+            }
         }
+    }
+
+    private void saveAsSBML() {
+        SBMLDocument doc = new SBMLDocument(2, 4);
+        Model model = doc.createModel("ReactiveSystem");
+
+        Compartment compartment = model.createCompartment("default");
+        compartment.setSize(1d);
+
+        // Add the substances (in Dynetica) to the SBML model (as Species)
+        Substance sub;
+        Species spec;
+        for (int i = 0; i < substances.size(); i++) {
+            sub = (Substance) substances.get(i);
+            spec = new Species(sub.getName());
+
+            spec.setName(sub.getName());
+            spec.setCompartment(compartment);
+
+            // not sure if I should use setInitialAmount or
+            // setInitialConcentration here - seems that it should be amount,
+            // from the values, in some example models
+            spec.setInitialAmount(sub.getInitialValue());
+
+            model.addSpecies(spec);
+        }
+
+        // Add the reactions
+        org.sbml.jsbml.Reaction reaction;
+        SpeciesReference specref;
+        ProgressiveReaction currentReaction;
+        List reactants, products;
+        GeneralExpression rateExpression;
+
+        for (int i = 0; i < progressiveReactions.size(); i++) {
+            currentReaction = (ProgressiveReaction) progressiveReactions.get(i);
+            reaction = model.createReaction(currentReaction.getName());
+
+            reactants = currentReaction.getReactants();
+            products = currentReaction.getProducts();
+
+            // Add reactants
+            for (int j = 0; j < reactants.size(); j++) {
+                specref = new SpeciesReference(
+                        model.getSpecies(((Substance) reactants.get(j))
+                                .getName()));
+                reaction.addReactant(specref);
+            }
+
+            // Add products
+            for (int j = 0; j < products.size(); j++) {
+                specref = new SpeciesReference(
+                        model.getSpecies(((Substance) products.get(j))
+                                .getName()));
+                reaction.addProduct(specref);
+            }
+
+            // Set as non-reversible
+            reaction.setReversible(false);
+
+            // TODO: Specify kinetic law
+            rateExpression = ((ProgressiveReaction) progressiveReactions.get(i))
+                    .getRateExpression();
+
+            // Approach: create an org.sbml.jsbml.KineticLaw, which inherits
+            // from org.sbml.jsbml.AbstractMathContainer, which has a setMath
+            // method. That needs to be passed an ASTNode object, which has left
+            // and right children that are also ASTNode objects - just like with
+            // GeneralExpression in Dynetica. Basically, need to traverse the
+            // GeneralExpression binary tree and copy it over to the ASTNode
+            // binary tree. rateExpression can be casted to
+            // dynetica.expression.SimpleOperator:
+            // ((dynetica.expression.SimpleOperator) rateExpression).getB()
+            // This inherits from Expression, so you can use getA and getB
+            KineticLaw kineticLaw = new KineticLaw();
+            kineticLaw
+                    .setMath(expressionToASTNode((SimpleOperator) rateExpression));
+
+            reaction.setKineticLaw(kineticLaw);
+        }
+
+        // Write to file
+
+        SBMLWriter sbmlWriter = new SBMLWriter();
+
+        try {
+            sbmlWriter.write(doc, file.getAbsolutePath());
+        } catch (SBMLException | FileNotFoundException | XMLStreamException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public ASTNode expressionToASTNode(SimpleOperator expression) {
+        ASTNode astNode = new ASTNode();
+        GeneralExpression leftNode = expression.getA();
+        GeneralExpression rightNode = expression.getB();
+
+        if (leftNode instanceof SimpleOperator)
+            astNode.addChild(expressionToASTNode((SimpleOperator) leftNode));
+        else {
+            if (leftNode instanceof Substance)
+                astNode.addChild(new ASTNode(((Substance) leftNode).getName()));
+            else
+                astNode.addChild(new ASTNode(leftNode.toString()));
+        }
+
+        if (rightNode instanceof SimpleOperator)
+            astNode.addChild(expressionToASTNode((SimpleOperator) rightNode));
+        else {
+            if (rightNode instanceof Substance)
+                astNode.addChild(new ASTNode(((Substance) rightNode).getName()));
+            else
+                astNode.addChild(new ASTNode(rightNode.toString()));
+        }
+
+        switch (expression.getClass().getSimpleName()) {
+        case "Multiply":
+            astNode.setType(ASTNode.Type.TIMES);
+            break;
+        case "Sum":
+            astNode.setType(ASTNode.Type.PLUS);
+            break;
+        case "Pow":
+            astNode.setType(ASTNode.Type.POWER);
+            break;
+        default:
+            System.out.println(expression.getClass().getName());
+            break;
+        }
+        // astNode.setType(Character.toString(expression.getOperator()));
+
+        return astNode;
     }
 
     // added 5/14/2005 LY

@@ -1629,17 +1629,16 @@ public class ModularSystemManager extends javax.swing.JFrame {
                     workDir);
             if (fileChooser.getFileFilter().equals(
                     fileChooser.getAcceptAllFileFilter())) {
-                currentSystem.saveAs(file);
+                currentSystem.saveAs(file, "dyn");
             } else {
                 String name = file.getPath();
-                String extension = "."
-                        + ((javax.swing.filechooser.FileNameExtensionFilter) fileChooser
-                                .getFileFilter()).getExtensions()[0];
+                String extension = ((javax.swing.filechooser.FileNameExtensionFilter) fileChooser
+                        .getFileFilter()).getExtensions()[0];
 
                 if (name.indexOf(extension) < 0)
-                    currentSystem.saveAs(new File(name + extension));
+                    currentSystem.saveAs(new File(name + "." + extension), extension);
                 else
-                    currentSystem.saveAs(new File(name));
+                    currentSystem.saveAs(new File(name), extension);
             }
             saveItem.setEnabled(false);
             saveButton.setEnabled(false);

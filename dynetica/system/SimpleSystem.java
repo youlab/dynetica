@@ -32,6 +32,10 @@ public class SimpleSystem extends Entity implements AbstractSystem {
     /** Holds value of property file. */
     protected File file;
 
+    /** Holds value of property file's type. */
+    /** Default value is the Dynetica file type */
+    protected String fileType = "dyn";
+
     javax.swing.event.EventListenerList listenerList = new javax.swing.event.EventListenerList();
     SystemStateChangeEvent stateChangeEvent = null;
     SystemStructureChangeEvent structureChangeEvent = null;
@@ -242,8 +246,9 @@ public class SimpleSystem extends Entity implements AbstractSystem {
         }
     }
 
-    public void saveAs(File file) {
+    public void saveAs(File file, String fileType) {
         this.file = file;
+        this.fileType = fileType;
         setSaved(false);
         save();
     }

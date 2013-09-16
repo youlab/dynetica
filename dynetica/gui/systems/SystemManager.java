@@ -1350,19 +1350,15 @@ public class SystemManager extends javax.swing.JFrame {
     private void saveAsSystem() {
         JFileChooser fileChooser = new JFileChooser(workDir);
         fileChooser.setAcceptAllFileFilterUsed(true);
+        fileChooser
+                .setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                        "Dynetica files (*.dyn)", "dyn"));
+        fileChooser
+                .addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                        "Synthetic Biology Markup Language (*.sbml)", "sbml"));
 
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.getName().endsWith(".dyn")
-                        || pathname.isDirectory();
-            }
-
-            public String getDescription() {
-                return "Dynetica files (*.dyn)";
-            }
-
-        });
         int returnVal = fileChooser.showSaveDialog(this);
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             // System.out.println(input.getParentFile().getPath());
@@ -1371,13 +1367,16 @@ public class SystemManager extends javax.swing.JFrame {
                     workDir);
             if (fileChooser.getFileFilter().equals(
                     fileChooser.getAcceptAllFileFilter()))
-                currentSystem.saveAs(file);
+                currentSystem.saveAs(file, "dyn");
             else {
                 String name = file.getPath();
+                String extension = ((javax.swing.filechooser.FileNameExtensionFilter) fileChooser
+                        .getFileFilter()).getExtensions()[0];
+
                 if (name.indexOf(".dyn") < 0)
-                    currentSystem.saveAs(new File(name + ".dyn"));
+                    currentSystem.saveAs(new File(name + "." + extension), extension);
                 else
-                    currentSystem.saveAs(new File(name));
+                    currentSystem.saveAs(new File(name), extension);
             }
             saveItem.setEnabled(false);
             saveButton.setEnabled(false);
