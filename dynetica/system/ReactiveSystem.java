@@ -633,12 +633,10 @@ public class ReactiveSystem extends SimpleSystem {
     @Override
     public void save() {
         if (!isSaved()) {
-            switch (fileType) {
-            case "dyn":
+            if (fileType.equals("dyn"))
                 super.save();
-            case "sbml":
+            else if (file.equals("sbml"))
                 saveAsSBML();
-            }
         }
     }
 
@@ -727,8 +725,11 @@ public class ReactiveSystem extends SimpleSystem {
 
         try {
             sbmlWriter.write(doc, file.getAbsolutePath());
-        } catch (SBMLException | FileNotFoundException | XMLStreamException e) {
-            // TODO Auto-generated catch block
+        } catch (SBMLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
             e.printStackTrace();
         }
     }
@@ -756,20 +757,16 @@ public class ReactiveSystem extends SimpleSystem {
                 astNode.addChild(new ASTNode(rightNode.toString()));
         }
 
-        switch (expression.getClass().getSimpleName()) {
-        case "Multiply":
+        String expressionClass = expression.getClass().getSimpleName();
+
+        if (expressionClass.equals("Multiply"))
             astNode.setType(ASTNode.Type.TIMES);
-            break;
-        case "Sum":
+        else if (expressionClass.equals("Sum"))
             astNode.setType(ASTNode.Type.PLUS);
-            break;
-        case "Pow":
+        else if (expressionClass.equals("Pow"))
             astNode.setType(ASTNode.Type.POWER);
-            break;
-        default:
+        else
             System.out.println(expression.getClass().getName());
-            break;
-        }
         // astNode.setType(Character.toString(expression.getOperator()));
 
         return astNode;
