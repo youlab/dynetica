@@ -56,7 +56,7 @@
     <Component class="javax.swing.JComboBox" name="metricSelector">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="9">
+          <StringArray count="10">
             <StringItem index="0" value="Select a metric..."/>
             <StringItem index="1" value="Final Value"/>
             <StringItem index="2" value="Time to Steady State"/>
@@ -66,6 +66,7 @@
             <StringItem index="6" value="Minimum Value"/>
             <StringItem index="7" value="Maximum Rate"/>
             <StringItem index="8" value="Range"/>
+            <StringItem index="9" value="Peak Frequency"/>
           </StringArray>
         </Property>
       </Properties>

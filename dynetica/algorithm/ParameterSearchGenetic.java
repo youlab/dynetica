@@ -2,9 +2,11 @@ package dynetica.algorithm;
 
 import dynetica.entity.*;
 import dynetica.expression.*;
+import dynetica.gui.plotting.Figure;
 import dynetica.system.*;
 import dynetica.util.Numerics;
 import java.util.*;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,6 +37,9 @@ public class ParameterSearchGenetic implements Runnable {
     int numGenerations;
     int vectorPopulationSize;
     boolean randomInitialPopulation = false;
+    
+    boolean trackMetrics = true;
+    ArrayList<Double>[] metricValues;
 
     public ParameterSearchGenetic(ReactiveSystem s, Parameter[] p,
             ArrayList<TargetObjective> to, double time, double th, int g,
@@ -53,6 +58,13 @@ public class ParameterSearchGenetic implements Runnable {
         for (int i = 0; i < searchParameters.length; i++) {
             Parameter par = searchParameters[i];
             originalParameterValues[i] = par.getValue();
+        }
+        
+        if (trackMetrics) {
+            metricValues = new ArrayList[objectives.size()];
+            for (int i = 0; i < metricValues.length; i++){
+                metricValues[i] = new ArrayList<Double>();
+            }
         }
     }
 
@@ -86,12 +98,25 @@ public class ParameterSearchGenetic implements Runnable {
 
             alphaDog = population.get(0);
             debug(alphaDog, "AlphaDog (round " + generation + ")");
+            
+            // Compute and store metrics, if enabled
+            if (trackMetrics) {
+                setParameters(alphaDog);
+                compute();
+                for (int i = 0; i < objectives.size(); i++) {
+                    TargetObjective t = objectives.get(i);
+                    double metricVal = t.getObjectiveFunction().getMetric().getValue();
+                    metricValues[i].add(metricVal);
+                }
+            }
+            
             // Check end conditions
             if (generation == numGenerations) {
                 String message = "Maximum generations reached.\nBest results shown below.\n"
                         + stringResult(alphaDog);
                 JOptionPane.showMessageDialog(null, message);
                 setParameters(alphaDog);
+                plotMetricValues();
                 return;
             }
             if (alphaDog.getScore() > 100 * (1 - threshold)) {
@@ -99,6 +124,7 @@ public class ParameterSearchGenetic implements Runnable {
                 setParameters(alphaDog);
                 JOptionPane.showMessageDialog(null,
                         "Parameter search complete.\n" + message);
+                plotMetricValues();
                 return;
             }
 
@@ -279,6 +305,28 @@ public class ParameterSearchGenetic implements Runnable {
             message.append(p[i].getName() + " = " + d[i] + "\n");
         }
         return message.toString();
+    }
+    
+    private void plotMetricValues() {
+        String[] labels = new String[metricValues.length];
+        double[][] yvalues = new double[labels.length][metricValues[0].size()];
+        for (int i = 0; i < labels.length; i++) {
+            labels[i] = objectives.get(i).getObjectiveFunction().getMetric().toString();
+            for (int j = 0; j < yvalues[0].length; j++) {
+                yvalues[i][j] = metricValues[i].get(j);
+            }
+        }
+        double[] xvalues = new double[yvalues[0].length];
+        for (int k = 1; k <= yvalues[0].length; k++) {
+            xvalues[k-1] = k;
+        }
+        JFrame jf = new JFrame("Plot of Metrics over Generations");
+        Figure f = new Figure("Generations", labels, xvalues, yvalues);
+        jf.getContentPane().add(f);
+        jf.setSize(500,400);
+        f.setSize(500,400);
+        //jf.pack();
+        jf.show();
     }
 
     private void debug(String s) {

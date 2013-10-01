@@ -89,7 +89,7 @@ public class MetricEditor extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed"
-    // desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
@@ -103,48 +103,31 @@ public class MetricEditor extends javax.swing.JPanel {
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Substance");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 14,
-                -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 14, -1, -1));
 
         substanceSelector.setModel(substanceBoxModel);
-        substanceSelector
-                .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        substanceSelectorActionPerformed(evt);
-                    }
-                });
-        add(substanceSelector,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 11, 119,
-                        -1));
+        substanceSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                substanceSelectorActionPerformed(evt);
+            }
+        });
+        add(substanceSelector, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 11, 119, -1));
 
         jLabel2.setText("Metric");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45,
-                -1, -1));
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, -1, -1));
 
-        metricSelector.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { "Select a metric...", "Final Value",
-                        "Time to Steady State", "Area Under Curve",
-                        "Correlation Coefficient", "Maximum Value",
-                        "Minimum Value", "Maximum Rate", "Range" }));
+        metricSelector.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select a metric...", "Final Value", "Time to Steady State", "Area Under Curve", "Correlation Coefficient", "Maximum Value", "Minimum Value", "Maximum Rate", "Range", "Peak Frequency" }));
         metricSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 metricSelectorActionPerformed(evt);
             }
         });
-        add(metricSelector, new org.netbeans.lib.awtextra.AbsoluteConstraints(
-                78, 42, 119, -1));
+        add(metricSelector, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 42, 119, -1));
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings
-                .createAutoBinding(
-                        org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE,
-                        textField, org.jdesktop.beansbinding.ELProperty
-                                .create("false"), textField,
-                        org.jdesktop.beansbinding.BeanProperty
-                                .create("editable"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, textField, org.jdesktop.beansbinding.ELProperty.create("false"), textField, org.jdesktop.beansbinding.BeanProperty.create("editable"));
         bindingGroup.addBinding(binding);
 
-        add(textField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10,
-                73, 187, -1));
+        add(textField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 73, 187, -1));
 
         addButton.setText("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -152,8 +135,7 @@ public class MetricEditor extends javax.swing.JPanel {
                 addButtonActionPerformed(evt);
             }
         });
-        add(addButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(75,
-                104, -1, -1));
+        add(addButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 104, -1, -1));
 
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
@@ -182,6 +164,8 @@ public class MetricEditor extends javax.swing.JPanel {
             metric = new MaximumRate(substance);
         } else if (selected.equalsIgnoreCase("Area Under Curve")) {
             metric = new AreaUnderCurve(substance);
+        } else if (selected.equalsIgnoreCase("Peak Frequency")) {
+            metric = new PeakFrequency(substance);
         } else if (selected.equalsIgnoreCase("Time to Steady State")) {
             double fraction = -1;
             while ((fraction < 0) || (fraction > 1)) {
