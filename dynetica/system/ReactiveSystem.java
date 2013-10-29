@@ -715,6 +715,17 @@ public class ReactiveSystem extends SimpleSystem {
             KineticLaw kineticLaw = new KineticLaw();
             kineticLaw
                     .setMath(expressionToASTNode((SimpleOperator) rateExpression));
+            
+            // Add parameters
+            LocalParameter localParam;
+            
+            for (int j = 0; j < currentReaction.getParameters().size(); j++) {
+            	localParam = new LocalParameter(currentReaction.getParameters().get(j).toString());
+            	
+            	localParam.setValue(((Parameter) currentReaction.getParameters().get(j)).getDefaultValue());
+            	
+            	kineticLaw.addLocalParameter(localParam);
+            }
 
             reaction.setKineticLaw(kineticLaw);
         }
