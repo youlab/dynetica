@@ -19,6 +19,7 @@ import java.io.*;
 import javax.xml.stream.XMLStreamException;
 
 import org.sbml.jsbml.Compartment;
+import org.sbml.jsbml.LocalParameter;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLReader;
@@ -318,8 +319,10 @@ public class ModularSystemBuilder extends java.lang.Object implements
     	// Add the reactions
     	org.sbml.jsbml.Reaction jsbmlReaction;
     	SpeciesReference specRef;
+    	LocalParameter localParam;
     	
     	ProgressiveReaction reaction;
+    	Parameter param;
     	
     	int j;
     	
@@ -362,6 +365,16 @@ public class ModularSystemBuilder extends java.lang.Object implements
     			}
     			
     			j++;
+    		}
+    		
+    		// Add parameters
+    		for(j = 0; j < jsbmlReaction.getKineticLaw().getLocalParameterCount(); j++) {
+    			localParam = jsbmlReaction.getKineticLaw().getLocalParameter(j);
+    			param = new Parameter(localParam.getId(), reactiveSystem);
+    			param.setValue(localParam.getValue());
+    			
+    			
+    			reaction.addParameter(param);
     		}
     		
     		try {
