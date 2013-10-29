@@ -10,10 +10,20 @@ import dynetica.entity.*;
 import dynetica.expression.*;
 import dynetica.exception.*;
 import dynetica.algorithm.*;
+import dynetica.reaction.ProgressiveReaction;
 import dynetica.util.*;
 import java.util.*;
 import java.lang.reflect.*;
 import java.io.*;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.sbml.jsbml.Compartment;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLReader;
+import org.sbml.jsbml.Species;
+import org.sbml.jsbml.SpeciesReference;
 
 /**
  * 
@@ -282,6 +292,91 @@ public class ModularSystemBuilder extends java.lang.Object implements
         system.setSaved(true);
         return system;
     }
+    
+    public static AbstractSystem buildSBML(File sbmlFile) throws IOException, XMLStreamException {
+    	SBMLReader reader = new SBMLReader();
+    	SBMLDocument doc = reader.readSBML(sbmlFile);
+    	
+    	ReactiveSystem reactiveSystem = new ReactiveSystem();
+    	
+    	// Retrieve compartment
+    	Model model = doc.getModel();
+    	
+    	Species spec;
+    	Substance sub;
+    	
+    	// Add the species (in SBML) as substances (in Dynetica)
+    	int i = 0;
+    	while(model.getSpecies(i) != null) {
+    		spec = model.getSpecies(i);    		
+    		sub = new Substance(spec.getName(), reactiveSystem);
+    		sub.setInitialValue(spec.getInitialAmount());
+    		reactiveSystem.addSubstance(sub);    		
+    		i++;
+    	}
+    	
+    	// Add the reactions
+    	org.sbml.jsbml.Reaction jsbmlReaction;
+    	SpeciesReference specRef;
+    	
+    	ProgressiveReaction reaction;
+    	
+    	int j;
+    	
+    	i = 0;
+    	while(model.getReaction(i) != null) {
+    		jsbmlReaction = model.getReaction(i);
+    		
+    		reaction = new ProgressiveReaction(jsbmlReaction.getId(), reactiveSystem);
+    		
+    		// Add reactants
+    		j = 0;
+    		while(jsbmlReaction.getReactant(j) != null) {
+    			specRef = jsbmlReaction.getReactant(j);
+    			
+    			for(int k = 0; k < reactiveSystem.getSubstances().size(); k++) {
+    				sub = (Substance) reactiveSystem.getSubstances().get(k);
+    				
+    				if(specRef.toString().equals(sub.getName())) {
+    					// Specify that this is a reactant by making the stoichiometric coefficient negative
+    					reaction.addSubstance(sub, -1 * specRef.getStoichiometry());
+    					break;
+    				}
+    			}
+    			
+    			j++;
+    		}
+    		
+    		// Add products
+    		j = 0;
+    		while(jsbmlReaction.getProduct(j) != null) {
+    			specRef = jsbmlReaction.getProduct(j);
+    			
+    			for(int k = 0; k < reactiveSystem.getSubstances().size(); k++) {
+    				sub = (Substance) reactiveSystem.getSubstances().get(k);
+    				
+    				if(specRef.toString().equals(sub.getName())) {
+    					reaction.addSubstance(sub, specRef.getStoichiometry());
+    					break;
+    				}
+    			}
+    			
+    			j++;
+    		}
+    		
+    		try {
+    			reaction.setKinetics(jsbmlReaction.getKineticLaw().getFormula());
+    		} catch(IllegalExpressionException e) {
+    			e.printStackTrace();
+    		}
+    		
+    		reactiveSystem.add(reaction);
+    		
+    		i++;
+    	}
+    	
+    	return reactiveSystem;
+    }
 
     //
     // Added 5/14/2005 LY
@@ -366,10 +461,15 @@ public class ModularSystemBuilder extends java.lang.Object implements
      * @throws InvalidPropertyValueException
      */
 
-    public static AbstractSystem build(File systemFile)
+    public static AbstractSystem buildSystem(File systemFile, String fileType)
             throws FileNotFoundException, IOException, ClassNotFoundException,
             InstantiationException, IllegalAccessException,
-            UnknownPropertyException, InvalidPropertyValueException {
-        return build(systemFile, null);
+            UnknownPropertyException, InvalidPropertyValueException, XMLStreamException {
+    	
+    	if(fileType.equals("sbml")) {
+    		return buildSBML(systemFile);
+    	}
+    	else
+    		return build(systemFile, null);
     }
 }
