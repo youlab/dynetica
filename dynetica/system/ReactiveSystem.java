@@ -642,7 +642,7 @@ public class ReactiveSystem extends SimpleSystem {
 
     private void saveAsSBML() {
         SBMLDocument doc = new SBMLDocument(2, 4);
-        Model model = doc.createModel("ReactiveSystem");
+        Model model = doc.createModel(name);
 
         Compartment compartment = model.createCompartment("default");
         compartment.setSize(1d);

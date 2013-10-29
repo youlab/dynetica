@@ -298,10 +298,11 @@ public class ModularSystemBuilder extends java.lang.Object implements
     	SBMLReader reader = new SBMLReader();
     	SBMLDocument doc = reader.readSBML(sbmlFile);
     	
-    	ReactiveSystem reactiveSystem = new ReactiveSystem();
-    	
     	// Retrieve compartment
     	Model model = doc.getModel();
+    	
+    	// Create ReactiveSystem
+    	ReactiveSystem reactiveSystem = new ReactiveSystem(model.getId());
     	
     	Species spec;
     	Substance sub;
