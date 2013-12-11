@@ -713,7 +713,10 @@ public class ReactiveSystem extends SimpleSystem {
             // ((dynetica.expression.SimpleOperator) rateExpression).getB()
             // This inherits from Expression, so you can use getA and getB
             KineticLaw kineticLaw = new KineticLaw();
-            kineticLaw
+            if(rateExpression instanceof Parameter || rateExpression instanceof Substance)
+                kineticLaw.setMath(new ASTNode(rateExpression.toString()));
+            else
+                kineticLaw
                     .setMath(expressionToASTNode((SimpleOperator) rateExpression));
             
             // Add parameters
