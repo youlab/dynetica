@@ -772,8 +772,12 @@ public class ReactiveSystem extends SimpleSystem {
 
         if (expressionClass.equals("Multiply"))
             astNode.setType(ASTNode.Type.TIMES);
+        else if (expressionClass.equals("Divide"))
+            astNode.setType(ASTNode.Type.DIVIDE);
         else if (expressionClass.equals("Sum"))
             astNode.setType(ASTNode.Type.PLUS);
+        else if (expressionClass.equals("Substract"))
+            astNode.setType(ASTNode.Type.MINUS);
         else if (expressionClass.equals("Pow"))
             astNode.setType(ASTNode.Type.POWER);
         else
