@@ -641,7 +641,10 @@ public class ReactiveSystem extends SimpleSystem {
     }
 
     private void saveAsSBML() {
-        SBMLDocument doc = new SBMLDocument(2, 4);
+        int level = 2;
+        int version = 4;
+
+        SBMLDocument doc = new SBMLDocument(level, version);
         Model model = doc.createModel(name);
 
         Compartment compartment = model.createCompartment("default");
@@ -731,6 +734,26 @@ public class ReactiveSystem extends SimpleSystem {
             }
 
             reaction.setKineticLaw(kineticLaw);
+        }
+
+        // Add the expression variables
+        AssignmentRule assignmentRule;
+        org.sbml.jsbml.Parameter parameter;
+        ExpressionVariable currentExpVar;
+        ASTNode math;
+
+        for (int i = 0; i < expressions.size(); i++) {
+            currentExpVar = (ExpressionVariable) expressions.get(i);
+
+            parameter = new org.sbml.jsbml.Parameter(currentExpVar.getName());
+            math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
+
+            assignmentRule = new AssignmentRule(math, level, version);
+            assignmentRule.setVariable(parameter);
+
+            model.addRule(assignmentRule);
+
+            model.removeSpecies(currentExpVar.getName());
         }
 
         // Write to file

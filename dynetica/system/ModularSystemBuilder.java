@@ -18,6 +18,7 @@ import java.io.*;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.sbml.jsbml.AssignmentRule;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.LocalParameter;
 import org.sbml.jsbml.Model;
@@ -388,6 +389,22 @@ public class ModularSystemBuilder extends java.lang.Object implements
     		
     		i++;
     	}
+
+        org.sbml.jsbml.AssignmentRule jsbmlRule;
+        ExpressionVariable expVar;
+
+        i = 0;
+        while(model.getRule(i) != null) {
+            jsbmlRule = (AssignmentRule) model.getRule(i);
+
+            expVar = new ExpressionVariable(jsbmlRule.getVariable(),
+                                            jsbmlRule.getMath().toString(), reactiveSystem);
+
+            reactiveSystem.remove(jsbmlRule.getVariable());
+            reactiveSystem.add(expVar);
+
+            i++;
+        }
     	
     	return reactiveSystem;
     }
