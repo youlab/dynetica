@@ -181,6 +181,8 @@ public abstract class Algorithm implements dynetica.entity.Editable, Runnable {
             // carry out one round of simulation
             run(simulationThread);
 
+            //Out outputs the time courses of all the substances during the course
+            //of the simulation.
             if (out != null)
                 saveCurrentSimulationResult(out);
 
@@ -243,7 +245,9 @@ public abstract class Algorithm implements dynetica.entity.Editable, Runnable {
 
     public void start() {
         if (simulationThread == null) {
+            //Kanishk: All substance values and the stored rates are set to initial values
             reset();
+            //This current object is passed to a thread. This causes the run() function to execute.
             simulationThread = new Thread(this, " Simulation");
             simulationThread.start();
         }

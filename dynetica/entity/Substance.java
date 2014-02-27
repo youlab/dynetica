@@ -324,6 +324,7 @@ public class Substance extends EntityVariable {
             rates.clear();
         }
         setRateExpression();
+        //Kanishk: Not very clear what this method does.
         setStochasticTerm();
         value = initialValue;
     }
