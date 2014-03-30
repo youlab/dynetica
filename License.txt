@@ -1,4 +1,4 @@
-Copyright (c) Lingchong You 1998-2005. 
+Copyright (c) Lingchong You and collaborators 1998-2014. 
 All rights reserved.
 
 
