@@ -4,3 +4,5 @@
 .idea
 *.iml
 jsbml.log
+*.class
+.DS_Store
