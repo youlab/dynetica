@@ -56,7 +56,7 @@ public class AboutDyneticaFrame extends javax.swing.JFrame {
 
         jTextPane1.setEditable(false);
         jTextPane1
-                .setText("Thank you for using Dynetica.\n\nDynetica is a generic model building tool for DYNamic NETworks that\nexist in nature, such as the chemical reaction networks, \nmetabolic networks, signalling pathways, and genetic networks.\n\nMore detailed help documentation is under construction.\n\nCopyright (C) 1999-2013  Lingchong You Lab (contact: you@duke.edu).\nAll rights reserved.\n\nCredits: \nApirak Hoolar (2001-2002),  extended and improved the mathmatical expression parser\nDerek Eidum (2013), introduced dynetica.objective package and the ability to do parameter search by various algorithms\nKanishk Asthana (2013), introduced modular systems and improved network visualization.\n");
+                .setText("Thank you for using Dynetica.\n\nDynetica is a generic model building tool for DYNamic NETworks that\nexist in nature, such as chemical reaction networks, \nmetabolic networks, signalling pathways, and genetic networks.\n\nMore detailed help documentation is under construction.\n\nCopyright (C) 1999-2014 Lingchong You Lab (contact: you@duke.edu).\nAll rights reserved.\n\nCredits: \nApirak Hoonlor (2001-2002), extended and improved the mathematical expression parser\nDerek Eidum (2013), introduced the dynetica.objective package and the ability to do parameter search by various algorithms\nKanishk Asthana (2013), introduced modular systems and improved network visualization.\n");
         jTextPane1.setMinimumSize(new java.awt.Dimension(482, 261));
         jScrollPane3.setViewportView(jTextPane1);
 
