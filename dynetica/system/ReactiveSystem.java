@@ -656,24 +656,29 @@ public class ReactiveSystem extends SimpleSystem {
         Species spec;
         for (int i = 0; i < substances.size(); i++) {
             sub = (Substance) substances.get(i);
-            spec = new Species(sub.getName());
 
-            spec.setName(sub.getName());
-            spec.setCompartment(compartment);
+            // Exclude expression variables from species list
+//            if(!(sub instanceof ExpressionVariable)) {
+                spec = new Species(sub.getName());
 
-            // not sure if I should use setInitialAmount or
-            // setInitialConcentration here - seems that it should be amount,
-            // from the values, in some example models
-            spec.setInitialAmount(sub.getInitialValue());
+                spec.setName(sub.getName());
+                spec.setCompartment(compartment);
 
-            model.addSpecies(spec);
+                // not sure if I should use setInitialAmount or
+                // setInitialConcentration here - seems that it should be amount,
+                // from the values, in some example models
+                spec.setInitialAmount(sub.getInitialValue());
+
+                model.addSpecies(spec);
+//            }
         }
 
         // Add the reactions
         org.sbml.jsbml.Reaction reaction;
         SpeciesReference specref;
+        ModifierSpeciesReference modspecref;
         ProgressiveReaction currentReaction;
-        List reactants, products;
+        List products, reactants, modifiers;
         GeneralExpression rateExpression;
 
         for (int i = 0; i < progressiveReactions.size(); i++) {
@@ -681,6 +686,7 @@ public class ReactiveSystem extends SimpleSystem {
             reaction = model.createReaction(currentReaction.getName());
 
             reactants = currentReaction.getReactants();
+            modifiers = currentReaction.getCatalysts();
             products = currentReaction.getProducts();
 
             // Add reactants
@@ -689,6 +695,21 @@ public class ReactiveSystem extends SimpleSystem {
                         model.getSpecies(((Substance) reactants.get(j))
                                 .getName()));
                 reaction.addReactant(specref);
+            }
+
+            // Add modifiers/catalysts
+            for (int j = 0; j < modifiers.size(); j++) {
+                // Screen for expression variables - they will always be classified as catalysts in Dynetica
+//                if(model.containsSpecies(((Substance) modifiers.get(j)).getName())) {
+                    modspecref = new ModifierSpeciesReference(
+                            model.getSpecies(((Substance) modifiers.get(j))
+                                    .getName()));
+//                }
+//                else {
+//                    modspecref = new ModifierSpeciesReference(model.getRule(((Substance) modifiers.get(j)).getName()).getVariable());
+//                }
+
+                reaction.addModifier(modspecref);
             }
 
             // Add products
@@ -757,7 +778,7 @@ public class ReactiveSystem extends SimpleSystem {
 
             model.addRule(assignmentRule);
 
-            model.removeSpecies(currentExpVar.getName());
+//            model.removeSpecies(currentExpVar.getName());
         }
 
         // Write to file
