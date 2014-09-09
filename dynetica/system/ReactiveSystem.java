@@ -10,6 +10,7 @@ package dynetica.system;
 
 import dynetica.entity.Annotation;
 import dynetica.entity.Parameter;
+import dynetica.expression.Constant;
 import dynetica.gui.visualization.NetworkLayout;
 import dynetica.entity.*;
 import dynetica.algorithm.*;
@@ -776,25 +777,26 @@ public class ReactiveSystem extends SimpleSystem {
 
     public ASTNode expressionToASTNode(SimpleOperator expression) {
         ASTNode astNode = new ASTNode();
-        GeneralExpression leftNode = expression.getA();
-        GeneralExpression rightNode = expression.getB();
 
-        if (leftNode instanceof SimpleOperator)
-            astNode.addChild(expressionToASTNode((SimpleOperator) leftNode));
-        else {
-            if (leftNode instanceof Substance)
-                astNode.addChild(new ASTNode(((Substance) leftNode).getName()));
-            else
-                astNode.addChild(new ASTNode(leftNode.toString()));
-        }
+        ArrayList<GeneralExpression> nodes = new ArrayList<GeneralExpression>();
+        nodes.add(expression.getA());
+        nodes.add(expression.getB());
 
-        if (rightNode instanceof SimpleOperator)
-            astNode.addChild(expressionToASTNode((SimpleOperator) rightNode));
-        else {
-            if (rightNode instanceof Substance)
-                astNode.addChild(new ASTNode(((Substance) rightNode).getName()));
-            else
-                astNode.addChild(new ASTNode(rightNode.toString()));
+        for(GeneralExpression node : nodes) {
+            if (node instanceof SimpleOperator)
+                astNode.addChild(expressionToASTNode((SimpleOperator) node));
+            else {
+                if (node instanceof Substance)
+                    astNode.addChild(new ASTNode(((Substance) node).getName()));
+                else if(node instanceof dynetica.expression.Constant) {
+                    if((node.getValue() % 1) == 0)
+                        astNode.addChild(new ASTNode((int) node.getValue()));
+                    else
+                        astNode.addChild(new ASTNode(node.getValue()));
+                }
+                else
+                    astNode.addChild(new ASTNode(node.toString()));
+            }
         }
 
         String expressionClass = expression.getClass().getSimpleName();
