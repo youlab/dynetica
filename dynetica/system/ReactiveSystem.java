@@ -701,7 +701,6 @@ public class ReactiveSystem extends SimpleSystem {
             // Set as non-reversible
             reaction.setReversible(false);
 
-            // TODO: Specify kinetic law
             rateExpression = ((ProgressiveReaction) progressiveReactions.get(i))
                     .getRateExpression();
 
@@ -746,6 +745,10 @@ public class ReactiveSystem extends SimpleSystem {
             currentExpVar = (ExpressionVariable) expressions.get(i);
 
             parameter = new org.sbml.jsbml.Parameter(currentExpVar.getName());
+
+            while(currentExpVar.getExpression() instanceof ExpressionVariable)
+                currentExpVar = (ExpressionVariable) currentExpVar.getExpression();
+
             math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
 
             assignmentRule = new AssignmentRule(math, level, version);
