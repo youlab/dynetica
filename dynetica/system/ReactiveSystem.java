@@ -657,20 +657,17 @@ public class ReactiveSystem extends SimpleSystem {
         for (int i = 0; i < substances.size(); i++) {
             sub = (Substance) substances.get(i);
 
-            // Exclude expression variables from species list
-//            if(!(sub instanceof ExpressionVariable)) {
-                spec = new Species(sub.getName());
+            spec = new Species(sub.getName());
 
-                spec.setName(sub.getName());
-                spec.setCompartment(compartment);
+            spec.setName(sub.getName());
+            spec.setCompartment(compartment);
 
-                // not sure if I should use setInitialAmount or
-                // setInitialConcentration here - seems that it should be amount,
-                // from the values, in some example models
-                spec.setInitialAmount(sub.getInitialValue());
+            // not sure if I should use setInitialAmount or
+            // setInitialConcentration here - seems that it should be amount,
+            // from the values, in some example models
+            spec.setInitialAmount(sub.getInitialValue());
 
-                model.addSpecies(spec);
-//            }
+            model.addSpecies(spec);
         }
 
         // Add the reactions
@@ -700,14 +697,9 @@ public class ReactiveSystem extends SimpleSystem {
             // Add modifiers/catalysts
             for (int j = 0; j < modifiers.size(); j++) {
                 // Screen for expression variables - they will always be classified as catalysts in Dynetica
-//                if(model.containsSpecies(((Substance) modifiers.get(j)).getName())) {
-                    modspecref = new ModifierSpeciesReference(
-                            model.getSpecies(((Substance) modifiers.get(j))
-                                    .getName()));
-//                }
-//                else {
-//                    modspecref = new ModifierSpeciesReference(model.getRule(((Substance) modifiers.get(j)).getName()).getVariable());
-//                }
+                modspecref = new ModifierSpeciesReference(
+                        model.getSpecies(((Substance) modifiers.get(j))
+                                .getName()));
 
                 reaction.addModifier(modspecref);
             }
@@ -744,14 +736,16 @@ public class ReactiveSystem extends SimpleSystem {
                     .setMath(expressionToASTNode((SimpleOperator) rateExpression));
             
             // Add parameters
-            LocalParameter localParam;
-            
-            for (int j = 0; j < currentReaction.getParameters().size(); j++) {
-            	localParam = new LocalParameter(currentReaction.getParameters().get(j).toString());
-            	
-            	localParam.setValue(((Parameter) currentReaction.getParameters().get(j)).getDefaultValue());
-            	
-            	kineticLaw.addLocalParameter(localParam);
+            org.sbml.jsbml.Parameter param;
+
+            for (Parameter dynParam : (ArrayList<Parameter>) currentReaction.getParameters()) {
+                if(!model.containsParameter(dynParam.toString())) {
+                    param = new org.sbml.jsbml.Parameter(dynParam.toString());
+
+                    param.setValue(dynParam.getDefaultValue());
+
+                    model.addParameter(param);
+                }
             }
 
             reaction.setKineticLaw(kineticLaw);
@@ -762,6 +756,9 @@ public class ReactiveSystem extends SimpleSystem {
         org.sbml.jsbml.Parameter parameter;
         ExpressionVariable currentExpVar;
         ASTNode math;
+
+        // TODO: 1. collect a list of all the variables in the assignment rules while making them
+        //       2. iterate through the list, and if there are any that aren't in the list of assignment rules, add as a parameter
 
         for (int i = 0; i < expressions.size(); i++) {
             currentExpVar = (ExpressionVariable) expressions.get(i);
