@@ -636,7 +636,7 @@ public class ReactiveSystem extends SimpleSystem {
         if (!isSaved()) {
             if (fileType.equals("dyn"))
                 super.save();
-            else if (fileType.equals("sbml"))
+            else if (fileType.equals("xml"))
                 saveAsSBML();
         }
     }
