@@ -497,7 +497,7 @@ public class ModularSystemBuilder extends java.lang.Object implements
             InstantiationException, IllegalAccessException,
             UnknownPropertyException, InvalidPropertyValueException, XMLStreamException {
     	
-    	if(fileType.equals("sbml")) {
+    	if(fileType.equals("xml")) {
     		return buildSBML(systemFile);
     	}
     	else

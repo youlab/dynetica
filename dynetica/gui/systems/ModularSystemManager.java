@@ -1631,7 +1631,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 						"Dynetica files (*.dyn)", "dyn"));
 		fileChooser
 				.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
-						"Synthetic Biology Markup Language (*.sbml)", "sbml"));
+						"Synthetic Biology Markup Language (*.xml)", "xml"));
 
 		int returnVal = fileChooser.showSaveDialog(this);
 
@@ -1702,7 +1702,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser(workDir);
         fileChooser.setAcceptAllFileFilterUsed(true);
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Dynetica files (*.dyn)", "dyn"));
-        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Synthetic Biology Markup Language (*.sbml)", "sbml"));
+        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Synthetic Biology Markup Language (*.xml)", "xml"));
 
 
         int returnVal = fileChooser.showOpenDialog(this);

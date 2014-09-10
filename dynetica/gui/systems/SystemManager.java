@@ -1355,7 +1355,7 @@ public class SystemManager extends javax.swing.JFrame {
                         "Dynetica files (*.dyn)", "dyn"));
         fileChooser
                 .addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
-                        "Synthetic Biology Markup Language (*.sbml)", "sbml"));
+                        "Synthetic Biology Markup Language (*.xml)", "xml"));
 
         int returnVal = fileChooser.showSaveDialog(this);
 
