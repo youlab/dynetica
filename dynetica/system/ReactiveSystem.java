@@ -645,6 +645,9 @@ public class ReactiveSystem extends SimpleSystem {
         int level = 2;
         int version = 4;
 
+        // Used below for adding parameters
+        org.sbml.jsbml.Parameter param;
+
         SBMLDocument doc = new SBMLDocument(level, version);
         Model model = doc.createModel(name);
 
@@ -734,10 +737,8 @@ public class ReactiveSystem extends SimpleSystem {
             else
                 kineticLaw
                     .setMath(expressionToASTNode((SimpleOperator) rateExpression));
-            
-            // Add parameters
-            org.sbml.jsbml.Parameter param;
 
+            // Add parameters
             for (Parameter dynParam : (ArrayList<Parameter>) currentReaction.getParameters()) {
                 if(!model.containsParameter(dynParam.toString())) {
                     param = new org.sbml.jsbml.Parameter(dynParam.toString());
@@ -754,28 +755,35 @@ public class ReactiveSystem extends SimpleSystem {
         // Add the expression variables
         AssignmentRule assignmentRule;
         org.sbml.jsbml.Parameter parameter;
-        ExpressionVariable currentExpVar;
         ASTNode math;
 
-        // TODO: 1. collect a list of all the variables in the assignment rules while making them
-        //       2. iterate through the list, and if there are any that aren't in the list of assignment rules, add as a parameter
-
-        for (int i = 0; i < expressions.size(); i++) {
-            currentExpVar = (ExpressionVariable) expressions.get(i);
+        for (ExpressionVariable currentExpVar : (ArrayList<ExpressionVariable>) expressions) {
 
             parameter = new org.sbml.jsbml.Parameter(currentExpVar.getName());
 
+            // Recurse into the expression variable definitions, so that one expression's
+            // definition no longer just points to another expression
             while(currentExpVar.getExpression() instanceof ExpressionVariable)
                 currentExpVar = (ExpressionVariable) currentExpVar.getExpression();
 
+            // Use expression variable (in Dynetica) to create assignment rule (in SBML)
             math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
 
             assignmentRule = new AssignmentRule(math, level, version);
             assignmentRule.setVariable(parameter);
 
             model.addRule(assignmentRule);
+        }
 
-//            model.removeSpecies(currentExpVar.getName());
+        // Add parameters from expression variable
+        for (Parameter dynParam : (ArrayList<Parameter>) getParameters()) {
+            if(!model.containsParameter(dynParam.toString()) && !dynParam.toString().equals("Time")) {
+                param = new org.sbml.jsbml.Parameter(dynParam.toString());
+
+                param.setValue(dynParam.getDefaultValue());
+
+                model.addParameter(param);
+            }
         }
 
         // Write to file
