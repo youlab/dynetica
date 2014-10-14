@@ -658,19 +658,28 @@ public class ReactiveSystem extends SimpleSystem {
         Substance sub;
         Species spec;
         for (int i = 0; i < substances.size(); i++) {
-            sub = (Substance) substances.get(i);
+            // Handles cases where a constant equation has been added by moving it to the list of parameters
+            if(substances.get(i) instanceof dynetica.entity.ExpressionVariable && ( (ExpressionVariable) substances.get(i)).getExpression() instanceof dynetica.expression.Constant) {
+                param = new org.sbml.jsbml.Parameter(( (ExpressionVariable) substances.get(i)).getName());
 
-            spec = new Species(sub.getName());
+                param.setValue(( (ExpressionVariable) substances.get(i)).getExpression().getValue());
 
-            spec.setName(sub.getName());
-            spec.setCompartment(compartment);
+                model.addParameter(param);
+            } else if(substances.get(i) instanceof dynetica.entity.Substance) {
+                sub = (Substance) substances.get(i);
 
-            // not sure if I should use setInitialAmount or
-            // setInitialConcentration here - seems that it should be amount,
-            // from the values, in some example models
-            spec.setInitialAmount(sub.getInitialValue());
+                spec = new Species(sub.getName());
 
-            model.addSpecies(spec);
+                spec.setName(sub.getName());
+                spec.setCompartment(compartment);
+
+                // not sure if I should use setInitialAmount or
+                // setInitialConcentration here - seems that it should be amount,
+                // from the values, in some example models
+                spec.setInitialAmount(sub.getInitialValue());
+
+                model.addSpecies(spec);
+            }
         }
 
         // Add the reactions
@@ -699,12 +708,16 @@ public class ReactiveSystem extends SimpleSystem {
 
             // Add modifiers/catalysts
             for (int j = 0; j < modifiers.size(); j++) {
-                // Screen for expression variables - they will always be classified as catalysts in Dynetica
-                modspecref = new ModifierSpeciesReference(
-                        model.getSpecies(((Substance) modifiers.get(j))
-                                .getName()));
+                // Skip constants stored in Dynetica as expression variables
+                // They were added as parameters in SBML
+                if(!model.containsParameter(((Substance) modifiers.get(j)).getName())) {
+                    // Screen for expression variables - they will always be classified as catalysts in Dynetica
+                    modspecref = new ModifierSpeciesReference(
+                            model.getSpecies(((Substance) modifiers.get(j))
+                                    .getName()));
 
-                reaction.addModifier(modspecref);
+                    reaction.addModifier(modspecref);
+                }
             }
 
             // Add products
@@ -754,25 +767,26 @@ public class ReactiveSystem extends SimpleSystem {
 
         // Add the expression variables
         AssignmentRule assignmentRule;
-        org.sbml.jsbml.Parameter parameter;
         ASTNode math;
 
         for (ExpressionVariable currentExpVar : (ArrayList<ExpressionVariable>) expressions) {
 
-            parameter = new org.sbml.jsbml.Parameter(currentExpVar.getName());
+            param = new org.sbml.jsbml.Parameter(currentExpVar.getName());
 
             // Recurse into the expression variable definitions, so that one expression's
             // definition no longer just points to another expression
             while(currentExpVar.getExpression() instanceof ExpressionVariable)
                 currentExpVar = (ExpressionVariable) currentExpVar.getExpression();
 
-            // Use expression variable (in Dynetica) to create assignment rule (in SBML)
-            math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
+            if(!(currentExpVar.getExpression() instanceof dynetica.expression.Constant)) {
+                // Use expression variable (in Dynetica) to create assignment rule (in SBML)
+                math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
 
-            assignmentRule = new AssignmentRule(math, level, version);
-            assignmentRule.setVariable(parameter);
+                assignmentRule = new AssignmentRule(math, level, version);
+                assignmentRule.setVariable(param);
 
-            model.addRule(assignmentRule);
+                model.addRule(assignmentRule);
+            }
         }
 
         // Add parameters from expression variable
