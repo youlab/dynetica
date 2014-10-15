@@ -1,5 +1,5 @@
 /**
- * Substract.java
+ * Subtract.java
  *
  *
  * Created: Tue Aug 29 13:01:25 2000
@@ -15,10 +15,10 @@ package dynetica.expression;
  * @author lingchong
  */
 
-public class Substract extends SimpleOperator {
-    public Substract(GeneralExpression a, GeneralExpression b) {
+public class Subtract extends SimpleOperator {
+    public Subtract(GeneralExpression a, GeneralExpression b) {
         super('-', a, b);
-        type = ExpressionConstants.SUBSTRACT;
+        type = ExpressionConstants.SUBTRACT;
     }
 
     @Override
@@ -26,4 +26,4 @@ public class Substract extends SimpleOperator {
         value = a.getValue() - b.getValue();
     }
 
-} // Substract
+} // Subtract
