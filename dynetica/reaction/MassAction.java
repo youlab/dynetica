@@ -12,7 +12,6 @@ import dynetica.entity.*;
 import dynetica.system.*;
 import dynetica.expression.*;
 import dynetica.exception.*;
-import java.util.*;
 
 /**
  * MassAction represents reactions that follow the simple mass action principle:
@@ -77,13 +76,13 @@ public class MassAction extends ProgressiveReaction {
         }
 
         if (forward != null & backward != null) {
-            setRateExpression(DMath.substract(forward, backward));
+            setRateExpression(DMath.subtract(forward, backward));
         } else if (forward != null) {
             setRateExpression(forward);
         }
 
         else if (backward != null) {
-            setRateExpression(DMath.substract(new Constant(0.0), backward));
+            setRateExpression(DMath.subtract(new Constant(0.0), backward));
         }
     }
 

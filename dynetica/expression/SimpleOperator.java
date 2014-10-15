@@ -26,7 +26,7 @@ public class SimpleOperator extends Expression {
             type = ExpressionConstants.SUM;
             break;
         case '-':
-            type = ExpressionConstants.SUBSTRACT;
+            type = ExpressionConstants.SUBTRACT;
             break;
         case '*':
             type = ExpressionConstants.MULTIPLY;
@@ -55,7 +55,7 @@ public class SimpleOperator extends Expression {
         switch (type) {
         case ExpressionConstants.SUM:
             value = a.getValue() + b.getValue();
-        case ExpressionConstants.SUBSTRACT:
+        case ExpressionConstants.SUBTRACT:
             value = a.getValue() - b.getValue();
         case ExpressionConstants.MULTIPLY:
             value = a.getValue() * b.getValue();

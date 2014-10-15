@@ -69,8 +69,8 @@ public class DMath {
 
     }
 
-    public static GeneralExpression substract(GeneralExpression a,
-            GeneralExpression b) {
+    public static GeneralExpression subtract(GeneralExpression a,
+                                             GeneralExpression b) {
 
         if (a instanceof Constant && b instanceof Constant)
 
@@ -78,7 +78,7 @@ public class DMath {
 
         else
 
-            return new Substract(a, b);
+            return new Subtract(a, b);
 
     }
 
