@@ -6,3 +6,5 @@
 jsbml.log
 *.class
 .DS_Store
+/test/
+nbproject/private/
