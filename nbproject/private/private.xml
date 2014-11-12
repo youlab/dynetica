@@ -4,15 +4,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/gui/algorithms/RK4Editor.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/system/ModularSystemBuilder.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/algorithm/RungeKutta4.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/entity/Editable.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/Dynetica.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/algorithm/Algorithm.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/gui/systems/ModularSystemManager.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/util/DyneticaProperties.java</file>
-            <file>file:/C:/Users/Kanishk/Documents/GitHub/dynetica/dynetica/system/ReactiveSystem.java</file>
+            <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/systems/SystemManager.java</file>
+            <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/util/BugReport.java</file>
+            <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/BugReportFrame.java</file>
+            <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/algorithms/BasicSensitivityAnalysisEditor.java</file>
         </group>
     </open-files>
 </project-private>
