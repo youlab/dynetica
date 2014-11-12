@@ -7,24 +7,27 @@
 
 package dynetica.gui.systems;
 
+import dynetica.algorithm.*;
+import dynetica.event.*;
+import dynetica.gui.AboutDyneticaFrame;
+import dynetica.gui.ApplicationFrame;
+import dynetica.gui.BugReportEditor;
 import dynetica.gui.algorithms.BottleNeckEditor;
+import dynetica.gui.algorithms.MultiParameterSensitivityAnalysisEditor;
 import dynetica.gui.algorithms.NoiseOptimizationEditor;
 import dynetica.gui.algorithms.ParameterSearchDoseResponseEditor;
 import dynetica.gui.algorithms.ParameterSearchGeneticEditor;
 import dynetica.gui.algorithms.ParameterSearchMonteCarloEditor;
 import dynetica.gui.algorithms.ParameterSearchMultiSubstanceEditor;
 import dynetica.gui.algorithms.SensitivityAnalysisEditor;
-import dynetica.gui.algorithms.MultiParameterSensitivityAnalysisEditor;
-import java.util.*;
-import dynetica.system.*;
-import dynetica.algorithm.*;
-import java.io.*;
-import javax.swing.*;
-import java.awt.Toolkit;
-import dynetica.event.*;
-import dynetica.gui.AboutDyneticaFrame;
-import dynetica.gui.ApplicationFrame;
 import dynetica.gui.entities.FunctionEditor;
+import dynetica.system.*;
+import dynetica.util.BugReport;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.event.*;
 
 /**
@@ -167,6 +170,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         viewMatlabStochastic = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutItem = new javax.swing.JMenuItem();
+        reportItem = new javax.swing.JMenuItem();
         toolBarPanel = new javax.swing.JPanel();
         fileToolBar = new javax.swing.JToolBar();
         newButton = new javax.swing.JButton();
@@ -644,6 +648,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
         });
         helpMenu.add(aboutItem);
 
+        reportItem.setText("Report Bug");
+        reportItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(reportItem);
+
         menuBar.add(helpMenu);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1063,6 +1075,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		new AboutDyneticaFrame().show();
 	}// GEN-LAST:event_aboutItemActionPerformed
 
+        private void reportItemActionPerformed(java.awt.event.ActionEvent evt){// GEN-FIRST:event_reportItemActionPerformed
+                ApplicationFrame frame = new ApplicationFrame(
+				"Dynetic Bug Reporter");
+		frame.getContentPane().add(new BugReportEditor(new BugReport()));
+		frame.pack();
+                frame.show();
+        }// GEN-LAST:event_reportItemActionPerformed
+        
 	private void saveAsButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveAsButtonActionPerformed
 		saveAsSystem();
 	}// GEN-LAST:event_saveAsButtonActionPerformed
@@ -1748,6 +1768,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
     private javax.swing.JMenuItem psmcItem;
     private javax.swing.JButton renameButton;
     private javax.swing.JMenuItem renameItem;
+    private javax.swing.JMenuItem reportItem;
     private javax.swing.JButton resumeButton;
     private javax.swing.JMenuItem resumeItem;
     private javax.swing.JMenuItem rssItem;
