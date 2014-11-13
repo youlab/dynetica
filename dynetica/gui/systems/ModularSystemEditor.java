@@ -1075,6 +1075,8 @@ public class ModularSystemEditor extends javax.swing.JPanel {
                                 null, e.getName());// i don't get the last
                                                    // statement e.getName();
                                                    // shouldn't it be setname
+                if(newName==null)
+                    return;
             } while (newName.contains(" ") || newName.contains("{")
                     || newName.contains("}"));
             if (newName.length() > 0)

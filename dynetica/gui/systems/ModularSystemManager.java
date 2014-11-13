@@ -1377,12 +1377,15 @@ public class ModularSystemManager extends javax.swing.JFrame {
 
 	private void newModularSystem() {
 		String newName;
-		for (;;) {
-			newName = JOptionPane.showInputDialog(
-					"Enter the name for the new system:").trim();
-			if (newName.length() > 0) {
-				break;
-			}
+		while(true) {
+			newName = JOptionPane.showInputDialog("Enter the name for the new system:");
+                        if(newName!=null){
+                            newName = newName.trim();
+                            if (newName.length() > 0) {
+                                    break;
+                            }
+                        }else
+                            return;
 		}
 		currentSystem = new ModularSystem(newName);
 		addSystem();
@@ -1539,6 +1542,16 @@ public class ModularSystemManager extends javax.swing.JFrame {
 	// close the system and the file associated with it.
 	//
 	private void closeSystem() {
+                if(!currentSystem.isSaved()){
+                    Object[] options = {"Save", "Don't Save", "Canvel"};
+                    int save = JOptionPane.showOptionDialog(this, 
+                            "You have unsaved changes, would you like to save before closing?",
+                            "Save on close?", JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    if(save==JOptionPane.CANCEL_OPTION)
+                        return;
+                    if(save==JOptionPane.YES_OPTION)
+                        saveSystem();
+                }
 		if (openedSystems.size() > 1) {
 			int currentIndex = systemPane.getSelectedIndex();
 			systemPane.remove(currentIndex);
@@ -1636,7 +1649,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				String extension = ((javax.swing.filechooser.FileNameExtensionFilter) fileChooser
 						.getFileFilter()).getExtensions()[0];
 
-				if (name.indexOf(extension) < 0)
+				if (name.indexOf("." + extension) < 0)
 					currentSystem.saveAs(new File(name + "." + extension),
 							extension);
 				else
