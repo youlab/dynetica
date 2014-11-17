@@ -1049,6 +1049,9 @@ public class ModularSystemEditor extends javax.swing.JPanel {
             system.remove(entityName);
             editorFrame.removeEditor(entityName);
         }
+        if(node != null && !node.isLeaf()){
+            JOptionPane.showMessageDialog(null, "Selected Node was not a leaf!", "alert", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     //
