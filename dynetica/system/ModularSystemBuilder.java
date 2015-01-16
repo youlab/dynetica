@@ -324,7 +324,7 @@ public class ModularSystemBuilder extends java.lang.Object implements
     	LocalParameter localParam;
     	
     	ProgressiveReaction reaction;
-    	Parameter param;
+    	dynetica.entity.Parameter param;
     	
     	int j;
     	
@@ -372,7 +372,7 @@ public class ModularSystemBuilder extends java.lang.Object implements
     		// Add parameters
     		for(j = 0; j < jsbmlReaction.getKineticLaw().getLocalParameterCount(); j++) {
     			localParam = jsbmlReaction.getKineticLaw().getLocalParameter(j);
-    			param = new Parameter(localParam.getId(), reactiveSystem);
+    			param = new dynetica.entity.Parameter(localParam.getId(), reactiveSystem);
     			param.setValue(localParam.getValue());
     			
     			

@@ -88,7 +88,8 @@ public class GeneticSystem extends ReactiveSystem {
 
             else if (entity instanceof Equilibrated) {
                 equilibratedReactions.add(entity);
-            } else if (entity instanceof Parameter) {
+            } else if (entity instanceof dynetica.entity.Parameter) {
+                dynetica.entity.Parameter name = (dynetica.entity.Parameter) entity;
                 parameters.add(entity);
             }
 
@@ -144,7 +145,7 @@ public class GeneticSystem extends ReactiveSystem {
                 //
                 if (g.getTranscription() == null) {
                     Reaction t1 = new Transcription(g, getNTP());
-                    Parameter kdm = new Parameter("RNA_Decay_Constant", this);
+                    dynetica.entity.Parameter kdm = new dynetica.entity.Parameter("RNA_Decay_Constant", this);
                     kdm.setValue(2e-4);
                     Reaction d1 = new Decay("Decay_" + g.getRnaName(), this,
                             g.getRna(), kdm);
@@ -153,7 +154,7 @@ public class GeneticSystem extends ReactiveSystem {
                 if (g.getGeneType() == Gene.mRNA_GENE
                         && g.getTranslation() == null) {
                     Reaction t2 = new Translation(g, getAminoAcid());
-                    Parameter kdp = new Parameter("Protein_Decay_Constant",
+                    dynetica.entity.Parameter kdp = new dynetica.entity.Parameter("Protein_Decay_Constant",
                             this);
                     kdp.setValue(2e-5);
                     Reaction d2 = new Decay("Decay_" + g.getProteinName(),
@@ -226,7 +227,7 @@ public class GeneticSystem extends ReactiveSystem {
 
         else if (entity instanceof Equilibrated) {
             equilibratedReactions.remove(entity);
-        } else if (entity instanceof Parameter) {
+        } else if (entity instanceof dynetica.entity.Parameter) {
             parameters.remove(entity);
         }
 
@@ -331,7 +332,7 @@ public class GeneticSystem extends ReactiveSystem {
 
         str.append(NEWLINE);
         for (int i = 0; i < parameters.size(); i++) {
-            Parameter p = ((Parameter) parameters.get(i));
+            dynetica.entity.Parameter p = ((dynetica.entity.Parameter) parameters.get(i));
             // if (p.isVisible())
             str.append(p.getCompleteInfo() + NEWLINE);
         }
