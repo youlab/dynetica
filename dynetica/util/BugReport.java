@@ -16,18 +16,18 @@ import javax.activation.*;
  */
 public class BugReport {
     
-    private Session session;
-    private String host;
-    private String to;
-    private String user;
-    private String auth;
+    final Session session;
+    final String host;
+    final String to;
+    final String user;
+    final String auth;
     
     public BugReport(){
         to = "chris.murphy@duke.edu";
         
         host = "smtp.gmail.com";
-        user = "";
-        auth = "";
+        user = "dynetica.bug.report@gmail.com";
+        auth = "acitenyd";
         
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

@@ -8,6 +8,7 @@ package dynetica.gui.algorithms;
 
 import dynetica.algorithm.HillEquationFit;
 import dynetica.entity.Substance;
+import dynetica.gui.plotting.HillEquationFitWindow;
 import dynetica.system.ReactiveSystem;
 import java.util.HashSet;
 import java.util.List;
@@ -39,10 +40,12 @@ public class HillEquationFitEditor extends javax.swing.JPanel {
         List substances = system.getSubstances();
         int nSubs = substances.size(); // substances.length;
         Substance s;
+        substanceBoxModel.addElement("");
+        productBoxModel.addElement("");
         for (int i = 0; i < nSubs; i++) {
             s = (Substance) (substances.get(i));
             substanceBoxModel.addElement(s.getName());
-            productBoxModel.addElement(s.getName());
+            productBoxModel.addElement("Rate of " + s.getName());
         }
         
         initComponents();
@@ -158,19 +161,30 @@ public class HillEquationFitEditor extends javax.swing.JPanel {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         // TODO add your handling code here:
+        if(model.getSubstance() == null || model.getProduct() == null){
+                        JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Please choose substance and product");
+        }
         model.setMaxRate(Double.parseDouble(maxRateField.getText()));
         model.run();
-        JOptionPane.showMessageDialog(null, "Km = " + model.getKm() + "\nn = " + model.getHillCoefficient());
+        JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Km = " + model.getKm() + "\nn = " + model.getHillCoefficient());
+        model.createBestFitLine();
+        HillEquationFitWindow frame = new HillEquationFitWindow(model);
+        frame.pack();
+        frame.show();
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void substanceComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_substanceComboBoxActionPerformed
         // TODO add your handling code here:
+        if(substanceBoxModel.getSelectedItem()=="")
+            return;
         model.setSubstance(system.getSubstance((String) substanceBoxModel.getSelectedItem()));
     }//GEN-LAST:event_substanceComboBoxActionPerformed
 
     private void productComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productComboBoxActionPerformed
         // TODO add your handling code here:
-        model.setProductRate(system.getSubstance((String) productBoxModel.getSelectedItem()));
+        if(productBoxModel.getSelectedItem()=="")
+            return;
+        model.setProduct(system.getSubstance(((String) productBoxModel.getSelectedItem()).substring(8)));
     }//GEN-LAST:event_productComboBoxActionPerformed
 
 

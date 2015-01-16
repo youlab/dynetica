@@ -10,6 +10,7 @@ import dynetica.entity.Substance;
 import dynetica.system.ReactiveSystem;
 import static java.lang.Math.exp;
 import static java.lang.Math.log;
+import static java.lang.Math.pow;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 /**
@@ -19,11 +20,13 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 public class HillEquationFit {
    
     private Substance substance;
-    private Substance productRate;
+    private Substance product;
+    
     private double maxRate;
     
     protected double[] sResults;
     protected double[] pResults;
+    private double[] bestFitPValues;
     
     private double hillCoefficient;
     private double Km;
@@ -39,12 +42,12 @@ public class HillEquationFit {
         return substance;
     }
     
-    public void setProductRate(Substance p){
-        this.productRate = p;
+    public void setProduct(Substance p){
+        this.product = p;
     }
     
-    public Substance getProductRate(){
-        return productRate;
+    public Substance getProduct(){
+        return product;
     }
     
     public void setMaxRate(double max){
@@ -59,13 +62,15 @@ public class HillEquationFit {
         
         double[] sValues = substance.getValues();
         sResults = new double[sValues.length];
-        double[] pValues = productRate.getRates();
+        double[] pValues = product.getRates();
         pResults = new double[sValues.length];
         
         SimpleRegression model = new SimpleRegression(true);
         
         for(int i=0;i<sValues.length;i++){
             double v = pValues[i]/maxRate;
+            if(v==0)
+                continue;
             sResults[i] = log(sValues[i]);
             pResults[i] = log(v/(1-v));
             model.addData(sResults[i], pResults[i]);
@@ -81,6 +86,18 @@ public class HillEquationFit {
     
     public double getHillCoefficient(){
         return hillCoefficient;
+    }
+    
+    public void createBestFitLine(){
+        double[] sValues = substance.getValues();
+        bestFitPValues = new double[sValues.length];
+        for(int i=0;i<sValues.length;i++){
+            bestFitPValues[i] = pow(sResults[i],hillCoefficient)/(pow(sResults[i],hillCoefficient) + pow(Km,hillCoefficient));
+        }
+    }
+    
+    public double[] getBestFitLine(){
+        return bestFitPValues;
     }
     
 }
