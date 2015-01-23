@@ -6,10 +6,18 @@
 
 package dynetica.util;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
 /**
  *
  * @author chrismurphy
@@ -17,18 +25,15 @@ import javax.activation.*;
 public class BugReport {
     
     final Session session;
-    final String host;
-    final String to;
-    final String user;
-    final String auth;
+    final String configfile = "dynetica/util/bugreportconfig.json";
+    private String host = null;
+    private String to;
+    private String user = null;
+    private String auth;
     
     public BugReport(){
-        to = "chris.murphy@duke.edu";
         
-        host = "smtp.gmail.com";
-        user = "dynetica.bug.report@gmail.com";
-        auth = "acitenyd";
-        
+        parseConfigFile(configfile);
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -41,6 +46,25 @@ public class BugReport {
         // Get the default Session object.
         session = Session.getDefaultInstance(props, null);
         session.setDebug(true);
+    }
+    
+    public void parseConfigFile(String file){
+        try {
+            JsonFactory jsonFactory = new JsonFactory();
+            JsonParser jp = jsonFactory.createJsonParser(new File(file));
+            jp.nextToken();
+            jp.nextValue();
+            to = jp.getText();
+            jp.nextValue();
+            host = jp.getText();
+            jp.nextValue();
+            user = jp.getText();
+            jp.nextValue();
+            auth = jp.getText();
+        } catch (IOException ex) {
+            Logger.getLogger(BugReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     
