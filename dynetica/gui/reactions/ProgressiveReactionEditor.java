@@ -78,6 +78,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         kineticsField = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
         tabbedInfoPane = new javax.swing.JTabbedPane();
         jSplitPane2 = new javax.swing.JSplitPane();
         substancePanel = new javax.swing.JPanel();
@@ -152,7 +153,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
 
         jPanel3.add(jScrollPane1);
 
-        jButton2.setText("Update");
+        jButton2.setText("Update Stoichiometry");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -168,6 +169,14 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jScrollPane2.setViewportView(kineticsField);
 
         jPanel3.add(jScrollPane2);
+
+        jButton3.setText("Update Kinetics");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton3);
 
         jSplitPane1.setRightComponent(jPanel3);
 
@@ -284,17 +293,24 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    if (stoichiometryField.getText().length() == 0 || kineticsField.getText().length() == 0){
-        JOptionPane.showMessageDialog(this ,"Please enter both stoichiometry and kinetics",
-    "Input Error",
-    JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-        setStoichiometry();
-        setKinetics();
-        jTextArea1.insert("Kinetics were succesfully updated. \n", 0);
-        jTextArea1.insert("Stoichiometry was succesfully updated. \n", 0);
+    
+    if (stoichiometryField.getText() != null)
+        {
+            jTextArea1.insert("Stoichiometry was succesfully updated. \n", 0);
+            setStoichiometry();
+            
+        }      
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+            
+    if (kineticsField.getText() != null)
+    {
+        jTextArea1.insert("Kinetics were succesfully updated. \n", 0);
+            setKinetics();
+          
+    }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void annotationAreaFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_annotationAreaFocusLost
         setAnnotation();
@@ -429,6 +445,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
     private javax.swing.JLabel formulaLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
