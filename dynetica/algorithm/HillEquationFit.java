@@ -17,10 +17,7 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
  *
  * @author chrismurphy
  */
-public class HillEquationFit {
-   
-    private Substance substance;
-    private Substance product;
+public class HillEquationFit extends DataFit{
     
     private double maxRate;
     
@@ -32,22 +29,11 @@ public class HillEquationFit {
     private double Km;
     
     public HillEquationFit(){
+        super();
     }
     
-    public void setSubstance(Substance s){
-        this.substance = s;
-    }
-    
-    public Substance getSubstance(){
-        return substance;
-    }
-    
-    public void setProduct(Substance p){
-        this.product = p;
-    }
-    
-    public Substance getProduct(){
-        return product;
+    public HillEquationFit(Substance independent, Substance dependent){
+        super(independent, dependent);
     }
     
     public void setMaxRate(double max){
@@ -60,18 +46,21 @@ public class HillEquationFit {
 
     public void run(){
         
-        double[] sValues = substance.getValues();
-        sResults = new double[sValues.length];
-        double[] pValues = product.getRates();
-        pResults = new double[sValues.length];
+        double[] xValues = independent.getValues();
+        xResults = new double[xValues.length];
+        double[] yValues = dependent.getRates();
+        yResults = new double[xValues.length];
         
         SimpleRegression model = new SimpleRegression(true);
         
-        for(int i=0;i<sValues.length;i++){
-            double v = pValues[i]/maxRate;
-            if(v==0)
+        for(int i=0;i<xValues.length;i++){
+            double v = yValues[i]/maxRate;
+            if(v==0){
+                sResults[i] = log(xValues[i]);
+                pResults[i] = 0;
                 continue;
-            sResults[i] = log(sValues[i]);
+            }
+            sResults[i] = log(xValues[i]);
             pResults[i] = log(v/(1-v));
             model.addData(sResults[i], pResults[i]);
         }
@@ -89,7 +78,7 @@ public class HillEquationFit {
     }
     
     public void createBestFitLine(){
-        double[] sValues = substance.getValues();
+        double[] sValues = dependent.getValues();
         bestFitPValues = new double[sValues.length];
         for(int i=0;i<sValues.length;i++){
             bestFitPValues[i] = pow(sResults[i],hillCoefficient)/(pow(sResults[i],hillCoefficient) + pow(Km,hillCoefficient));

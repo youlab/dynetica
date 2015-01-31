@@ -30,16 +30,16 @@ public class HillEquationFitWindow extends javax.swing.JFrame {
         model = fit;
         
         String[] labels = new String[2];
-        labels[0] = "Original Rate data for "+ model.getProduct().getName();
+        labels[0] = "Original Rate data for "+ model.getDependent().getName();
         labels[1] = "Best Fit Hill Equation";
         double[][] data = new double[2][model.getBestFitLine().length];
-        data[0] = model.getProduct().getRates();
+        data[0] = model.getDependent().getRates();
         data[1] = model.getBestFitLine();
         
         initComponents();
         figurePanel.add(figure.getPlotPanel(), java.awt.BorderLayout.CENTER);
-        figure.plotData(model.getSubstance().getName(), labels,
-            model.getSubstance().getValues(), data);
+        figure.plotData(model.getIndependent().getName(), labels,
+            model.getIndependent().getValues(), data);
         figurePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         figurePanel.repaint();
         pack();
