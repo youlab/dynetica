@@ -50,7 +50,8 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
     private void setUpBox() {
         List substanceList = system.getSubstances();
         List parameterList = system.getParameters();
-
+        
+        variableBoxModel.addElement("Choose Parameter");
         // Exclude simulationTimer
         for (Object o : parameterList) {
             if (!(o instanceof SimulationTimer))
@@ -316,6 +317,10 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_minFieldFocusLost
 
     private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_plotButtonActionPerformed
+        if(this.psa.getVariable()==null){
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Please choose a parameter!");
+            return;
+        }
         new dynetica.gui.plotting.BasicSensitivityAnalysisWindow(psa).show();
     }// GEN-LAST:event_plotButtonActionPerformed
 
@@ -335,6 +340,14 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_addButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_runButtonActionPerformed
+        if(psa.getVariable() == null){
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Please choose a parameter!");
+            return;
+        }
+        if(selectedSubstanceNames.getSize()==0){
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Please add at least 1 substance!");
+            return;
+        }
         Substance[] substances = new Substance[selectedSubstanceNames.getSize()];
         for (int i = 0; i < substances.length; i++)
             substances[i] = (Substance) (system
@@ -367,6 +380,9 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
 
     private void selectionBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectionBoxActionPerformed
         String name = (String) (selectionBox.getSelectedItem());
+        if(name.equals("Choose Parameter")){
+            return;
+        }
         EntityVariable ev = (EntityVariable) (system.getEntity(name));
         double baseValue;
         if (ev instanceof Parameter)
