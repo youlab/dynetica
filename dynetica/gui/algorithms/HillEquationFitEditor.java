@@ -161,7 +161,7 @@ public class HillEquationFitEditor extends javax.swing.JPanel {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         // TODO add your handling code here:
-        if(model.getSubstance() == null || model.getProduct() == null){
+        if(model.getIndependent() == null || model.getDependent() == null){
                         JOptionPane.showMessageDialog(this.getRootPane().getParent(), "Please choose substance and product");
         }
         model.setMaxRate(Double.parseDouble(maxRateField.getText()));
@@ -177,14 +177,14 @@ public class HillEquationFitEditor extends javax.swing.JPanel {
         // TODO add your handling code here:
         if(substanceBoxModel.getSelectedItem()=="")
             return;
-        model.setSubstance(system.getSubstance((String) substanceBoxModel.getSelectedItem()));
+        model.setIndependent(system.getSubstance((String) substanceBoxModel.getSelectedItem()));
     }//GEN-LAST:event_substanceComboBoxActionPerformed
 
     private void productComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productComboBoxActionPerformed
         // TODO add your handling code here:
         if(productBoxModel.getSelectedItem()=="")
             return;
-        model.setProduct(system.getSubstance(((String) productBoxModel.getSelectedItem()).substring(8)));
+        model.setDependent(system.getSubstance(((String) productBoxModel.getSelectedItem()).substring(8)));
     }//GEN-LAST:event_productComboBoxActionPerformed
 
 
