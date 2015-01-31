@@ -151,7 +151,7 @@ public class ProgressiveReaction extends Reaction implements Progressive {
 
     public void setStoichiometry(String s) {
         super.setStoichiometry(s);
-//        updateEntityList();
+        updateEntityList();
     }
 
     /**

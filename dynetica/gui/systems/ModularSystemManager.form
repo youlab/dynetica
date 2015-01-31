@@ -603,14 +603,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="reportItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Report Bug"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reportItemActionPerformed"/>
-              </Events>
-            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
