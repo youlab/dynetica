@@ -18,7 +18,7 @@ public class ExpressionConstants {
 
     // binary expressions
     public static final int SUM = 1; // a + b
-    public static final int SUBSTRACT = 2; // a - b
+    public static final int SUBTRACT = 2; // a - b
     public static final int MULTIPLY = 3; // a * b
     public static final int DIVIDE = 4; // a / b
     public static final int POW = 5; // a ^ b
@@ -94,7 +94,7 @@ public class ExpressionConstants {
         exprMap.put("(", new Integer(LEFT_PAREN));
         exprMap.put(")", new Integer(RIGHT_PAREN));
         exprMap.put("+", new Integer(SUM));
-        exprMap.put("-", new Integer(SUBSTRACT));
+        exprMap.put("-", new Integer(SUBTRACT));
         exprMap.put("*", new Integer(MULTIPLY));
         exprMap.put("/", new Integer(DIVIDE));
         exprMap.put("^", new Integer(POW));

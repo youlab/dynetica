@@ -547,7 +547,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psmcItem);
 
         noiseItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        noiseItem.setText("Noise Optimization");
+        noiseItem.setText("Noise Optimization (under development)");
         noiseItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noiseItemActionPerformed(evt);
@@ -556,7 +556,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(noiseItem);
 
         psMultiSubstanceItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        psMultiSubstanceItem.setText("Multi Substance Parameter Search");
+        psMultiSubstanceItem.setText("Multi Substance Parameter Search (under development)");
         psMultiSubstanceItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 psMultiSubstanceItemActionPerformed(evt);
@@ -565,7 +565,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psMultiSubstanceItem);
 
         bottleneckItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        bottleneckItem.setText("Bottleneck Simulation");
+        bottleneckItem.setText("Bottleneck Simulation (under development)");
         bottleneckItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottleneckItemActionPerformed(evt);
@@ -1631,7 +1631,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 						"Dynetica files (*.dyn)", "dyn"));
 		fileChooser
 				.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
-						"Synthetic Biology Markup Language (*.sbml)", "sbml"));
+						"Synthetic Biology Markup Language (*.xml)", "xml"));
 
 		int returnVal = fileChooser.showSaveDialog(this);
 
@@ -1702,7 +1702,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser(workDir);
         fileChooser.setAcceptAllFileFilterUsed(true);
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Dynetica files (*.dyn)", "dyn"));
-        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Synthetic Biology Markup Language (*.sbml)", "sbml"));
+        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Synthetic Biology Markup Language (*.xml)", "xml"));
 
 
         int returnVal = fileChooser.showOpenDialog(this);

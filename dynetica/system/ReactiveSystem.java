@@ -10,6 +10,7 @@ package dynetica.system;
 
 import dynetica.entity.Annotation;
 import dynetica.entity.Parameter;
+import dynetica.expression.Constant;
 import dynetica.gui.visualization.NetworkLayout;
 import dynetica.entity.*;
 import dynetica.algorithm.*;
@@ -635,7 +636,7 @@ public class ReactiveSystem extends SimpleSystem {
         if (!isSaved()) {
             if (fileType.equals("dyn"))
                 super.save();
-            else if (fileType.equals("sbml"))
+            else if (fileType.equals("xml"))
                 saveAsSBML();
         }
     }
@@ -643,6 +644,9 @@ public class ReactiveSystem extends SimpleSystem {
     private void saveAsSBML() {
         int level = 2;
         int version = 4;
+
+        // Used below for adding parameters
+        org.sbml.jsbml.Parameter param;
 
         SBMLDocument doc = new SBMLDocument(level, version);
         Model model = doc.createModel(name);
@@ -654,25 +658,36 @@ public class ReactiveSystem extends SimpleSystem {
         Substance sub;
         Species spec;
         for (int i = 0; i < substances.size(); i++) {
-            sub = (Substance) substances.get(i);
-            spec = new Species(sub.getName());
+            // Handles cases where a constant equation has been added by moving it to the list of parameters
+            if(substances.get(i) instanceof dynetica.entity.ExpressionVariable && ( (ExpressionVariable) substances.get(i)).getExpression() instanceof dynetica.expression.Constant) {
+                param = new org.sbml.jsbml.Parameter(( (ExpressionVariable) substances.get(i)).getName());
 
-            spec.setName(sub.getName());
-            spec.setCompartment(compartment);
+                param.setValue(( (ExpressionVariable) substances.get(i)).getExpression().getValue());
 
-            // not sure if I should use setInitialAmount or
-            // setInitialConcentration here - seems that it should be amount,
-            // from the values, in some example models
-            spec.setInitialAmount(sub.getInitialValue());
+                model.addParameter(param);
+            } else if(substances.get(i) instanceof dynetica.entity.Substance) {
+                sub = (Substance) substances.get(i);
 
-            model.addSpecies(spec);
+                spec = new Species(sub.getName());
+
+                spec.setName(sub.getName());
+                spec.setCompartment(compartment);
+
+                // not sure if I should use setInitialAmount or
+                // setInitialConcentration here - seems that it should be amount,
+                // from the values, in some example models
+                spec.setInitialAmount(sub.getInitialValue());
+
+                model.addSpecies(spec);
+            }
         }
 
         // Add the reactions
         org.sbml.jsbml.Reaction reaction;
         SpeciesReference specref;
+        ModifierSpeciesReference modspecref;
         ProgressiveReaction currentReaction;
-        List reactants, products;
+        List products, reactants, modifiers;
         GeneralExpression rateExpression;
 
         for (int i = 0; i < progressiveReactions.size(); i++) {
@@ -680,6 +695,7 @@ public class ReactiveSystem extends SimpleSystem {
             reaction = model.createReaction(currentReaction.getName());
 
             reactants = currentReaction.getReactants();
+            modifiers = currentReaction.getCatalysts();
             products = currentReaction.getProducts();
 
             // Add reactants
@@ -688,6 +704,20 @@ public class ReactiveSystem extends SimpleSystem {
                         model.getSpecies(((Substance) reactants.get(j))
                                 .getName()));
                 reaction.addReactant(specref);
+            }
+
+            // Add modifiers/catalysts
+            for (int j = 0; j < modifiers.size(); j++) {
+                // Skip constants stored in Dynetica as expression variables
+                // They were added as parameters in SBML
+                if(!model.containsParameter(((Substance) modifiers.get(j)).getName())) {
+                    // Screen for expression variables - they will always be classified as catalysts in Dynetica
+                    modspecref = new ModifierSpeciesReference(
+                            model.getSpecies(((Substance) modifiers.get(j))
+                                    .getName()));
+
+                    reaction.addModifier(modspecref);
+                }
             }
 
             // Add products
@@ -701,7 +731,6 @@ public class ReactiveSystem extends SimpleSystem {
             // Set as non-reversible
             reaction.setReversible(false);
 
-            // TODO: Specify kinetic law
             rateExpression = ((ProgressiveReaction) progressiveReactions.get(i))
                     .getRateExpression();
 
@@ -721,16 +750,16 @@ public class ReactiveSystem extends SimpleSystem {
             else
                 kineticLaw
                     .setMath(expressionToASTNode((SimpleOperator) rateExpression));
-            
+
             // Add parameters
-            LocalParameter localParam;
-            
-            for (int j = 0; j < currentReaction.getParameters().size(); j++) {
-            	localParam = new LocalParameter(currentReaction.getParameters().get(j).toString());
-            	
-            	localParam.setValue(((Parameter) currentReaction.getParameters().get(j)).getDefaultValue());
-            	
-            	kineticLaw.addLocalParameter(localParam);
+            for (Parameter dynParam : (ArrayList<Parameter>) currentReaction.getParameters()) {
+                if(!model.containsParameter(dynParam.toString())) {
+                    param = new org.sbml.jsbml.Parameter(dynParam.toString());
+
+                    param.setValue(dynParam.getDefaultValue());
+
+                    model.addParameter(param);
+                }
             }
 
             reaction.setKineticLaw(kineticLaw);
@@ -738,22 +767,37 @@ public class ReactiveSystem extends SimpleSystem {
 
         // Add the expression variables
         AssignmentRule assignmentRule;
-        org.sbml.jsbml.Parameter parameter;
-        ExpressionVariable currentExpVar;
         ASTNode math;
 
-        for (int i = 0; i < expressions.size(); i++) {
-            currentExpVar = (ExpressionVariable) expressions.get(i);
+        for (ExpressionVariable currentExpVar : (ArrayList<ExpressionVariable>) expressions) {
 
-            parameter = new org.sbml.jsbml.Parameter(currentExpVar.getName());
-            math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
+            param = new org.sbml.jsbml.Parameter(currentExpVar.getName());
 
-            assignmentRule = new AssignmentRule(math, level, version);
-            assignmentRule.setVariable(parameter);
+            // Recurse into the expression variable definitions, so that one expression's
+            // definition no longer just points to another expression
+            while(currentExpVar.getExpression() instanceof ExpressionVariable)
+                currentExpVar = (ExpressionVariable) currentExpVar.getExpression();
 
-            model.addRule(assignmentRule);
+            if(!(currentExpVar.getExpression() instanceof dynetica.expression.Constant)) {
+                // Use expression variable (in Dynetica) to create assignment rule (in SBML)
+                math = expressionToASTNode((SimpleOperator) currentExpVar.getExpression());
 
-            model.removeSpecies(currentExpVar.getName());
+                assignmentRule = new AssignmentRule(math, level, version);
+                assignmentRule.setVariable(param);
+
+                model.addRule(assignmentRule);
+            }
+        }
+
+        // Add parameters from expression variable
+        for (Parameter dynParam : (ArrayList<Parameter>) getParameters()) {
+            if(!model.containsParameter(dynParam.toString()) && !dynParam.toString().equals("Time")) {
+                param = new org.sbml.jsbml.Parameter(dynParam.toString());
+
+                param.setValue(dynParam.getDefaultValue());
+
+                model.addParameter(param);
+            }
         }
 
         // Write to file
@@ -773,25 +817,26 @@ public class ReactiveSystem extends SimpleSystem {
 
     public ASTNode expressionToASTNode(SimpleOperator expression) {
         ASTNode astNode = new ASTNode();
-        GeneralExpression leftNode = expression.getA();
-        GeneralExpression rightNode = expression.getB();
 
-        if (leftNode instanceof SimpleOperator)
-            astNode.addChild(expressionToASTNode((SimpleOperator) leftNode));
-        else {
-            if (leftNode instanceof Substance)
-                astNode.addChild(new ASTNode(((Substance) leftNode).getName()));
-            else
-                astNode.addChild(new ASTNode(leftNode.toString()));
-        }
+        ArrayList<GeneralExpression> nodes = new ArrayList<GeneralExpression>();
+        nodes.add(expression.getA());
+        nodes.add(expression.getB());
 
-        if (rightNode instanceof SimpleOperator)
-            astNode.addChild(expressionToASTNode((SimpleOperator) rightNode));
-        else {
-            if (rightNode instanceof Substance)
-                astNode.addChild(new ASTNode(((Substance) rightNode).getName()));
-            else
-                astNode.addChild(new ASTNode(rightNode.toString()));
+        for(GeneralExpression node : nodes) {
+            if (node instanceof SimpleOperator)
+                astNode.addChild(expressionToASTNode((SimpleOperator) node));
+            else {
+                if (node instanceof Substance)
+                    astNode.addChild(new ASTNode(((Substance) node).getName()));
+                else if(node instanceof dynetica.expression.Constant) {
+                    if((node.getValue() % 1) == 0)
+                        astNode.addChild(new ASTNode((int) node.getValue()));
+                    else
+                        astNode.addChild(new ASTNode(node.getValue()));
+                }
+                else
+                    astNode.addChild(new ASTNode(node.toString()));
+            }
         }
 
         String expressionClass = expression.getClass().getSimpleName();
@@ -802,7 +847,7 @@ public class ReactiveSystem extends SimpleSystem {
             astNode.setType(ASTNode.Type.DIVIDE);
         else if (expressionClass.equals("Sum"))
             astNode.setType(ASTNode.Type.PLUS);
-        else if (expressionClass.equals("Substract"))
+        else if (expressionClass.equals("Subtract"))
             astNode.setType(ASTNode.Type.MINUS);
         else if (expressionClass.equals("Pow"))
             astNode.setType(ASTNode.Type.POWER);

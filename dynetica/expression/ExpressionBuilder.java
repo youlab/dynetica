@@ -32,8 +32,8 @@ public class ExpressionBuilder extends ExpressionConstants {
         switch (getType(expr)) {
         case SUM:
             return DMath.sum(a, b);
-        case SUBSTRACT:
-            return DMath.substract(a, b);
+        case SUBTRACT:
+            return DMath.subtract(a, b);
         case MULTIPLY:
             return DMath.multiply(a, b);
         case DIVIDE:
