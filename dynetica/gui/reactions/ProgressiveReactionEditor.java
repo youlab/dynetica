@@ -64,6 +64,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed"
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -72,12 +73,12 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         formulaLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         stoichiometryField = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         kineticsField = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         tabbedInfoPane = new javax.swing.JTabbedPane();
         jSplitPane2 = new javax.swing.JSplitPane();
         substancePanel = new javax.swing.JPanel();
@@ -115,18 +116,19 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(100);
         jSplitPane1.setDividerSize(1);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(130, 100));
-        jPanel2.setLayout(new java.awt.GridLayout(2, 1, 2, 2));
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         formulaLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         formulaLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         formulaLabel.setText("Stoichiometry");
         formulaLabel.setToolTipText("The formula of the reaction following the current\nconvention in writing down chemical reactions. \nFor example, you can write:\n\n 3 A + 2 B -> 5 D");
-        formulaLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        formulaLabel.setMaximumSize(new java.awt.Dimension(400, 25));
+        formulaLabel.setAlignmentY(0.0F);
+        formulaLabel.setMaximumSize(new java.awt.Dimension(200, 25));
         formulaLabel.setMinimumSize(new java.awt.Dimension(100, 25));
-        formulaLabel.setPreferredSize(new java.awt.Dimension(130, 25));
+        formulaLabel.setPreferredSize(new java.awt.Dimension(250, 25));
         jPanel2.add(formulaLabel);
 
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -136,21 +138,30 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel3.setMaximumSize(new java.awt.Dimension(100, 25));
         jLabel3.setMinimumSize(new java.awt.Dimension(100, 25));
-        jLabel3.setPreferredSize(new java.awt.Dimension(100, 25));
+        jLabel3.setPreferredSize(new java.awt.Dimension(250, 25));
         jPanel2.add(jLabel3);
 
-        jSplitPane1.setLeftComponent(jPanel2);
-
-        jPanel3.setLayout(new java.awt.GridLayout(2, 1, 2, 2));
-
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(200, 40));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(250, 60));
 
         stoichiometryField.setLineWrap(true);
         stoichiometryField.setText(getStoichiometry());
         stoichiometryField.setWrapStyleWord(true);
         jScrollPane1.setViewportView(stoichiometryField);
 
-        jPanel3.add(jScrollPane1);
+        jPanel2.add(jScrollPane1);
+
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(250, 60));
+
+        kineticsField.setLineWrap(true);
+        kineticsField.setText(getKinetics());
+        kineticsField.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(kineticsField);
+
+        jPanel2.add(jScrollPane2);
+
+        jSplitPane1.setLeftComponent(jPanel2);
+
+        jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
 
         jButton2.setText("Update");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -159,15 +170,6 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
             }
         });
         jPanel3.add(jButton2);
-
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(200, 40));
-
-        kineticsField.setLineWrap(true);
-        kineticsField.setText(getKinetics());
-        kineticsField.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(kineticsField);
-
-        jPanel3.add(jScrollPane2);
 
         jSplitPane1.setRightComponent(jPanel3);
 
@@ -235,11 +237,11 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         pEditor.setLayout(pEditorLayout);
         pEditorLayout.setHorizontalGroup(
             pEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 247, Short.MAX_VALUE)
+            .addGap(0, 259, Short.MAX_VALUE)
         );
         pEditorLayout.setVerticalGroup(
             pEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 220, Short.MAX_VALUE)
         );
 
         parameterPanel.add(pEditor);
@@ -271,7 +273,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
