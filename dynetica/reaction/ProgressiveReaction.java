@@ -64,6 +64,9 @@ public class ProgressiveReaction extends Reaction implements Progressive {
     public void setRateExpression(GeneralExpression ge) {
         rateExpression = ge;
         kinetics = ge.toString();
+        for(int i=0;i<this.substances.keySet().toArray().length;i++){
+            ((Substance) this.substances.keySet().toArray()[i]).setRateExpression();
+        }
         updateEntityList();
         if (getSystem() != null)
             getSystem().fireSystemStateChange();
