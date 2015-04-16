@@ -404,13 +404,18 @@ public class ModularSystem extends ReactiveSystem {
             str.append(NEWLINE);
 
             str.append(module.getFullName() + " {" + NEWLINE);
-
+            // Topological Sort added by Billy Wan March 2015
+            List<ExpressionVariable> toSort = new ArrayList<>();
             for (int j = 0; j < module.getExpressions().size(); j++) {
-                str.append(NEWLINE);
                 ExpressionVariable ev = (ExpressionVariable) module
                         .getExpressions().get(j);
                 if (ev.getSystem().equals(module))
-                    str.append(ev.getCompleteInfo()).append(NEWLINE);
+                    toSort.add(ev);
+            }
+            List<ExpressionVariable> sorted = topoSort(toSort);
+            for (int j = 0; j < sorted.size(); j++){
+                ExpressionVariable ev = sorted.get(j);
+                str.append(ev.getCompleteInfo()).append(NEWLINE);
             }
 
             str.append("}").append(NEWLINE);
@@ -418,12 +423,28 @@ public class ModularSystem extends ReactiveSystem {
         }
 
         str.append(NEWLINE);
-
+        
+//        for (int i = 0; i < expressions.size(); i++) {
+//            ExpressionVariable ev = ((ExpressionVariable) expressions.get(i));
+//            if (ev.getSystem().equals(this)){
+//                str.append(ev.getCompleteInfo()).append(NEWLINE);
+//            }
+//        }
+        
+        List<ExpressionVariable> toSort = new ArrayList<>();
         for (int i = 0; i < expressions.size(); i++) {
             ExpressionVariable ev = ((ExpressionVariable) expressions.get(i));
-            if (ev.getSystem().equals(this))
-                str.append(ev.getCompleteInfo()).append(NEWLINE);
+            if (ev.getSystem().equals(this)){
+                toSort.add(ev);
+                
+            }
         }
+        List<ExpressionVariable> sorted = topoSort(toSort);
+        for (int i = 0; i < sorted.size(); i++){
+            ExpressionVariable ev = sorted.get(i);
+            str.append(ev.getCompleteInfo()).append(NEWLINE);
+        }
+            
 
         str.append(NEWLINE);
 
@@ -467,6 +488,73 @@ public class ModularSystem extends ReactiveSystem {
 
         return str.toString();
 
+    }
+    
+    public List<ExpressionVariable> topoSort(List<ExpressionVariable> evList){
+        Map<ExpressionVariable, List<ExpressionVariable>> evDependencies = 
+                new HashMap<>();
+        Map<ExpressionVariable, Integer> inDegree = new HashMap<>();
+        
+        for (int i = 0; i < evList.size(); i++) {
+            ExpressionVariable ev = evList.get(i);
+            inDegree.put(ev, 0);
+            // get list of substances that this ev depends on
+            List evDep = ev.getSubstances();
+            for (int j = 0; j < evDep.size(); j++){
+                Substance s = (Substance) evDep.get(j);
+                if (s instanceof ExpressionVariable){
+                    ExpressionVariable sev = (ExpressionVariable) s;
+                    if (!evDependencies.containsKey(sev)){
+                        List<ExpressionVariable> dependencies = new
+                                            ArrayList<>();
+                        dependencies.add(ev);
+                        evDependencies.put(sev, dependencies);
+                    }
+                    else {
+                        List<ExpressionVariable> dependencies =
+                                evDependencies.get(sev);
+                        dependencies.add(ev);
+                        evDependencies.put(sev, dependencies);
+                    }
+                }
+            }
+        }
+        
+        for (ExpressionVariable ev: evDependencies.keySet()){
+            List<ExpressionVariable> dependencies = evDependencies.get(ev);
+            for (ExpressionVariable dev:dependencies){
+                if (!inDegree.containsKey(dev)){
+                    Integer degree = 1;
+                    inDegree.put(dev, degree);
+                }
+                else {
+                    Integer degree = inDegree.get(dev);
+                    degree += 1;
+                    inDegree.put(dev, degree);
+                }
+            }
+        }
+        
+        // Queue of expression variables with indegree 0
+        Queue<ExpressionVariable> inDegree0 = new LinkedList<>();
+        for (ExpressionVariable ev: inDegree.keySet()){
+            if (inDegree.get(ev).equals(0)) inDegree0.add(ev);
+        }
+        List<ExpressionVariable> sorted = new ArrayList<>();
+        while (!inDegree0.isEmpty()){
+            ExpressionVariable ev = inDegree0.poll();
+            sorted.add(ev);
+            if (evDependencies.containsKey(ev)){
+                List<ExpressionVariable> dependencies = evDependencies.get(ev);
+                for (ExpressionVariable dev:dependencies){
+                    Integer degree = inDegree.get(dev);
+                    degree += -1;
+                    if (degree.equals(0)) inDegree0.add(dev);
+                    inDegree.put(dev, degree);
+                }
+            }
+        }
+        return sorted;
     }
 
     public void merge(File systemFile) throws FileNotFoundException,
