@@ -7,24 +7,27 @@
 
 package dynetica.gui.systems;
 
+import dynetica.algorithm.*;
+import dynetica.event.*;
+import dynetica.gui.AboutDyneticaFrame;
+import dynetica.gui.ApplicationFrame;
+import dynetica.gui.BugReportEditor;
 import dynetica.gui.algorithms.BottleNeckEditor;
+import dynetica.gui.algorithms.MultiParameterSensitivityAnalysisEditor;
 import dynetica.gui.algorithms.NoiseOptimizationEditor;
 import dynetica.gui.algorithms.ParameterSearchDoseResponseEditor;
 import dynetica.gui.algorithms.ParameterSearchGeneticEditor;
 import dynetica.gui.algorithms.ParameterSearchMonteCarloEditor;
 import dynetica.gui.algorithms.ParameterSearchMultiSubstanceEditor;
 import dynetica.gui.algorithms.SensitivityAnalysisEditor;
-import dynetica.gui.algorithms.MultiParameterSensitivityAnalysisEditor;
-import java.util.*;
-import dynetica.system.*;
-import dynetica.algorithm.*;
-import java.io.*;
-import javax.swing.*;
-import java.awt.Toolkit;
-import dynetica.event.*;
-import dynetica.gui.AboutDyneticaFrame;
-import dynetica.gui.ApplicationFrame;
 import dynetica.gui.entities.FunctionEditor;
+import dynetica.system.*;
+import dynetica.util.BugReport;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.event.*;
 
 /**
@@ -99,6 +102,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
 			algorithmBoxModel.addElement(algorithmNames[i]);
 		}
 	}
+        
+        private void reportItemActionPerformed(java.awt.event.ActionEvent evt){// GEN-FIRST:event_reportItemActionPerformed
+                ApplicationFrame frame = new ApplicationFrame(
+				"Dynetic Bug Reporter");
+		frame.getContentPane().add(new BugReportEditor(new BugReport()));
+		frame.pack();
+                frame.show();
+        }
 
 	// you have to get the summer internship before you leave from this place
 	// for new york
@@ -167,6 +178,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         viewMatlabStochastic = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutItem = new javax.swing.JMenuItem();
+        reportItem = new javax.swing.JMenuItem();
         toolBarPanel = new javax.swing.JPanel();
         fileToolBar = new javax.swing.JToolBar();
         newButton = new javax.swing.JButton();
@@ -543,7 +555,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psmcItem);
 
         noiseItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        noiseItem.setText("Noise Optimization (under development)");
+        noiseItem.setText("Noise Optimization");
         noiseItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noiseItemActionPerformed(evt);
@@ -552,7 +564,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(noiseItem);
 
         psMultiSubstanceItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        psMultiSubstanceItem.setText("Multi Substance Parameter Search (under development)");
+        psMultiSubstanceItem.setText("Multi Substance Parameter Search");
         psMultiSubstanceItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 psMultiSubstanceItemActionPerformed(evt);
@@ -561,7 +573,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psMultiSubstanceItem);
 
         bottleneckItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        bottleneckItem.setText("Bottleneck Simulation (under development)");
+        bottleneckItem.setText("Bottleneck Simulation");
         bottleneckItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottleneckItemActionPerformed(evt);
@@ -643,6 +655,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
             }
         });
         helpMenu.add(aboutItem);
+
+        reportItem.setText("Report Bug");
+        reportItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(reportItem);
 
         menuBar.add(helpMenu);
 
@@ -1357,12 +1377,15 @@ public class ModularSystemManager extends javax.swing.JFrame {
 
 	private void newModularSystem() {
 		String newName;
-		for (;;) {
-			newName = JOptionPane.showInputDialog(
-					"Enter the name for the new system:").trim();
-			if (newName.length() > 0) {
-				break;
-			}
+		while(true) {
+			newName = JOptionPane.showInputDialog("Enter the name for the new system:");
+                        if(newName!=null){
+                            newName = newName.trim();
+                            if (newName.length() > 0) {
+                                    break;
+                            }
+                        }else
+                            return;
 		}
 		currentSystem = new ModularSystem(newName);
 		addSystem();
@@ -1519,6 +1542,16 @@ public class ModularSystemManager extends javax.swing.JFrame {
 	// close the system and the file associated with it.
 	//
 	private void closeSystem() {
+                if(!currentSystem.isSaved()){
+                    Object[] options = {"Save", "Don't Save", "Canvel"};
+                    int save = JOptionPane.showOptionDialog(this, 
+                            "You have unsaved changes, would you like to save before closing?",
+                            "Save on close?", JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                    if(save==JOptionPane.CANCEL_OPTION)
+                        return;
+                    if(save==JOptionPane.YES_OPTION)
+                        saveSystem();
+                }
 		if (openedSystems.size() > 1) {
 			int currentIndex = systemPane.getSelectedIndex();
 			systemPane.remove(currentIndex);
@@ -1616,7 +1649,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				String extension = ((javax.swing.filechooser.FileNameExtensionFilter) fileChooser
 						.getFileFilter()).getExtensions()[0];
 
-				if (name.indexOf(extension) < 0)
+				if (name.indexOf("." + extension) < 0)
 					currentSystem.saveAs(new File(name + "." + extension),
 							extension);
 				else
@@ -1748,6 +1781,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
     private javax.swing.JMenuItem psmcItem;
     private javax.swing.JButton renameButton;
     private javax.swing.JMenuItem renameItem;
+    private javax.swing.JMenuItem reportItem;
     private javax.swing.JButton resumeButton;
     private javax.swing.JMenuItem resumeItem;
     private javax.swing.JMenuItem rssItem;
