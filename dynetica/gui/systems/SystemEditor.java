@@ -952,16 +952,17 @@ public class SystemEditor extends javax.swing.JPanel {
 
             String newName = e.getName();
             do {
-                newName = (String) JOptionPane
-                        .showInputDialog(
-                                this,
-                                "Enter the name for the new "
-                                        + (className.substring(className
-                                                .lastIndexOf('.') + 1) + "\n" + "Please make sure there are no spaces or curly brackets in the name."),
-                                "Input", JOptionPane.QUESTION_MESSAGE, null,
-                                null, e.getName());// i don't get the last
-                                                   // statement e.getName();
-                                                   // shouldn't it be setname
+                    newName = (String) JOptionPane
+                            .showInputDialog(
+                                    this,
+                                    "Enter the name for the new "
+                                            + (className.substring(className
+                                                    .lastIndexOf('.') + 1) + "\n" + "Please make sure there are no spaces or curly brackets in the name."),
+                                    "Input", JOptionPane.QUESTION_MESSAGE, null,
+                                    null, e.getName());// i don't get the last
+                                                       // statement e.getName();
+                                                       // shouldn't it be setname
+                    if(newName==null){return;}
             } while (newName.contains(" ") || newName.contains("{")
                     || newName.contains("}"));
 
