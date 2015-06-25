@@ -4,6 +4,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/system/ModularSystem.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/gui/systems/ModularSystemManager.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/system/SimpleSystem.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/system/AbstractSystem.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/entity/Substance.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/system/ReactiveSystem.java</file>
+            <file>file:/Users/Billy/Desktop/dynetica/dynetica/entity/ExpressionVariable.java</file>
+=======
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/BugReportEditor.java</file>
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/algorithm/SensitivityAnalysis.java</file>
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/util/BugReport.java</file>
@@ -21,6 +30,7 @@
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/systems/ModularSystemEditor.java</file>
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/algorithm/DataFit.java</file>
             <file>file:/Users/chrismurphy/Dynetica/workspace/dynetica/dynetica/gui/plotting/SensitivityPlaneWindow.java</file>
+>>>>>>> e6b707d473feb28722f8bef73827f2b7d8a64b88
         </group>
     </open-files>
 </project-private>
