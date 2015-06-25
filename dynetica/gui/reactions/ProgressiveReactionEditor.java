@@ -149,6 +149,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jScrollPane1.setViewportView(stoichiometryField);
 
         jPanel2.add(jScrollPane1);
+<<<<<<< HEAD
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(250, 60));
 
@@ -164,6 +165,23 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
 
         jButton2.setText("Update");
+=======
+
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(250, 60));
+
+        kineticsField.setLineWrap(true);
+        kineticsField.setText(getKinetics());
+        kineticsField.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(kineticsField);
+
+        jPanel2.add(jScrollPane2);
+
+        jSplitPane1.setLeftComponent(jPanel2);
+
+        jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
+
+        jButton2.setText("Update Stoichiometry");
+>>>>>>> e6b707d473feb28722f8bef73827f2b7d8a64b88
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -298,6 +316,16 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jTextArea1.insert("Kinetics were succesfully updated. \n", 0);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+            
+    if (kineticsField.getText() != null)
+    {
+        jTextArea1.insert("Kinetics were succesfully updated. \n", 0);
+            setKinetics();
+          
+    }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void annotationAreaFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_annotationAreaFocusLost
         setAnnotation();
     }// GEN-LAST:event_annotationAreaFocusLost
@@ -431,6 +459,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
     private javax.swing.JLabel formulaLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

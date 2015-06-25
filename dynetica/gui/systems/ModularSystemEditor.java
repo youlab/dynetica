@@ -1068,6 +1068,7 @@ public class ModularSystemEditor extends javax.swing.JPanel {
 
             String newName = e.getName();
             do {
+                System.out.print("here!!");
                 newName = (String) JOptionPane
                         .showInputDialog(
                                 this,

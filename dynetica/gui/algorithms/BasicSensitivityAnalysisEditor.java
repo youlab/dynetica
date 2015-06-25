@@ -50,7 +50,6 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
     private void setUpBox() {
         List substanceList = system.getSubstances();
         List parameterList = system.getParameters();
-        
         variableBoxModel.addElement("Choose Parameter");
         // Exclude simulationTimer
         for (Object o : parameterList) {

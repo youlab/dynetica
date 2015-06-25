@@ -5,10 +5,10 @@ package dynetica.gui.plotting;
  * @author  Lingchong You
  * @version 0.1
  */
-import dynetica.algorithm.HillEquationFit;
+import dynetica.algorithm.DataFit;
 import dynetica.entity.*;
 import dynetica.gui.ApplicationFrame;
-import dynetica.gui.algorithms.HillEquationFitEditor;
+import dynetica.gui.algorithms.DataFittingEditor;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -250,12 +250,13 @@ public class PhasePlaneWindow extends javax.swing.JFrame {
         startItem = new javax.swing.JMenuItem();
         pauseItem = new javax.swing.JMenuItem();
         resumeItem = new javax.swing.JMenuItem();
-        hillItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         logXItem = new javax.swing.JCheckBoxMenuItem();
         logYItem = new javax.swing.JCheckBoxMenuItem();
         selectAllItem = new javax.swing.JMenuItem();
         autoUpdateBox = new javax.swing.JCheckBoxMenuItem();
+        dataMenu = new javax.swing.JMenu();
+        dataFitItem = new javax.swing.JMenuItem();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -280,8 +281,8 @@ public class PhasePlaneWindow extends javax.swing.JFrame {
         jScrollPane1.setPreferredSize(new java.awt.Dimension(60, 200));
 
         xList.setModel(xNames);
-        xList.setSelectedIndex(0);
         xList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        xList.setSelectedIndex(0);
         xList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 xListValueChanged(evt);
@@ -483,14 +484,6 @@ public class PhasePlaneWindow extends javax.swing.JFrame {
         });
         simMenu.add(resumeItem);
 
-        hillItem.setText("Fit Hill Equation");
-        hillItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hillItemActionPerformed(evt);
-            }
-        });
-        simMenu.add(hillItem);
-
         jMenuBar1.add(simMenu);
 
         viewMenu.setText("View");
@@ -530,16 +523,28 @@ public class PhasePlaneWindow extends javax.swing.JFrame {
 
         jMenuBar1.add(viewMenu);
 
+        dataMenu.setText("Data");
+
+        dataFitItem.setText("Fit Data");
+        dataFitItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dataFitItemActionPerformed(evt);
+            }
+        });
+        dataMenu.add(dataFitItem);
+
+        jMenuBar1.add(dataMenu);
+
         setJMenuBar(jMenuBar1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void hillItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hillItemActionPerformed
+    private void dataFitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataFitItemActionPerformed
         // TODO add your handling code here:
-        ApplicationFrame frame = new ApplicationFrame("Hill Equation Fit");
-        frame.getContentPane().add(new HillEquationFitEditor(new HillEquationFit(), system));
+        ApplicationFrame frame = new ApplicationFrame("Data Fit");
+        frame.getContentPane().add(new DataFittingEditor(new DataFit(system), xNames, yNames));
         frame.pack();
         frame.show();
-    }//GEN-LAST:event_hillItemActionPerformed
+    }//GEN-LAST:event_dataFitItemActionPerformed
 
     private void saveDataItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveDataItemActionPerformed
         saveData();
@@ -720,10 +725,11 @@ public class PhasePlaneWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBoxMenuItem autoUpdateBox;
     private javax.swing.JMenuItem closeItem;
+    private javax.swing.JMenuItem dataFitItem;
+    private javax.swing.JMenu dataMenu;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JPanel figurePanel;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem hillItem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;

@@ -102,6 +102,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
 			algorithmBoxModel.addElement(algorithmNames[i]);
 		}
 	}
+        
+        private void reportItemActionPerformed(java.awt.event.ActionEvent evt){// GEN-FIRST:event_reportItemActionPerformed
+                ApplicationFrame frame = new ApplicationFrame(
+				"Dynetic Bug Reporter");
+		frame.getContentPane().add(new BugReportEditor(new BugReport()));
+		frame.pack();
+                frame.show();
+        }
 
 	// you have to get the summer internship before you leave from this place
 	// for new york
@@ -547,7 +555,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psmcItem);
 
         noiseItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        noiseItem.setText("Noise Optimization (under development)");
+        noiseItem.setText("Noise Optimization");
         noiseItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noiseItemActionPerformed(evt);
@@ -556,7 +564,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(noiseItem);
 
         psMultiSubstanceItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        psMultiSubstanceItem.setText("Multi Substance Parameter Search (under development)");
+        psMultiSubstanceItem.setText("Multi Substance Parameter Search");
         psMultiSubstanceItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 psMultiSubstanceItemActionPerformed(evt);
@@ -565,7 +573,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         simMenu.add(psMultiSubstanceItem);
 
         bottleneckItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
-        bottleneckItem.setText("Bottleneck Simulation (under development)");
+        bottleneckItem.setText("Bottleneck Simulation");
         bottleneckItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bottleneckItemActionPerformed(evt);
@@ -1075,14 +1083,6 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		new AboutDyneticaFrame().show();
 	}// GEN-LAST:event_aboutItemActionPerformed
 
-        private void reportItemActionPerformed(java.awt.event.ActionEvent evt){// GEN-FIRST:event_reportItemActionPerformed
-                ApplicationFrame frame = new ApplicationFrame(
-				"Dynetic Bug Reporter");
-		frame.getContentPane().add(new BugReportEditor(new BugReport()));
-		frame.pack();
-                frame.show();
-        }// GEN-LAST:event_reportItemActionPerformed
-        
 	private void saveAsButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveAsButtonActionPerformed
 		saveAsSystem();
 	}// GEN-LAST:event_saveAsButtonActionPerformed
