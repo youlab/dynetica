@@ -163,7 +163,8 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
 
         jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
 
-        jButton2.setText("Update Stoichiometry");
+        jButton2.setText("Update");
+
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
