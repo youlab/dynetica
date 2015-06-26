@@ -149,7 +149,6 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jScrollPane1.setViewportView(stoichiometryField);
 
         jPanel2.add(jScrollPane1);
-<<<<<<< HEAD
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(250, 60));
 
@@ -165,23 +164,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
 
         jButton2.setText("Update");
-=======
 
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(250, 60));
-
-        kineticsField.setLineWrap(true);
-        kineticsField.setText(getKinetics());
-        kineticsField.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(kineticsField);
-
-        jPanel2.add(jScrollPane2);
-
-        jSplitPane1.setLeftComponent(jPanel2);
-
-        jPanel3.setLayout(new java.awt.GridLayout(1, 1, 2, 2));
-
-        jButton2.setText("Update Stoichiometry");
->>>>>>> e6b707d473feb28722f8bef73827f2b7d8a64b88
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
