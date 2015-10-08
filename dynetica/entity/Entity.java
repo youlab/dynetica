@@ -46,10 +46,12 @@ abstract public class Entity implements SystemProperties, Editable, Cloneable {
     // Tentatively added by Lingchong You on 2/10/2000 to facilitate
     // the processing of properties of an object. Need to find out
     // whether Java already provides something like this.
-    //
     // it may be better to define this method in an interface.
+    //
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     public void setProperty(String propertyName, String propertyValue)
-            throws UnknownPropertyException, InvalidPropertyValueException {
+            throws UnknownPropertyException, InvalidPropertyValueException, 
+            IllegalExpressionException{
         if (propertyName.compareTo(name) == 0)
             name = propertyValue;
         else

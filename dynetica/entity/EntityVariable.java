@@ -133,10 +133,12 @@ public class EntityVariable extends Entity implements Variable, ModelConstants {
         if (getSystem() != null)
             getSystem().fireSystemStateChange();
     }
-
+    
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     @Override
     public void setProperty(String propertyName, String propertyValue)
-            throws UnknownPropertyException, InvalidPropertyValueException {
+            throws UnknownPropertyException, InvalidPropertyValueException, 
+            IllegalExpressionException{
         if (propertyName.compareTo("Max") == 0)
             max = Double.parseDouble(propertyValue);
         else if (propertyName.compareTo("Min") == 0)
