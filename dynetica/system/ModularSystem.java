@@ -399,8 +399,32 @@ public class ModularSystem extends ReactiveSystem {
                 str.append(p.getCompleteInfo()).append(NEWLINE);
         }
 
+        // Added to fix the cross-module ev dependencies bug
+        // Billy Wan May 2015
+        Map<ExpressionVariable, AbstractModule> evToModule = new HashMap<>();
+        List<ExpressionVariable> toSortModule = new ArrayList<>();
         for (int i = 0; i < modules.size(); i++) {
             AbstractModule module = (AbstractModule) modules.get(i);
+             for (int j = 0; j < module.getExpressions().size(); j++) {
+                ExpressionVariable ev = (ExpressionVariable) module
+                        .getExpressions().get(j);
+                if (ev.getSystem().equals(module)){
+                    toSortModule.add(ev);
+                    evToModule.put(ev, module);
+                }
+            }
+        }
+        List<ExpressionVariable> sortedModules = topoSort(toSortModule);
+        List<AbstractModule> modulesInOrder = new ArrayList<>();
+        for (int i = 0; i < sortedModules.size(); i++){
+            ExpressionVariable ev = sortedModules.get(i);
+            AbstractModule moduleOfEv = evToModule.get(ev);
+            if (!modulesInOrder.contains(moduleOfEv))
+                modulesInOrder.add(moduleOfEv);
+        }
+        
+        for (int i = 0; i < modulesInOrder.size(); i++) {
+            AbstractModule module = (AbstractModule) modulesInOrder.get(i);
             str.append(NEWLINE);
 
             str.append(module.getFullName() + " {" + NEWLINE);
