@@ -379,31 +379,33 @@ public class BasicSensitivityAnalysisEditor extends javax.swing.JPanel {
 
     private void selectionBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectionBoxActionPerformed
         String name = (String) (selectionBox.getSelectedItem());
-        if(name.equals("Choose Parameter")){
-            return;
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+                        "Error", JOptionPane.ERROR_MESSAGE);
         }
-        EntityVariable ev = (EntityVariable) (system.getEntity(name));
-        double baseValue;
-        if (ev instanceof Parameter)
-            baseValue = ev.getValue();
-        else
-            baseValue = ((Substance) ev).getInitialValue();
-
-        double min = 0.1 * baseValue;
-        double max = 10 * baseValue;
-
-        if (baseValue <= Double.MIN_VALUE) {
-            min = 0.0;
-            max = 1.0;
+        else {
+            EntityVariable ev = (EntityVariable) (system.getEntity(name));
+            double baseValue;
+            if (ev instanceof Parameter)
+                baseValue = ev.getValue();
+            else
+                baseValue = ((Substance) ev).getInitialValue();
+            
+            double min = 0.1 * baseValue;
+            double max = 10 * baseValue;
+            
+            if (baseValue <= Double.MIN_VALUE) {
+                min = 0.0;
+                max = 1.0;
+            }
+            
+            maxField.setText(dynetica.util.Numerics.displayFormattedValue(max));
+            minField.setText(dynetica.util.Numerics.displayFormattedValue(min));
+            
+            psa.setMax(max);
+            psa.setMin(min);
+            psa.setVariable(ev);
         }
-
-        maxField.setText(dynetica.util.Numerics.displayFormattedValue(max));
-        minField.setText(dynetica.util.Numerics.displayFormattedValue(min));
-
-        psa.setMax(max);
-        psa.setMin(min);
-        psa.setVariable(ev);
-
     }// GEN-LAST:event_selectionBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

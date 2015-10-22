@@ -784,11 +784,12 @@ public class ModularSystem extends ReactiveSystem {
         this.setSaved(false);
         fireSystemStructureChange();
     }
-
+    
+    // Modified by Billy Wan Oct 2015 to throw IllegalExpressionException
     public void addModule(File systemFile) throws FileNotFoundException,
             IOException, ClassNotFoundException, InstantiationException,
             IllegalAccessException, UnknownPropertyException,
-            InvalidPropertyValueException {
+            InvalidPropertyValueException, IllegalExpressionException {
         SimpleSystem system;
         GeneralModule mod = new GeneralModule();
         ModularSystem tempSystem = new ModularSystem();
