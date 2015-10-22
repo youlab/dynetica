@@ -19,6 +19,9 @@ public class Substance extends EntityVariable {
     /** Holds the value of the substance; i. e., the # of molecules */
     double initialValue = 0.0;
     double rate = 0.0;
+    // Billy Wan added on July 6 2015 
+    // to allow initial value to be an expression.
+    GeneralExpression initialExpression;
 
     protected DoubleList values = new DoubleList();
     protected DoubleList rates = new DoubleList();
@@ -264,11 +267,22 @@ public class Substance extends EntityVariable {
     }
 
     public double getInitialValue() {
+        if (initialExpression != null) return initialExpression.getValue();
         return initialValue;
+    }
+    
+    public GeneralExpression getInitialExpression(){
+        return initialExpression;
     }
 
     public void setInitialValue(double iv) {
         initialValue = iv;
+        if (getSystem() != null)
+            getSystem().fireSystemStateChange();
+    }
+    
+    public void setInitialExpression(GeneralExpression iexp){
+        initialExpression = iexp;
         if (getSystem() != null)
             getSystem().fireSystemStateChange();
     }
@@ -326,7 +340,8 @@ public class Substance extends EntityVariable {
         setRateExpression();
         //Kanishk: Not very clear what this method does.
         setStochasticTerm();
-        value = initialValue;
+//        value = initialValue;
+        value = getInitialValue();
     }
 
     @Override
@@ -337,7 +352,8 @@ public class Substance extends EntityVariable {
     public String getCompleteInfo() {
         StringBuffer sb = new StringBuffer(getFullName() + " {" + NEWLINE
                 + " InitialValue { " + getInitialValue() + "}" + NEWLINE
-                + "Value {" + getValue() + "}" + NEWLINE + " Min {" + getMin()
+                + " InitialExpression {" + getInitialExpression() + "}" + NEWLINE
+                + " Value {" + getValue() + "}" + NEWLINE + " Min {" + getMin()
                 + "}" + NEWLINE + " Max {" + getMax() + "}" + NEWLINE
                 +
                 // the getX and getY methods were implemented on 4/19/2005
@@ -349,13 +365,18 @@ public class Substance extends EntityVariable {
 
     @Override
     public void setProperty(String propertyName, String propertyValue)
-            throws UnknownPropertyException, InvalidPropertyValueException {
+            throws UnknownPropertyException, InvalidPropertyValueException,
+            IllegalExpressionException{
         if (propertyName.compareToIgnoreCase("max") == 0)
             setMax(Double.parseDouble(propertyValue));
         else if (propertyName.compareToIgnoreCase("min") == 0)
             setMin(Double.parseDouble(propertyValue));
         else if (propertyName.compareToIgnoreCase("InitialValue") == 0)
             setInitialValue(Double.parseDouble(propertyValue));
+        // added by Billy Wan Sep 2015
+        else if (propertyName.compareToIgnoreCase("InitialExpression") == 0)
+            setInitialExpression(ExpressionParser.parse(this.getSystem(),
+                    propertyValue));
         else if (propertyName.compareToIgnoreCase("Value") == 0)
             setValue(Double.parseDouble(propertyValue));
         else if (propertyName.compareToIgnoreCase("visible") == 0) {

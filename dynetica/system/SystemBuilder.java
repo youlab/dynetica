@@ -128,11 +128,11 @@ public class SystemBuilder extends java.lang.Object implements SystemProperties 
         return temp.toString();
 
     }
-
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     public static void set(SimpleSystem system, int offset, String properties)
             throws InvalidPropertyValueException, UnknownPropertyException,
             IOException, IllegalAccessException, ClassNotFoundException,
-            InstantiationException {
+            InstantiationException, IllegalExpressionException {
 
         System.out.println("Setting up System " + system.getName());
         LineNumberReader reader = new LineNumberReader(new StringReader(
@@ -192,10 +192,10 @@ public class SystemBuilder extends java.lang.Object implements SystemProperties 
         }
 
     }
-
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     public static void set(Entity entity, int offset, String properties)
             throws InvalidPropertyValueException, UnknownPropertyException,
-            IOException {
+            IOException, IllegalExpressionException {
         // System.out.println(properties);
         LineNumberReader reader = new LineNumberReader(new StringReader(
                 properties));
@@ -243,13 +243,15 @@ public class SystemBuilder extends java.lang.Object implements SystemProperties 
      *             This method can be used to build ReactiveSystem,
      *             GeneticSystem, and Genome.
      */
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     public static AbstractSystem build(File systemFile,
             AbstractSystem superSystem) throws FileNotFoundException,
             IOException, ClassNotFoundException,
 
             InstantiationException, IllegalAccessException,
 
-            UnknownPropertyException, InvalidPropertyValueException {
+            UnknownPropertyException, InvalidPropertyValueException,
+            IllegalExpressionException{
         SimpleSystem system;
         LineNumberReader reader = new LineNumberReader(new FileReader(
                 systemFile));
@@ -357,11 +359,12 @@ public class SystemBuilder extends java.lang.Object implements SystemProperties 
      * 
      * @throws InvalidPropertyValueException
      */
-
+    // modified by Billy Wan Sep 2015 to throw IllegalExpressionException
     public static AbstractSystem build(File systemFile)
             throws FileNotFoundException, IOException, ClassNotFoundException,
             InstantiationException, IllegalAccessException,
-            UnknownPropertyException, InvalidPropertyValueException {
+            UnknownPropertyException, InvalidPropertyValueException,
+            IllegalExpressionException{
         return build(systemFile, null);
     }
 }
