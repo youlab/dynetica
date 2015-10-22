@@ -116,7 +116,12 @@ public class SubstanceEditor extends javax.swing.JPanel {
         fieldPane.setLayout(new java.awt.GridLayout(5, 1));
 
         initialValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        initialValueField.setText(String.valueOf(substance.getInitialValue()));
+        if (substance.getInitialExpression() != null) {
+            initialValueField.setText(substance.getInitialExpression().toString());
+        }
+        else {
+            initialValueField.setText(String.valueOf(substance.getInitialValue()));
+        }
         initialValueField.setMaximumSize(new java.awt.Dimension(400, 25));
         initialValueField.setPreferredSize(new java.awt.Dimension(106, 25));
         initialValueField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -272,23 +277,26 @@ public class SubstanceEditor extends javax.swing.JPanel {
     }
 
     private void setSubstanceInitialValue() {
-//        double oldValue = substance.getInitialValue();
-//        double newValue = Double.parseDouble(initialValueField.getText());
-//        if (oldValue != newValue) {
-//            substance.setInitialValue(newValue);
-//            substance.getSystem().fireSystemStateChange();
-//        }
-        GeneralExpression oldExpression = substance.getInitialExpression();
+        double oldValue = substance.getInitialValue();
         try {
-            GeneralExpression newExpression = ExpressionParser.parse(
-                    substance.getSystem(), initialValueField.getText());
-            if (oldExpression == null || !oldExpression.equals(newExpression)){
-                substance.setInitialExpression(newExpression);
+            double newValue = Double.parseDouble(initialValueField.getText());
+            if (oldValue != newValue) {
+                substance.setInitialValue(newValue);
                 substance.getSystem().fireSystemStateChange();
             }
-        } catch (IllegalExpressionException iee) {
-            System.out.println(iee);
-        }  
+        } catch (NumberFormatException npe) {
+            GeneralExpression oldExpression = substance.getInitialExpression();
+            try {
+                GeneralExpression newExpression = ExpressionParser.parse(
+                    substance.getSystem(), initialValueField.getText());
+                if (oldExpression == null || !oldExpression.equals(newExpression)){
+                    substance.setInitialExpression(newExpression);
+                    substance.getSystem().fireSystemStateChange();
+                }
+            } catch (IllegalExpressionException iee) {
+                System.out.println(iee);
+            }
+        }
     }
 
     private String getRateExpression() {
