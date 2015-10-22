@@ -293,6 +293,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+<<<<<<< HEAD
     
     if (stoichiometryField.getText() != null)
         {
@@ -300,6 +301,18 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
             setStoichiometry();
             
         }      
+=======
+    if (stoichiometryField.getText().length() == 0 || kineticsField.getText().length() == 0){
+        JOptionPane.showMessageDialog(this ,"Please enter both stoichiometry and kinetics",
+        "Input Error",
+        JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+        setStoichiometry();
+        jTextArea1.insert("Stoichiometry was succesfully updated. \n", 0);
+        setKinetics();
+        jTextArea1.insert("Kinetics were succesfully updated. \n", 0);
+>>>>>>> 992a987... fixes the update stoichiometry and kinetics bug
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -416,7 +429,7 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         if (stoichiometry.length() > 0
                 && oldStoichiometry.compareTo(stoichiometry) != 0) {
             reaction.setStoichiometry(stoichiometry);
-            updateListModels();
+//            updateListModels();
         }
     }
 
