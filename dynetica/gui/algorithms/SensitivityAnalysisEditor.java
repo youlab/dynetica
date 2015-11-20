@@ -323,6 +323,16 @@ public class SensitivityAnalysisEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_addButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_runButtonActionPerformed
+        if (sa.getVariable() == null) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (metrics.size() == 0) {
+            JOptionPane.showMessageDialog(this, "Please add at least 1 metric!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         sa.setMetrics(metrics);
         sa.setPlotOnComplete(false);
         sa.start();
@@ -352,7 +362,7 @@ public class SensitivityAnalysisEditor extends javax.swing.JPanel {
     private void selectionBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectionBoxActionPerformed
         String name = (String) (selectionBox.getSelectedItem());
         if (name.equals("Choose Parameter")) {
-            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+            JOptionPane.showMessageDialog(this, "Please choose a parameter!",
                         "Error", JOptionPane.ERROR_MESSAGE);
         }
         else {

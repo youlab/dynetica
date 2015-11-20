@@ -57,7 +57,13 @@ public class SensitivityAnalysis implements Runnable {
         xValues = new double[numSimulations + 1];
 
         double currentValue;
-        double oldValue = variable.getValue();
+        double oldValue = 0.0;
+        if (variable instanceof Parameter){
+            oldValue = variable.getValue();
+        }
+        else {
+            oldValue = ((Substance) variable).getInitialValue();
+        }
         for (int i = 0; i <= numSimulations; i++) {
             if (simulationThread == null) {
                 System.out
@@ -81,12 +87,12 @@ public class SensitivityAnalysis implements Runnable {
             for (int j = 0; j < metricList.size(); j++) {
                 yValues[j][i] = metricList.get(j).getValue();
             }
-
-            if (variable instanceof Parameter)
-                variable.setValue(oldValue);
-            else
-                ((Substance) variable).setInitialValue(oldValue);
-
+        }
+        if (variable instanceof Parameter) {
+            variable.setValue(oldValue);
+        }
+        else {
+            ((Substance) variable).setInitialValue(oldValue);
         }
         if (plotOnComplete) {
             dynetica.gui.plotting.SensitivityPlaneWindow s = new dynetica.gui.plotting.SensitivityPlaneWindow(

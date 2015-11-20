@@ -276,6 +276,7 @@ public class Substance extends EntityVariable {
     }
 
     public void setInitialValue(double iv) {
+        initialExpression = null;
         initialValue = iv;
         if (getSystem() != null)
             getSystem().fireSystemStateChange();

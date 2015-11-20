@@ -277,25 +277,16 @@ public class SubstanceEditor extends javax.swing.JPanel {
     }
 
     private void setSubstanceInitialValue() {
-        double oldValue = substance.getInitialValue();
+        GeneralExpression oldExpression = substance.getInitialExpression();
         try {
-            double newValue = Double.parseDouble(initialValueField.getText());
-            if (oldValue != newValue) {
-                substance.setInitialValue(newValue);
+            GeneralExpression newExpression = ExpressionParser.parse(
+                    substance.getSystem(), initialValueField.getText());
+            if (oldExpression == null || !oldExpression.equals(newExpression)){
+                substance.setInitialExpression(newExpression);
                 substance.getSystem().fireSystemStateChange();
             }
-        } catch (NumberFormatException npe) {
-            GeneralExpression oldExpression = substance.getInitialExpression();
-            try {
-                GeneralExpression newExpression = ExpressionParser.parse(
-                    substance.getSystem(), initialValueField.getText());
-                if (oldExpression == null || !oldExpression.equals(newExpression)){
-                    substance.setInitialExpression(newExpression);
-                    substance.getSystem().fireSystemStateChange();
-                }
-            } catch (IllegalExpressionException iee) {
-                System.out.println(iee);
-            }
+        } catch (IllegalExpressionException iee) {
+            System.out.println(iee);
         }
     }
 

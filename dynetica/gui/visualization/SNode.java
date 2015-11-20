@@ -66,9 +66,16 @@ public class SNode extends EntityNode {
             g.setFont(new Font(f.getFontName(), f.getStyle(), (int) (f
                     .getSize() * 1.25 * relativeFontSize)));
             g.setColor(Color.BLACK);
-            g.drawString("Initial Value: " + sub.getInitialValue(),
+            if (sub.getInitialExpression() != null) {
+                g.drawString("Initial Value: " + sub.getInitialExpression(),
                     (float) (getX() + getWidth()),
                     (float) (getY() - 2 * getHeight()));
+            }
+            else {
+                g.drawString("Initial Value: " + sub.getInitialValue(),
+                        (float) (getX() + getWidth()),
+                        (float) (getY() - 2 * getHeight()));
+            }
             g.drawString("Current Value: " + sub.getValue(),
                     (float) (getX() + getWidth()),
                     (float) (getY() - getHeight()));
