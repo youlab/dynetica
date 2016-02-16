@@ -2,7 +2,7 @@ package dynetica.algorithm;
 
 /**
  *
- * @author Billy Wan
+ * @author Xizheng (Billy) Wan
  */
 
 import dynetica.entity.*;
