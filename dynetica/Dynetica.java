@@ -37,7 +37,7 @@ public class Dynetica extends Object {
         // Modified by Kanishk Asthana to handle Modular Systems
         new dynetica.gui.systems.ModularSystemManager(
                 dynetica.util.DyneticaProperties
-                        .getProperty("workingDirectory")).show();
+                        .getProperty("workingDirectory")).setVisible(true);
 
     }
 }

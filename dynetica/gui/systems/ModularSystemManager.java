@@ -13,13 +13,7 @@ import dynetica.gui.AboutDyneticaFrame;
 import dynetica.gui.ApplicationFrame;
 import dynetica.gui.BugReportEditor;
 import dynetica.gui.algorithms.BottleNeckEditor;
-import dynetica.gui.algorithms.MultiParameterSensitivityAnalysisEditor;
-import dynetica.gui.algorithms.NoiseOptimizationEditor;
-import dynetica.gui.algorithms.ParameterSearchDoseResponseEditor;
-import dynetica.gui.algorithms.ParameterSearchGeneticEditor;
-import dynetica.gui.algorithms.ParameterSearchMonteCarloEditor;
-import dynetica.gui.algorithms.ParameterSearchMultiSubstanceEditor;
-import dynetica.gui.algorithms.SensitivityAnalysisEditor;
+import dynetica.gui.algorithms.*;
 import dynetica.gui.entities.FunctionEditor;
 import dynetica.system.*;
 import dynetica.util.BugReport;
@@ -108,7 +102,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				"Dynetic Bug Reporter");
 		frame.getContentPane().add(new BugReportEditor(new BugReport()));
 		frame.pack();
-                frame.show();
+                frame.setVisible(true);
         }
 
 	// you have to get the summer internship before you leave from this place
@@ -169,6 +163,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         noiseItem = new javax.swing.JMenuItem();
         psMultiSubstanceItem = new javax.swing.JMenuItem();
         bottleneckItem = new javax.swing.JMenuItem();
+        invasionItem = new javax.swing.JMenuItem();
         psGeneticItem = new javax.swing.JMenuItem();
         psDoseResponseItem = new javax.swing.JMenuItem();
         mathMenu = new javax.swing.JMenu();
@@ -581,6 +576,15 @@ public class ModularSystemManager extends javax.swing.JFrame {
         });
         simMenu.add(bottleneckItem);
 
+        invasionItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        invasionItem.setText("Invasion Simulation");
+        invasionItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                invasionItemActionPerformed(evt);
+            }
+        });
+        simMenu.add(invasionItem);
+
         psGeneticItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         psGeneticItem.setText("Genetic Parameter Search");
         psGeneticItem.addActionListener(new java.awt.event.ActionListener() {
@@ -841,6 +845,11 @@ public class ModularSystemManager extends javax.swing.JFrame {
         getContentPane().add(currentSystemType, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void invasionItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invasionItemActionPerformed
+        // TODO add your handling code here:
+        viewInvasion();
+    }//GEN-LAST:event_invasionItemActionPerformed
+
 	private void sdeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sdeItemActionPerformed
 		//
 		// Only create a new instance of the algorithm if necessary.
@@ -857,7 +866,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_sdeItemActionPerformed
 
 	private void optimizedDirectItemActionPerformed(
@@ -876,7 +885,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_optimizedDirectItemActionPerformed
 
 	private void annotateItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_annotateItemActionPerformed
@@ -899,7 +908,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_firstReactionMethodItemActionPerformed
 
 	private void renameButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_renameButtonActionPerformed
@@ -925,7 +934,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_directMethodItemActionPerformed
 
 	private void vRungeKutta4ItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_vRungeKutta4ItemActionPerformed
@@ -944,7 +953,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_vRungeKutta4ItemActionPerformed
 
 	private void rungeKutta4ItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rungeKutta4ItemActionPerformed
@@ -963,7 +972,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 	}// GEN-LAST:event_rungeKutta4ItemActionPerformed
 
 	private void showSimToolBarItemActionPerformed(
@@ -982,7 +991,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				new SensitivityAnalysisEditor(new SensitivityAnalysis(
 						currentSystem)));
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}// GEN-LAST:event_psaItemActionPerformed
 
 	private void algorithmBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_algorithmBoxActionPerformed
@@ -1010,7 +1019,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(algorithmEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 
 	}// GEN-LAST:event_algorithmBoxActionPerformed
 
@@ -1164,7 +1173,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				"Define/Modify Customized Math Expressions");
 		frame.getContentPane().add(new FunctionEditor());
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}// GEN-LAST:event_editMathActionPerformed
 
 	private void viewMATLABActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewMATLABActionPerformed
@@ -1188,7 +1197,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				new MultiParameterSensitivityAnalysisEditor(
 						new MultiParameterSensitivityAnalysis(currentSystem)));
 		frame.pack();
-		frame.show(); // TODO add your handling code here:
+		frame.setVisible(true);
 	}// GEN-LAST:event_mpsItemActionPerformed
 
 	private void basicSAItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_basicSAItemActionPerformed
@@ -1198,7 +1207,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				new dynetica.gui.algorithms.BasicSensitivityAnalysisEditor(
 						new BasicSensitivityAnalysis(currentSystem)));
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}// GEN-LAST:event_basicSAItemActionPerformed
 
 	private void sysOutItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sysOutItemActionPerformed
@@ -1212,7 +1221,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				.add(new dynetica.gui.algorithms.RepeatedStochasticSimulationsEditor(
 						new RepeatedStochasticSimulations(currentSystem)));
 		frame.pack();
-		frame.show(); // TODO add your handling code here:
+		frame.setVisible(true);
 	}// GEN-LAST:event_rssItemActionPerformed
 
 	private void bssaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bssaMenuItemActionPerformed
@@ -1222,7 +1231,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				new dynetica.gui.algorithms.BasicStochasticSensitivityEditor(
 						new BasicStochasticSensitivityAnalysis(currentSystem)));
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}// GEN-LAST:event_bssaMenuItemActionPerformed
 
 	private void twoParaScanItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_twoParaScanItemActionPerformed
@@ -1232,14 +1241,14 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				new dynetica.gui.algorithms.SequentialTwoParameterScanEditor(
 						new SequentialTwoParameterScan(currentSystem)));
 		frame.pack();
-		frame.show();
+		frame.setVisible(true);
 	}// GEN-LAST:event_twoParaScanItemActionPerformed
 
 	private void viewMatlabCode() {
 		JFrame jf = new JFrame("MATLAB Code for " + currentSystem.getName());
 		jf.getContentPane().add(new EquationsMATLAB(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewPSMC() {
@@ -1248,7 +1257,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		jf.getContentPane().add(
 				new ParameterSearchMonteCarloEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewPSMS() {
@@ -1257,7 +1266,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		jf.getContentPane().add(
 				new ParameterSearchMultiSubstanceEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewNOCT() {
@@ -1265,7 +1274,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				+ currentSystem.getName());
 		jf.getContentPane().add(new NoiseOptimizationEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewBottleneck() {
@@ -1273,8 +1282,16 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				+ currentSystem.getName());
 		jf.getContentPane().add(new BottleNeckEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
+        
+        private void viewInvasion() {
+            JFrame jf = new JFrame("Invasion Simulation for " 
+                    + currentSystem.getName());
+            jf.getContentPane().add(new InvasionSimulationEditor(currentSystem));
+            jf.pack();
+            jf.setVisible(true);
+        }
 
 	private void viewParameterSearchGenetic() {
 		JFrame jf = new JFrame("Genetic Parameter Search for "
@@ -1282,7 +1299,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		jf.getContentPane()
 				.add(new ParameterSearchGeneticEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewMatlabStochastic() {
@@ -1290,7 +1307,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 				+ currentSystem.getName());
 		jf.getContentPane().add(new EquationsMatlabStochastic(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void viewPSDR() {
@@ -1299,7 +1316,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		jf.getContentPane().add(
 				new ParameterSearchDoseResponseEditor(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void merge() {
@@ -1407,7 +1424,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		JFrame jf = new JFrame("Equations for " + currentSystem.getName());
 		jf.getContentPane().add(new EquationsViewer(currentSystem));
 		jf.pack();
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void setToolBar() {
@@ -1449,7 +1466,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		// rates as well.
 		//
 		JFrame jf = new dynetica.gui.plotting.PhasePlaneWindow(currentSystem);
-		jf.show();
+		jf.setVisible(true);
 	}
 
 	private void setCurrentSystem() {
@@ -1534,7 +1551,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		algoFrame.getContentPane().add(annotationEditor);
 		algoFrame.pack();
 		algoFrame.setLocation(400, 300);
-		algoFrame.show();
+		algoFrame.setVisible(true);
 
 	}
 
@@ -1751,6 +1768,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
     private javax.swing.JToolBar fileToolBar;
     private javax.swing.JMenuItem firstReactionMethodItem;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem invasionItem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;

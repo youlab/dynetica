@@ -5,16 +5,22 @@
  */
 package dynetica.gui.algorithms;
 
+import dynetica.algorithm.*;
+import dynetica.entity.*;
+import dynetica.system.*;
+import java.util.*;
+import javax.swing.*;
+
 /**
  *
- * @author Billy
+ * @author Xizheng (Billy) Wan
  */
 public class InvasionSimulationEditor extends javax.swing.JPanel {
 
     /**
      * Creates new form InvasionSimulationEditor
      */
-    public InvasionSimulationEditor() {
+    public InvasionSimulationEditor(ReactiveSystem sys) {
         initComponents();
     }
 
