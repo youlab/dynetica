@@ -16,14 +16,43 @@ import javax.swing.*;
  * @author Xizheng (Billy) Wan
  */
 public class InvasionSimulationEditor extends javax.swing.JPanel {
-
+    
+    private InvasionSimulation is;
+    private ReactiveSystem system;
+    private List<Substance> substances;
+    private List<Parameter> parameters;
+    private DefaultComboBoxModel substanceChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel paramChoices = new DefaultComboBoxModel();
+    private boolean initCellDensityFieldModified = false;
+    private boolean initCheaterFractionFieldModified = false;
+    
+    private Substance cooperator;
+    private Substance cheater;
+    private double initCellDensity;
+    private double initCheaterFraction;
     /**
      * Creates new form InvasionSimulationEditor
      */
     public InvasionSimulationEditor(ReactiveSystem sys) {
+        system = sys;
+        substances = sys.getSubstances();
+        parameters = sys.getParameters();
         initComponents();
+        setupDropdownLists();
     }
 
+    private void setupDropdownLists() {
+        substanceChoices.addElement("Choose Species");
+        for (Substance s : substances) {
+            substanceChoices.addElement(s.getName());
+        }
+        paramChoices.addElement("Choose Parameter");
+        for (Parameter p : parameters) {
+            if (p instanceof SimulationTimer) continue;
+            paramChoices.addElement(p.getName());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,19 +62,275 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        jSplitPane1 = new javax.swing.JSplitPane();
+        buttonPanel = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        labelPanel = new javax.swing.JPanel();
+        systemLabel = new javax.swing.JLabel();
+        coopSpeciesLabel = new javax.swing.JLabel();
+        cheaterSpeciesLabel = new javax.swing.JLabel();
+        initCellDensityLabel = new javax.swing.JLabel();
+        initCheaterFractionLabel = new javax.swing.JLabel();
+        coopParamLabel = new javax.swing.JLabel();
+        coopMinValueLabel = new javax.swing.JLabel();
+        coopMaxValueLabel = new javax.swing.JLabel();
+        cheaterParamLabel = new javax.swing.JLabel();
+        cheaterMinValueLabel = new javax.swing.JLabel();
+        cheaterMaxValueLabel = new javax.swing.JLabel();
+        simTimeLabel = new javax.swing.JLabel();
+        valuePanel = new javax.swing.JPanel();
+        systemName = new javax.swing.JLabel();
+        coopSelectionBox = new javax.swing.JComboBox();
+        cheaterSelectionBox = new javax.swing.JComboBox();
+        initCellDensityField = new javax.swing.JTextField();
+        initCheaterFractionField = new javax.swing.JTextField();
+        coopParamSelectionBox = new javax.swing.JComboBox();
+        coopMinValueField = new javax.swing.JTextField();
+        coopMaxValueField = new javax.swing.JTextField();
+        cheaterParamSelectionBox = new javax.swing.JComboBox();
+        cheaterMinValueField = new javax.swing.JTextField();
+        cheaterMaxValueField = new javax.swing.JTextField();
+        simTimeField = new javax.swing.JTextField();
+
+        setPreferredSize(new java.awt.Dimension(600, 500));
+        setLayout(new java.awt.BorderLayout());
+
+        jSplitPane1.setDividerLocation(425);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(500, 400));
+        jSplitPane1.setPreferredSize(new java.awt.Dimension(600, 500));
+
+        buttonPanel.setMinimumSize(new java.awt.Dimension(100, 75));
+        buttonPanel.setPreferredSize(new java.awt.Dimension(600, 75));
+        buttonPanel.setSize(new java.awt.Dimension(600, 75));
+
+        javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
+        buttonPanel.setLayout(buttonPanelLayout);
+        buttonPanelLayout.setHorizontalGroup(
+            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 596, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        buttonPanelLayout.setVerticalGroup(
+            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 75, Short.MAX_VALUE)
         );
+
+        jSplitPane1.setBottomComponent(buttonPanel);
+
+        jSplitPane2.setDividerLocation(200);
+        jSplitPane2.setDividerSize(1);
+
+        labelPanel.setPreferredSize(new java.awt.Dimension(200, 425));
+        labelPanel.setSize(new java.awt.Dimension(200, 425));
+        labelPanel.setLayout(new java.awt.GridLayout(12, 1));
+
+        systemLabel.setText("System");
+        labelPanel.add(systemLabel);
+
+        coopSpeciesLabel.setText("Cooperator Species");
+        labelPanel.add(coopSpeciesLabel);
+
+        cheaterSpeciesLabel.setText("Cheater Species");
+        labelPanel.add(cheaterSpeciesLabel);
+
+        initCellDensityLabel.setText("Initial Cell Density");
+        labelPanel.add(initCellDensityLabel);
+
+        initCheaterFractionLabel.setText("Initial Cheater Fraction");
+        labelPanel.add(initCheaterFractionLabel);
+
+        coopParamLabel.setText("Cooperator Parameter");
+        labelPanel.add(coopParamLabel);
+
+        coopMinValueLabel.setText("Minimum Value");
+        labelPanel.add(coopMinValueLabel);
+
+        coopMaxValueLabel.setText("Maximum Value");
+        labelPanel.add(coopMaxValueLabel);
+
+        cheaterParamLabel.setText("Cheater Parameter");
+        labelPanel.add(cheaterParamLabel);
+
+        cheaterMinValueLabel.setText("Minimum Value");
+        labelPanel.add(cheaterMinValueLabel);
+
+        cheaterMaxValueLabel.setText("Maximum Value");
+        labelPanel.add(cheaterMaxValueLabel);
+
+        simTimeLabel.setText("Simulation Time");
+        labelPanel.add(simTimeLabel);
+
+        jSplitPane2.setLeftComponent(labelPanel);
+
+        valuePanel.setPreferredSize(new java.awt.Dimension(400, 425));
+        valuePanel.setSize(new java.awt.Dimension(400, 425));
+        valuePanel.setLayout(new java.awt.GridLayout(12, 1));
+
+        systemName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        systemName.setText(system.getName());
+        valuePanel.add(systemName);
+
+        coopSelectionBox.setModel(substanceChoices);
+        valuePanel.add(coopSelectionBox);
+
+        cheaterSelectionBox.setModel(substanceChoices);
+        valuePanel.add(cheaterSelectionBox);
+
+        initCellDensityField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        initCellDensityField.setText("Please enter the initial cell density");
+        initCellDensityField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                initCellDensityFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                initCellDensityFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(initCellDensityField);
+
+        initCheaterFractionField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        initCheaterFractionField.setText("Please enter the initial cheater fraction");
+        initCheaterFractionField.setToolTipText("");
+        initCheaterFractionField.setActionCommand("<Not Set>");
+        initCheaterFractionField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                initCheaterFractionFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                initCheaterFractionFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(initCheaterFractionField);
+
+        coopParamSelectionBox.setModel(paramChoices);
+        valuePanel.add(coopParamSelectionBox);
+
+        coopMinValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        coopMinValueField.setText("0.0");
+        valuePanel.add(coopMinValueField);
+
+        coopMaxValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        coopMaxValueField.setText("1.0");
+        valuePanel.add(coopMaxValueField);
+
+        cheaterParamSelectionBox.setModel(paramChoices);
+        valuePanel.add(cheaterParamSelectionBox);
+
+        cheaterMinValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        cheaterMinValueField.setText("0.0");
+        valuePanel.add(cheaterMinValueField);
+
+        cheaterMaxValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        cheaterMaxValueField.setText("1.0");
+        valuePanel.add(cheaterMaxValueField);
+
+        simTimeField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        simTimeField.setText("100");
+        simTimeField.setToolTipText("");
+        valuePanel.add(simTimeField);
+
+        jSplitPane2.setRightComponent(valuePanel);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
+
+        add(jSplitPane1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void initCellDensityFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCellDensityFieldFocusGained
+        // TODO add your handling code here:
+        if (! initCellDensityFieldModified) {
+            initCellDensityField.setText("");
+        }
+    }//GEN-LAST:event_initCellDensityFieldFocusGained
+
+    private void initCellDensityFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCellDensityFieldFocusLost
+        // TODO add your handling code here:
+        // set bool to true if some value is entered
+        if (initCellDensityField.getText().isEmpty()) {
+            initCellDensityField.setText("Please enter the initial cell density");
+            initCellDensityFieldModified = false;
+            initCellDensity = 0.0;
+        } 
+        else {
+            try {
+                initCellDensity = Double.parseDouble(initCellDensityField.getText());
+                initCellDensityFieldModified = true;
+            }
+            catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+                if (! initCellDensityFieldModified) {
+                    initCellDensityField.setText("Please enter the initial cell density");
+                }
+                else {
+                    initCellDensityField.setText(String.valueOf(initCellDensity));
+                }
+            }
+        }
+    }//GEN-LAST:event_initCellDensityFieldFocusLost
+
+    private void initCheaterFractionFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCheaterFractionFieldFocusGained
+        // TODO add your handling code here:
+        if (! initCheaterFractionFieldModified) {
+            initCheaterFractionField.setText("");
+        }
+    }//GEN-LAST:event_initCheaterFractionFieldFocusGained
+
+    private void initCheaterFractionFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCheaterFractionFieldFocusLost
+        // TODO add your handling code here:
+        if (initCheaterFractionField.getText().isEmpty()) {
+            initCheaterFractionField.setText("Please enter the initial cheater fraction");
+            initCheaterFractionFieldModified = false;
+            initCheaterFraction = 0.0;
+        }
+        else {
+            try {
+                initCheaterFraction = Double.parseDouble(initCheaterFractionField.getText());
+                initCheaterFractionFieldModified = true;
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+                if (! initCheaterFractionFieldModified) {
+                    initCheaterFractionField.setText("Please enter the initial cheater fraction");
+                }
+                else {
+                    initCheaterFractionField.setText(String.valueOf(initCheaterFraction));
+                }
+            }
+        }
+    }//GEN-LAST:event_initCheaterFractionFieldFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel buttonPanel;
+    private javax.swing.JTextField cheaterMaxValueField;
+    private javax.swing.JLabel cheaterMaxValueLabel;
+    private javax.swing.JTextField cheaterMinValueField;
+    private javax.swing.JLabel cheaterMinValueLabel;
+    private javax.swing.JLabel cheaterParamLabel;
+    private javax.swing.JComboBox cheaterParamSelectionBox;
+    private javax.swing.JComboBox cheaterSelectionBox;
+    private javax.swing.JLabel cheaterSpeciesLabel;
+    private javax.swing.JTextField coopMaxValueField;
+    private javax.swing.JLabel coopMaxValueLabel;
+    private javax.swing.JTextField coopMinValueField;
+    private javax.swing.JLabel coopMinValueLabel;
+    private javax.swing.JLabel coopParamLabel;
+    private javax.swing.JComboBox coopParamSelectionBox;
+    private javax.swing.JComboBox coopSelectionBox;
+    private javax.swing.JLabel coopSpeciesLabel;
+    private javax.swing.JTextField initCellDensityField;
+    private javax.swing.JLabel initCellDensityLabel;
+    private javax.swing.JTextField initCheaterFractionField;
+    private javax.swing.JLabel initCheaterFractionLabel;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JPanel labelPanel;
+    private javax.swing.JTextField simTimeField;
+    private javax.swing.JLabel simTimeLabel;
+    private javax.swing.JLabel systemLabel;
+    private javax.swing.JLabel systemName;
+    private javax.swing.JPanel valuePanel;
     // End of variables declaration//GEN-END:variables
 }

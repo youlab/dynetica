@@ -226,7 +226,7 @@ public class BottleNeckEditor extends javax.swing.JPanel {
 
     private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_plotButtonActionPerformed
         JFrame jf = new dynetica.gui.plotting.PhasePlaneWindow(system);
-        jf.show();
+        jf.setVisible(true);
     }// GEN-LAST:event_plotButtonActionPerformed
 
     private void saveCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveCheckBoxActionPerformed
