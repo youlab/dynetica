@@ -6,6 +6,7 @@
 package dynetica.gui.plotting;
 
 import java.awt.Color;
+import java.io.*;
 
 /**
  *
@@ -102,10 +103,27 @@ public class HeatMapWindow extends javax.swing.JFrame {
 
     private void saveDataItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataItemActionPerformed
         // TODO add your handling code here:
+        try {
+            PrintWriter pw = new PrintWriter("Invasion Simulation Data.txt", 
+                    "UTF-8");
+            double[][] data = hm.getData();
+            for (int i = 0; i < data.length; i++) {
+                pw.print(data[i][0]);
+                for (int j = 1; j < data[0].length; j++) {
+                    pw.print("\t" + data[i][j]);
+                }
+                pw.println();
+            }
+            pw.close();
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        
     }//GEN-LAST:event_saveDataItemActionPerformed
 
     private void logicalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logicalCheckBoxActionPerformed
-        // TODO add your handling code here:
+        // update the figure according to the state of the checkbox
         this.hm.updateLogical(logicalCheckBox.getState());
     }//GEN-LAST:event_logicalCheckBoxActionPerformed
 

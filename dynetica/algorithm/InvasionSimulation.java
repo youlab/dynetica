@@ -62,9 +62,9 @@ public class InvasionSimulation implements Runnable {
         }
         // divide by diagonal value to get ratio (normalize by the value when 
         // cheater is alone
-        for (int i = 0; i < cheaterFitness.length; i++) {
-            double diagonalValue = cheaterFitness[i][i];
-            for (int j = 0; j < cheaterFitness[0].length; j++) {
+        for (int j = 0; j < cheaterFitness[0].length; j++) {
+            double diagonalValue = cheaterFitness[j][j];
+            for (int i = 0; i < cheaterFitness.length; i++) {
                 cheaterFitness[i][j] /= diagonalValue;
             }
         }

@@ -67,6 +67,11 @@ public class HeatMap extends JPanel {
         drawData(this.data);
     }
     
+    // return data
+    public double[][] getData() {
+        return data;
+    }
+    
     /**
      * Specify the coordinate bounds for the map. Only used for the axis labels,
      * which must be enabled separately. Calls repaint() when finished.
