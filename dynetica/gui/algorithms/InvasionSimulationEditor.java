@@ -13,7 +13,7 @@ import javax.swing.*;
 
 /**
  *
- * @author Xizheng (Billy) Wan
+ * @author Xizheng (Billy) Wan (2016)
  */
 public class InvasionSimulationEditor extends javax.swing.JPanel {
     
@@ -21,15 +21,21 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
     private ReactiveSystem system;
     private List<Substance> substances;
     private List<Parameter> parameters;
-    private DefaultComboBoxModel substanceChoices = new DefaultComboBoxModel();
-    private DefaultComboBoxModel paramChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel coopChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel cheaterChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel coopParamChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel cheaterParamChoices = new DefaultComboBoxModel();
     private boolean initCellDensityFieldModified = false;
     private boolean initCheaterFractionFieldModified = false;
     
     private Substance cooperator;
     private Substance cheater;
+    private Parameter coopParam;
+    private Parameter cheaterParam;
     private double initCellDensity;
     private double initCheaterFraction;
+    private int numPoints = 20;
+    private double simTime = 100;
     /**
      * Creates new form InvasionSimulationEditor
      */
@@ -37,19 +43,23 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         system = sys;
         substances = sys.getSubstances();
         parameters = sys.getParameters();
-        initComponents();
         setupDropdownLists();
+        initComponents();
     }
 
     private void setupDropdownLists() {
-        substanceChoices.addElement("Choose Species");
+        coopChoices.addElement("Choose Species");
+        cheaterChoices.addElement("Choose Species");
         for (Substance s : substances) {
-            substanceChoices.addElement(s.getName());
+            coopChoices.addElement(s.getName());
+            cheaterChoices.addElement(s.getName());
         }
-        paramChoices.addElement("Choose Parameter");
+        coopParamChoices.addElement("Choose Parameter");
+        cheaterParamChoices.addElement("Choose Parameter");
         for (Parameter p : parameters) {
             if (p instanceof SimulationTimer) continue;
-            paramChoices.addElement(p.getName());
+            coopParamChoices.addElement(p.getName());
+            cheaterParamChoices.addElement(p.getName());
         }
     }
     
@@ -64,6 +74,9 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         buttonPanel = new javax.swing.JPanel();
+        runButton = new javax.swing.JButton();
+        pauseButton = new javax.swing.JButton();
+        plotButton = new javax.swing.JButton();
         jSplitPane2 = new javax.swing.JSplitPane();
         labelPanel = new javax.swing.JPanel();
         systemLabel = new javax.swing.JLabel();
@@ -77,6 +90,7 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         cheaterParamLabel = new javax.swing.JLabel();
         cheaterMinValueLabel = new javax.swing.JLabel();
         cheaterMaxValueLabel = new javax.swing.JLabel();
+        numPointsLabel = new javax.swing.JLabel();
         simTimeLabel = new javax.swing.JLabel();
         valuePanel = new javax.swing.JPanel();
         systemName = new javax.swing.JLabel();
@@ -90,6 +104,7 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         cheaterParamSelectionBox = new javax.swing.JComboBox();
         cheaterMinValueField = new javax.swing.JTextField();
         cheaterMaxValueField = new javax.swing.JTextField();
+        numPointsField = new javax.swing.JTextField();
         simTimeField = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(600, 500));
@@ -104,16 +119,29 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         buttonPanel.setPreferredSize(new java.awt.Dimension(600, 75));
         buttonPanel.setSize(new java.awt.Dimension(600, 75));
 
-        javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
-        buttonPanel.setLayout(buttonPanelLayout);
-        buttonPanelLayout.setHorizontalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 596, Short.MAX_VALUE)
-        );
-        buttonPanelLayout.setVerticalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 75, Short.MAX_VALUE)
-        );
+        runButton.setText("Run");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(runButton);
+
+        pauseButton.setText("Pause");
+        pauseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pauseButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(pauseButton);
+
+        plotButton.setText("Plot");
+        plotButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(plotButton);
 
         jSplitPane1.setBottomComponent(buttonPanel);
 
@@ -122,7 +150,7 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
 
         labelPanel.setPreferredSize(new java.awt.Dimension(200, 425));
         labelPanel.setSize(new java.awt.Dimension(200, 425));
-        labelPanel.setLayout(new java.awt.GridLayout(12, 1));
+        labelPanel.setLayout(new java.awt.GridLayout(13, 1));
 
         systemLabel.setText("System");
         labelPanel.add(systemLabel);
@@ -157,6 +185,10 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         cheaterMaxValueLabel.setText("Maximum Value");
         labelPanel.add(cheaterMaxValueLabel);
 
+        numPointsLabel.setText("Number of Points");
+        numPointsLabel.setToolTipText("");
+        labelPanel.add(numPointsLabel);
+
         simTimeLabel.setText("Simulation Time");
         labelPanel.add(simTimeLabel);
 
@@ -164,16 +196,26 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
 
         valuePanel.setPreferredSize(new java.awt.Dimension(400, 425));
         valuePanel.setSize(new java.awt.Dimension(400, 425));
-        valuePanel.setLayout(new java.awt.GridLayout(12, 1));
+        valuePanel.setLayout(new java.awt.GridLayout(13, 1));
 
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         systemName.setText(system.getName());
         valuePanel.add(systemName);
 
-        coopSelectionBox.setModel(substanceChoices);
+        coopSelectionBox.setModel(coopChoices);
+        coopSelectionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                coopSelectionBoxActionPerformed(evt);
+            }
+        });
         valuePanel.add(coopSelectionBox);
 
-        cheaterSelectionBox.setModel(substanceChoices);
+        cheaterSelectionBox.setModel(cheaterChoices);
+        cheaterSelectionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cheaterSelectionBoxActionPerformed(evt);
+            }
+        });
         valuePanel.add(cheaterSelectionBox);
 
         initCellDensityField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -202,31 +244,75 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         });
         valuePanel.add(initCheaterFractionField);
 
-        coopParamSelectionBox.setModel(paramChoices);
+        coopParamSelectionBox.setModel(coopParamChoices);
+        coopParamSelectionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                coopParamSelectionBoxActionPerformed(evt);
+            }
+        });
         valuePanel.add(coopParamSelectionBox);
 
         coopMinValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         coopMinValueField.setText("0.0");
+        coopMinValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coopMinValueFieldFocusLost(evt);
+            }
+        });
         valuePanel.add(coopMinValueField);
 
         coopMaxValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         coopMaxValueField.setText("1.0");
+        coopMaxValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coopMaxValueFieldFocusLost(evt);
+            }
+        });
         valuePanel.add(coopMaxValueField);
 
-        cheaterParamSelectionBox.setModel(paramChoices);
+        cheaterParamSelectionBox.setModel(cheaterParamChoices);
+        cheaterParamSelectionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cheaterParamSelectionBoxActionPerformed(evt);
+            }
+        });
         valuePanel.add(cheaterParamSelectionBox);
 
         cheaterMinValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         cheaterMinValueField.setText("0.0");
+        cheaterMinValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cheaterMinValueFieldFocusLost(evt);
+            }
+        });
         valuePanel.add(cheaterMinValueField);
 
         cheaterMaxValueField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         cheaterMaxValueField.setText("1.0");
+        cheaterMaxValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cheaterMaxValueFieldFocusLost(evt);
+            }
+        });
         valuePanel.add(cheaterMaxValueField);
+
+        numPointsField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        numPointsField.setText("20");
+        numPointsField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                numPointsFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(numPointsField);
 
         simTimeField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         simTimeField.setText("100");
         simTimeField.setToolTipText("");
+        simTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                simTimeFieldFocusLost(evt);
+            }
+        });
         valuePanel.add(simTimeField);
 
         jSplitPane2.setRightComponent(valuePanel);
@@ -301,6 +387,147 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_initCheaterFractionFieldFocusLost
 
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        // TODO add your handling code here:
+        is = new InvasionSimulation(system, cooperator, cheater, coopParam, 
+        cheaterParam, initCellDensity, initCheaterFraction, numPoints, simTime);
+        is.start();
+    }//GEN-LAST:event_runButtonActionPerformed
+
+    private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
+        // TODO add your handling code here:
+        if (is != null) {
+            is.pause();
+        }
+    }//GEN-LAST:event_pauseButtonActionPerformed
+
+    private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
+        // TODO add your handling code here:
+        is.plot();
+    }//GEN-LAST:event_plotButtonActionPerformed
+
+    private void coopSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coopSelectionBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) coopSelectionBox.getSelectedItem();
+        if (name.equals("Choose Species")) {
+            JOptionPane.showMessageDialog(this, "Please choose a species",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cooperator = system.getSubstance(name);
+        }
+    }//GEN-LAST:event_coopSelectionBoxActionPerformed
+
+    private void cheaterSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cheaterSelectionBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) cheaterSelectionBox.getSelectedItem();
+        if (name.equals("Choose Species")) {
+            JOptionPane.showMessageDialog(this, "Please choose a species",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cheater = system.getSubstance(name);
+        }
+    }//GEN-LAST:event_cheaterSelectionBoxActionPerformed
+
+    private void coopParamSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coopParamSelectionBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) coopParamSelectionBox.getSelectedItem();
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            coopParam = system.getParameter(name);
+            coopParam.setMin(0.0);
+            coopParam.setMax(1.0);
+        }
+    }//GEN-LAST:event_coopParamSelectionBoxActionPerformed
+
+    private void coopMinValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coopMinValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(coopMinValueField.getText());
+            coopParam.setMin(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_coopMinValueFieldFocusLost
+
+    private void coopMaxValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coopMaxValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double max = Double.parseDouble(coopMaxValueField.getText());
+            coopParam.setMax(max);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_coopMaxValueFieldFocusLost
+
+    private void cheaterParamSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cheaterParamSelectionBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) cheaterParamSelectionBox.getSelectedItem();
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cheaterParam = system.getParameter(name);
+            cheaterParam.setMin(0.0);
+            cheaterParam.setMax(1.0);
+        }
+    }//GEN-LAST:event_cheaterParamSelectionBoxActionPerformed
+
+    private void cheaterMinValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cheaterMinValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(cheaterMinValueField.getText());
+            cheaterParam.setMin(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_cheaterMinValueFieldFocusLost
+
+    private void cheaterMaxValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cheaterMaxValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double max = Double.parseDouble(cheaterMaxValueField.getText());
+            cheaterParam.setMax(max);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_cheaterMaxValueFieldFocusLost
+
+    private void simTimeFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_simTimeFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            simTime = Double.parseDouble(simTimeField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_simTimeFieldFocusLost
+
+    private void numPointsFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_numPointsFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            numPoints = Integer.parseInt(numPointsField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_numPointsFieldFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
@@ -327,6 +554,11 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JPanel labelPanel;
+    private javax.swing.JTextField numPointsField;
+    private javax.swing.JLabel numPointsLabel;
+    private javax.swing.JButton pauseButton;
+    private javax.swing.JButton plotButton;
+    private javax.swing.JButton runButton;
     private javax.swing.JTextField simTimeField;
     private javax.swing.JLabel simTimeLabel;
     private javax.swing.JLabel systemLabel;
