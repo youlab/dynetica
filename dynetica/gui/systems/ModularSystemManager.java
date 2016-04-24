@@ -164,6 +164,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         psMultiSubstanceItem = new javax.swing.JMenuItem();
         bottleneckItem = new javax.swing.JMenuItem();
         invasionItem = new javax.swing.JMenuItem();
+        evoDynamicsItem = new javax.swing.JMenuItem();
         psGeneticItem = new javax.swing.JMenuItem();
         psDoseResponseItem = new javax.swing.JMenuItem();
         mathMenu = new javax.swing.JMenu();
@@ -500,6 +501,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         });
         simMenu.add(psaItem);
 
+        twoParaScanItem.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         twoParaScanItem.setText("Sequential two-parameter scan");
         twoParaScanItem.setToolTipText("Parametric sensitivity analysis on simultaneous changes on two parameters (or initial values of substances)");
         twoParaScanItem.addActionListener(new java.awt.event.ActionListener() {
@@ -585,6 +587,16 @@ public class ModularSystemManager extends javax.swing.JFrame {
         });
         simMenu.add(invasionItem);
 
+        evoDynamicsItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        evoDynamicsItem.setText("Evolution Dynamics Simulation");
+        evoDynamicsItem.setToolTipText("");
+        evoDynamicsItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                evoDynamicsItemActionPerformed(evt);
+            }
+        });
+        simMenu.add(evoDynamicsItem);
+
         psGeneticItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         psGeneticItem.setText("Genetic Parameter Search");
         psGeneticItem.addActionListener(new java.awt.event.ActionListener() {
@@ -594,6 +606,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
         });
         simMenu.add(psGeneticItem);
 
+        psDoseResponseItem.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         psDoseResponseItem.setText("Dose Response Parameter Search");
         psDoseResponseItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -849,6 +862,15 @@ public class ModularSystemManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         viewInvasion();
     }//GEN-LAST:event_invasionItemActionPerformed
+
+    private void evoDynamicsItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_evoDynamicsItemActionPerformed
+        // TODO add your handling code here:
+        ApplicationFrame frame = new ApplicationFrame("Evolutionary Dynamics"
+                + " Simulation for " + currentSystem.getName());
+        frame.getContentPane().add(new EvoDynamicsSimulationEditor(currentSystem));
+        frame.pack();
+        frame.setVisible(true);
+    }//GEN-LAST:event_evoDynamicsItemActionPerformed
 
 	private void sdeItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sdeItemActionPerformed
 		//
@@ -1763,6 +1785,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
     private javax.swing.JMenuItem directMethodItem;
     private javax.swing.JMenuItem editMath;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem evoDynamicsItem;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JToolBar fileToolBar;
