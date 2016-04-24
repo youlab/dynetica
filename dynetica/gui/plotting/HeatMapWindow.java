@@ -23,9 +23,9 @@ public class HeatMapWindow extends javax.swing.JFrame {
         super("Invasion Simulation Plot");
         initComponents();
         this.hm = hm;
-        figurePanel.add(this.hm);
+        figurePanel.add(this.hm, java.awt.BorderLayout.CENTER);
         this.setSize(500, 450);
-        this.hm.setSize(500, 400);
+        //this.hm.setSize(500, 400);
     }
 
     /**
@@ -51,17 +51,7 @@ public class HeatMapWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        javax.swing.GroupLayout figurePanelLayout = new javax.swing.GroupLayout(figurePanel);
-        figurePanel.setLayout(figurePanelLayout);
-        figurePanelLayout.setHorizontalGroup(
-            figurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        figurePanelLayout.setVerticalGroup(
-            figurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
-        );
-
+        figurePanel.setLayout(new java.awt.BorderLayout());
         getContentPane().add(figurePanel, java.awt.BorderLayout.CENTER);
 
         fileMenu.setText("File");

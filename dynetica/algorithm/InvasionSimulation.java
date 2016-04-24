@@ -22,6 +22,7 @@ public class InvasionSimulation implements Runnable {
     private double initCheaterFraction;
     private int numPoints;
     private double simTime;
+    private boolean finished;
     private HeatMap hm;
     
     private Thread simulationThread = null;
@@ -38,6 +39,7 @@ public class InvasionSimulation implements Runnable {
         this.initCheaterFraction = initCheaterFrac;
         this.numPoints = numPts;
         this.simTime = time;
+        this.finished = false;
         
         this.algorithm = sys.getAlgorithm();
     }
@@ -85,6 +87,7 @@ public class InvasionSimulation implements Runnable {
         hm.setXAxisTitle(coopParam.getName());
         hm.setYAxisTitle(cheaterParam.getName());
         hm.setCoordinateBounds(coopMin, coopMax, cheaterMin, cheaterMax);
+        finished = true;
     }
     
     public void plot() {
@@ -107,6 +110,7 @@ public class InvasionSimulation implements Runnable {
     }
     
     public void start() {
+        finished = false;
         if (simulationThread == null) {
             simulationThread = new Thread(this, " Simulation");
             simulationThread.start();
@@ -115,5 +119,9 @@ public class InvasionSimulation implements Runnable {
     
     public void pause() {
         simulationThread = null;
+    }
+    
+    public boolean isFinished() {
+        return finished;
     }
 }

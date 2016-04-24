@@ -403,7 +403,13 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
 
     private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
         // TODO add your handling code here:
-        is.plot();
+        if (is.isFinished()) {
+            is.plot();
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Please wait for the simulation"
+                    + "to finish", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_plotButtonActionPerformed
 
     private void coopSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coopSelectionBoxActionPerformed
