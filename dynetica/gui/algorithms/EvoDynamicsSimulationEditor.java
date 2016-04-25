@@ -7,21 +7,96 @@ package dynetica.gui.algorithms;
 
 import dynetica.entity.*;
 import dynetica.system.*;
+import dynetica.algorithm.*;
+import dynetica.objective.*;
+import java.util.*;
 import javax.swing.*;
 
 /**
  *
- * @author Billy
+ * @author Xizheng (Billy) Wan
  */
 public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
+    
+    private SensitivityAnalysis sa;
+    private InvasionSimulation is;
+    private BottleNeckSimulation bns;
+    private ReactiveSystem system;
+    private List<Substance> substances;
+    private List<Parameter> parameters;
+    
+    private DefaultComboBoxModel saVariableBoxModel = new DefaultComboBoxModel();
+    private DefaultComboBoxModel metricBoxModel = new DefaultComboBoxModel();
+    private DefaultComboBoxModel coopChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel cheaterChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel coopParamChoices = new DefaultComboBoxModel();
+    private DefaultComboBoxModel cheaterParamChoices = new DefaultComboBoxModel();
+    
+    // Invasion Simulation
+    private double initCellDensity;
+    private double initCheaterFraction;
+    private Substance cooperator;
+    private Substance cheater;
+    private Parameter coopParam;
+    private Parameter cheaterParam;
+    private int isNumPoints = 20;
+    private double isSimTime = 100;
 
+    private boolean initCellDensityFieldModified = false;
+    private boolean initCheaterFractionFieldModified = false;
+    
+    // Bottleneck Simulation
+    private int subPopSize = 5;
+    private double bsSimTime = 100;
+    private int bsNumRounds = 5;
+    private double valueToNormalize = 1.0;
     /**
      * Creates new form EvoDynamicsSimulationEditor
      */
     public EvoDynamicsSimulationEditor(ReactiveSystem sys) {
+        system = sys;
+        sa = new SensitivityAnalysis(sys);
+        substances = sys.getSubstances();
+        parameters = sys.getParameters();
+        setUpLists();
         initComponents();
     }
+    
+    private void setUpLists() {
+        // Exclude simulation timer
+        saVariableBoxModel.addElement("Choose Variable");
+        for (Object o : parameters) {
+            if (!(o instanceof SimulationTimer))
+                saVariableBoxModel.addElement(((Parameter) o).getName());
+        }
 
+        // Exclude expression variables
+        for (Object o : substances) {
+            if (!(o instanceof ExpressionVariable))
+                saVariableBoxModel.addElement(((Substance) o).getName());
+        }
+        
+        metricBoxModel.addElement("Choose Metric");
+        for (Object o : substances) {
+            metricBoxModel.addElement(((Substance) o).getName());
+        }
+        
+        coopChoices.addElement("Choose Species");
+        cheaterChoices.addElement("Choose Species");
+        for (Substance s : substances) {
+            coopChoices.addElement(s.getName());
+            cheaterChoices.addElement(s.getName());
+        }
+        
+        coopParamChoices.addElement("Choose Parameter");
+        cheaterParamChoices.addElement("Choose Parameter");
+        for (Parameter p : parameters) {
+            if (p instanceof SimulationTimer) continue;
+            coopParamChoices.addElement(p.getName());
+            cheaterParamChoices.addElement(p.getName());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,19 +106,928 @@ public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jSplitPane1 = new javax.swing.JSplitPane();
+        controlPanel = new javax.swing.JPanel();
+        checkBoxPanel = new javax.swing.JPanel();
+        saCheckBox = new javax.swing.JCheckBox();
+        isCheckBox = new javax.swing.JCheckBox();
+        bsCheckBox = new javax.swing.JCheckBox();
+        buttonPanel = new javax.swing.JPanel();
+        runButton = new javax.swing.JButton();
+        plotButton = new javax.swing.JButton();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        labelPanel = new javax.swing.JPanel();
+        systemLabel = new javax.swing.JLabel();
+        emptyLabel1 = new javax.swing.JLabel();
+        saVariableLabel = new javax.swing.JLabel();
+        saVarMinLabel = new javax.swing.JLabel();
+        saVarMaxLabel = new javax.swing.JLabel();
+        metricLabel = new javax.swing.JLabel();
+        saNumPointsLabel = new javax.swing.JLabel();
+        logScaleLabel = new javax.swing.JLabel();
+        saTimeLabel = new javax.swing.JLabel();
+        emptyLabel2 = new javax.swing.JLabel();
+        coopSpeciesLabel = new javax.swing.JLabel();
+        cheaterSpeciesLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        emptyLabel3 = new javax.swing.JLabel();
+        initCellDensityLabel = new javax.swing.JLabel();
+        coopParamLabel = new javax.swing.JLabel();
+        coopMinValueLabel = new javax.swing.JLabel();
+        coopMaxValueLabel = new javax.swing.JLabel();
+        cheaterParamLabel = new javax.swing.JLabel();
+        cheaterMinValueLabel = new javax.swing.JLabel();
+        cheaterParamMaxValueLabel = new javax.swing.JLabel();
+        isNumPointsLabel = new javax.swing.JLabel();
+        isSimTimeLabel = new javax.swing.JLabel();
+        bottleneckLabel = new javax.swing.JLabel();
+        popSizeLabel = new javax.swing.JLabel();
+        bsSimTimeLabel = new javax.swing.JLabel();
+        numRoundsLabel = new javax.swing.JLabel();
+        saveDataCheckBox = new javax.swing.JCheckBox();
+        valuePanel = new javax.swing.JPanel();
+        systemNameLabel = new javax.swing.JLabel();
+        saLabel = new javax.swing.JLabel();
+        saVariableComboBox = new javax.swing.JComboBox();
+        saVarMinTextField = new javax.swing.JTextField();
+        saVarMaxTextField = new javax.swing.JTextField();
+        metricComboBox = new javax.swing.JComboBox();
+        saNumPointsTextField = new javax.swing.JTextField();
+        logScaleCheckBox = new javax.swing.JCheckBox();
+        saTimeTextField = new javax.swing.JTextField();
+        isbsLabel = new javax.swing.JLabel();
+        coopSpeciesComboBox = new javax.swing.JComboBox();
+        cheaterSpeciesComboBox = new javax.swing.JComboBox();
+        initCheaterFractionField = new javax.swing.JTextField();
+        isLabel = new javax.swing.JLabel();
+        initCellDensityField = new javax.swing.JTextField();
+        coopParamComboBox = new javax.swing.JComboBox();
+        coopParamMinValueField = new javax.swing.JTextField();
+        coopParamMaxValueField = new javax.swing.JTextField();
+        cheaterParamComboBox = new javax.swing.JComboBox();
+        cheaterParamMinValueField = new javax.swing.JTextField();
+        cheaterParamMaxValueField = new javax.swing.JTextField();
+        isNumPointsField = new javax.swing.JTextField();
+        isSimTimeField = new javax.swing.JTextField();
+        simLabel = new javax.swing.JLabel();
+        popSizePanel = new javax.swing.JPanel();
+        popSizeComboBox = new javax.swing.JComboBox();
+        popSizeField = new javax.swing.JTextField();
+        bsSimTimeField = new javax.swing.JTextField();
+        numRoundsField = new javax.swing.JTextField();
+        normalizeIVPanel = new javax.swing.JPanel();
+        normalizeIVCheckBox = new javax.swing.JCheckBox();
+        normalizeIVValuesPanel = new javax.swing.JPanel();
+        valueLabel = new javax.swing.JLabel();
+        normalizeIVField = new javax.swing.JTextField();
+
+        setMinimumSize(new java.awt.Dimension(500, 800));
+        setPreferredSize(new java.awt.Dimension(500, 800));
+        setSize(new java.awt.Dimension(500, 800));
+        setLayout(new java.awt.BorderLayout());
+
+        jSplitPane1.setDividerLocation(700);
+        jSplitPane1.setDividerSize(10);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        controlPanel.setMaximumSize(new java.awt.Dimension(500, 100));
+        controlPanel.setMinimumSize(new java.awt.Dimension(500, 90));
+        controlPanel.setPreferredSize(new java.awt.Dimension(500, 100));
+        controlPanel.setSize(new java.awt.Dimension(500, 100));
+        controlPanel.setLayout(new java.awt.BorderLayout());
+
+        checkBoxPanel.setMinimumSize(new java.awt.Dimension(500, 45));
+        checkBoxPanel.setPreferredSize(new java.awt.Dimension(500, 45));
+        checkBoxPanel.setSize(new java.awt.Dimension(500, 45));
+
+        saCheckBox.setText("Sensitivity Analysis");
+        checkBoxPanel.add(saCheckBox);
+
+        isCheckBox.setText("Invasion Simulation");
+        checkBoxPanel.add(isCheckBox);
+
+        bsCheckBox.setText("Bottleneck Simulation");
+        checkBoxPanel.add(bsCheckBox);
+
+        controlPanel.add(checkBoxPanel, java.awt.BorderLayout.NORTH);
+
+        buttonPanel.setMinimumSize(new java.awt.Dimension(500, 45));
+        buttonPanel.setPreferredSize(new java.awt.Dimension(500, 45));
+        buttonPanel.setSize(new java.awt.Dimension(500, 45));
+
+        runButton.setText("Run");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(runButton);
+
+        plotButton.setText("Plot");
+        plotButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(plotButton);
+
+        controlPanel.add(buttonPanel, java.awt.BorderLayout.SOUTH);
+
+        jSplitPane1.setBottomComponent(controlPanel);
+
+        jSplitPane2.setDividerLocation(200);
+        jSplitPane2.setDividerSize(1);
+
+        labelPanel.setPreferredSize(new java.awt.Dimension(200, 700));
+        labelPanel.setSize(new java.awt.Dimension(200, 700));
+        labelPanel.setLayout(new java.awt.GridLayout(28, 1));
+
+        systemLabel.setText("System");
+        labelPanel.add(systemLabel);
+
+        emptyLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        emptyLabel1.setText("Sensitivity");
+        labelPanel.add(emptyLabel1);
+
+        saVariableLabel.setText("Variable");
+        labelPanel.add(saVariableLabel);
+
+        saVarMinLabel.setText("Minimum Value");
+        labelPanel.add(saVarMinLabel);
+
+        saVarMaxLabel.setText("Maximum Value");
+        labelPanel.add(saVarMaxLabel);
+
+        metricLabel.setText("Metric");
+        labelPanel.add(metricLabel);
+
+        saNumPointsLabel.setText("Number of Points");
+        labelPanel.add(saNumPointsLabel);
+
+        logScaleLabel.setText("Log Scale");
+        labelPanel.add(logScaleLabel);
+
+        saTimeLabel.setText("Time");
+        labelPanel.add(saTimeLabel);
+
+        emptyLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        emptyLabel2.setText("Invasion &");
+        labelPanel.add(emptyLabel2);
+
+        coopSpeciesLabel.setText("Cooperator Species");
+        labelPanel.add(coopSpeciesLabel);
+
+        cheaterSpeciesLabel.setText("Cheater Species");
+        labelPanel.add(cheaterSpeciesLabel);
+
+        jLabel1.setText("Initial Cheater Fraction");
+        labelPanel.add(jLabel1);
+
+        emptyLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        emptyLabel3.setText("Invasion");
+        labelPanel.add(emptyLabel3);
+
+        initCellDensityLabel.setText("Initial Cell Density");
+        labelPanel.add(initCellDensityLabel);
+
+        coopParamLabel.setText("Cooperator Parameter");
+        labelPanel.add(coopParamLabel);
+
+        coopMinValueLabel.setText("Minimum Value");
+        labelPanel.add(coopMinValueLabel);
+
+        coopMaxValueLabel.setText("Maximum Value");
+        labelPanel.add(coopMaxValueLabel);
+
+        cheaterParamLabel.setText("Cheater Parameter");
+        labelPanel.add(cheaterParamLabel);
+
+        cheaterMinValueLabel.setText("Minimum Value");
+        labelPanel.add(cheaterMinValueLabel);
+
+        cheaterParamMaxValueLabel.setText("Maximum Value");
+        labelPanel.add(cheaterParamMaxValueLabel);
+
+        isNumPointsLabel.setText("Number of Points");
+        labelPanel.add(isNumPointsLabel);
+
+        isSimTimeLabel.setText("Simulation Time");
+        labelPanel.add(isSimTimeLabel);
+
+        bottleneckLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        bottleneckLabel.setText("Bottleneck");
+        labelPanel.add(bottleneckLabel);
+
+        popSizeLabel.setText("Sub-Population Size");
+        labelPanel.add(popSizeLabel);
+
+        bsSimTimeLabel.setText("Simulation Time");
+        labelPanel.add(bsSimTimeLabel);
+
+        numRoundsLabel.setText("Number of Bottleneck Rounds");
+        labelPanel.add(numRoundsLabel);
+
+        saveDataCheckBox.setText("Save All Simulation Data");
+        labelPanel.add(saveDataCheckBox);
+
+        jSplitPane2.setLeftComponent(labelPanel);
+
+        valuePanel.setMinimumSize(new java.awt.Dimension(300, 700));
+        valuePanel.setPreferredSize(new java.awt.Dimension(300, 700));
+        valuePanel.setSize(new java.awt.Dimension(300, 700));
+        valuePanel.setLayout(new java.awt.GridLayout(28, 1));
+
+        systemNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        systemNameLabel.setText(system.getName());
+        valuePanel.add(systemNameLabel);
+
+        saLabel.setText(" Analysis");
+        valuePanel.add(saLabel);
+
+        saVariableComboBox.setModel(saVariableBoxModel);
+        saVariableComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saVariableComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(saVariableComboBox);
+
+        saVarMinTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        saVarMinTextField.setText(String.valueOf(sa.getMin()));
+        saVarMinTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                saVarMinTextFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(saVarMinTextField);
+
+        saVarMaxTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        saVarMaxTextField.setText(String.valueOf(sa.getMax()));
+        saVarMaxTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                saVarMaxTextFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(saVarMaxTextField);
+
+        metricComboBox.setModel(metricBoxModel);
+        metricComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metricComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(metricComboBox);
+
+        saNumPointsTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        saNumPointsTextField.setText(String.valueOf(sa.getNumSimulations()));
+        saNumPointsTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                saNumPointsTextFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(saNumPointsTextField);
+
+        logScaleCheckBox.setText(String.valueOf(sa.isLogScale()));
+        logScaleCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        logScaleCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logScaleCheckBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(logScaleCheckBox);
+
+        saTimeTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        saTimeTextField.setText(String.valueOf(sa.getTime()));
+        valuePanel.add(saTimeTextField);
+
+        isbsLabel.setText(" Bottleneck Simulation");
+        valuePanel.add(isbsLabel);
+
+        coopSpeciesComboBox.setModel(coopChoices);
+        coopSpeciesComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                coopSpeciesComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(coopSpeciesComboBox);
+
+        cheaterSpeciesComboBox.setModel(cheaterChoices);
+        cheaterSpeciesComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cheaterSpeciesComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(cheaterSpeciesComboBox);
+
+        initCheaterFractionField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        initCheaterFractionField.setText("Please enter the initial cheater fraction");
+        initCheaterFractionField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                initCheaterFractionFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                initCheaterFractionFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(initCheaterFractionField);
+
+        isLabel.setText(" Simulation");
+        valuePanel.add(isLabel);
+
+        initCellDensityField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        initCellDensityField.setText("Please enter the initial cell density");
+        initCellDensityField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                initCellDensityFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                initCellDensityFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(initCellDensityField);
+
+        coopParamComboBox.setModel(coopParamChoices);
+        coopParamComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                coopParamComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(coopParamComboBox);
+
+        coopParamMinValueField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        coopParamMinValueField.setText("0.0");
+        coopParamMinValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coopParamMinValueFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(coopParamMinValueField);
+
+        coopParamMaxValueField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        coopParamMaxValueField.setText("1.0");
+        coopParamMaxValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coopParamMaxValueFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(coopParamMaxValueField);
+
+        cheaterParamComboBox.setModel(cheaterParamChoices);
+        cheaterParamComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cheaterParamComboBoxActionPerformed(evt);
+            }
+        });
+        valuePanel.add(cheaterParamComboBox);
+
+        cheaterParamMinValueField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        cheaterParamMinValueField.setText("0.0");
+        cheaterParamMinValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cheaterParamMinValueFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(cheaterParamMinValueField);
+
+        cheaterParamMaxValueField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        cheaterParamMaxValueField.setText("1.0");
+        cheaterParamMaxValueField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cheaterParamMaxValueFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(cheaterParamMaxValueField);
+
+        isNumPointsField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        isNumPointsField.setText("20");
+        isNumPointsField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                isNumPointsFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(isNumPointsField);
+
+        isSimTimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        isSimTimeField.setText("100");
+        isSimTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                isSimTimeFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(isSimTimeField);
+
+        simLabel.setText(" Simulation");
+        valuePanel.add(simLabel);
+
+        popSizePanel.setLayout(new java.awt.GridLayout(1, 2));
+
+        popSizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Fixed", "Mean" }));
+        popSizePanel.add(popSizeComboBox);
+
+        popSizeField.setText("5");
+        popSizeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                popSizeFieldFocusLost(evt);
+            }
+        });
+        popSizePanel.add(popSizeField);
+
+        valuePanel.add(popSizePanel);
+
+        bsSimTimeField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        bsSimTimeField.setText("100");
+        bsSimTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                bsSimTimeFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(bsSimTimeField);
+
+        numRoundsField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        numRoundsField.setText("5");
+        numRoundsField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                numRoundsFieldFocusLost(evt);
+            }
+        });
+        valuePanel.add(numRoundsField);
+
+        normalizeIVPanel.setLayout(new java.awt.GridLayout(1, 2));
+
+        normalizeIVCheckBox.setText("Normalize Initial Values");
+        normalizeIVPanel.add(normalizeIVCheckBox);
+
+        normalizeIVValuesPanel.setLayout(new java.awt.GridLayout(1, 2));
+
+        valueLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        valueLabel.setText("Value: ");
+        normalizeIVValuesPanel.add(valueLabel);
+
+        normalizeIVField.setText("1.0");
+        normalizeIVField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                normalizeIVFieldFocusLost(evt);
+            }
+        });
+        normalizeIVValuesPanel.add(normalizeIVField);
+
+        normalizeIVPanel.add(normalizeIVValuesPanel);
+
+        valuePanel.add(normalizeIVPanel);
+
+        jSplitPane2.setRightComponent(valuePanel);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
+
+        add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void saVariableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saVariableComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) (saVariableComboBox.getSelectedItem());
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            EntityVariable ev = (EntityVariable) (system.getEntity(name));
+            double baseValue;
+            if (ev instanceof Parameter) {
+                baseValue = ev.getValue();
+            } else {
+                baseValue = ((Substance) ev).getInitialValue();
+            }
+            
+            double min = 0.1 * baseValue;
+            double max = 10 * baseValue;
+            
+            if (baseValue <= Double.MIN_VALUE) {
+                min = 0.0;
+                max = 1.0;
+            }
+            
+            saVarMaxTextField.setText(dynetica.util.Numerics.displayFormattedValue(max));
+            saVarMinTextField.setText(dynetica.util.Numerics.displayFormattedValue(min));
+            
+            sa.setMax(max);
+            sa.setMin(min);
+            sa.setVariable(ev);
+        }
+    }//GEN-LAST:event_saVariableComboBoxActionPerformed
+
+    private void saVarMinTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_saVarMinTextFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(saVarMinTextField.getText());
+            sa.setMin(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_saVarMinTextFieldFocusLost
+
+    private void saVarMaxTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_saVarMaxTextFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(saVarMaxTextField.getText());
+            sa.setMax(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_saVarMaxTextFieldFocusLost
+
+    private void metricComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) metricComboBox.getSelectedItem();
+        if (name.equals("Choose Metric")) {
+            JOptionPane.showMessageDialog(this, "Please choose a metric",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            Substance metricSubstance = system.getSubstance(name);
+            ArrayList<AbstractMetric> metrics = new ArrayList<AbstractMetric>();
+            metrics.add(new FinalValue(metricSubstance));
+            sa.setMetrics(metrics);
+        }
+    }//GEN-LAST:event_metricComboBoxActionPerformed
+
+    private void saNumPointsTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_saNumPointsTextFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            int numPoints = Integer.parseInt(saNumPointsTextField.getText());
+            sa.setNumSimulations(numPoints);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_saNumPointsTextFieldFocusLost
+
+    private void logScaleCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logScaleCheckBoxActionPerformed
+        // TODO add your handling code here:
+        sa.setLogScale(logScaleCheckBox.isSelected());
+        logScaleCheckBox.setText(String.valueOf(logScaleCheckBox.isSelected()));
+    }//GEN-LAST:event_logScaleCheckBoxActionPerformed
+
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        // Sensitivity Analysis
+        if (saCheckBox.isSelected()) {
+            sa.setPlotOnComplete(false);
+            sa.start();
+        }
+        // Invasion Simulation
+        if (isCheckBox.isSelected()) {
+            is = new InvasionSimulation(system, cooperator, cheater, coopParam, 
+            cheaterParam, initCellDensity, initCheaterFraction, isNumPoints, isSimTime);
+            is.start();
+        }
+        // Bottleneck Simulation
+        if (bsCheckBox.isSelected()) {
+            bns = new BottleNeckSimulation(system, cooperator, cheater, subPopSize,
+                    initCheaterFraction, bsSimTime, bsNumRounds);
+            if (((String) popSizeComboBox.getSelectedItem())
+                    .equalsIgnoreCase("Mean")) {
+                bns.setPoisson(true);
+            }
+            bns.setSave(saveDataCheckBox.isSelected());
+            if (normalizeIVCheckBox.isSelected()) {
+                bns.setNormalize(true);
+                bns.setNormalizedIV(valueToNormalize);
+            }
+            bns.start();
+        }
+    }//GEN-LAST:event_runButtonActionPerformed
+
+    private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
+        // Sensitivity Analysis
+        if (saCheckBox.isSelected()) {    
+            new dynetica.gui.plotting.SensitivityPlaneWindow(sa).setVisible(true);
+        }
+        // Invasion Simulation
+        if (isCheckBox.isSelected()) {
+            if (is.isFinished()) {
+                is.plot();
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Please wait for the simulation"
+                        + "to finish", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // Bottleneck Simulation
+        if (bsCheckBox.isSelected()) {
+            JFrame jf = new dynetica.gui.plotting.PhasePlaneWindow(system);
+            jf.setVisible(true);
+        }
+    }//GEN-LAST:event_plotButtonActionPerformed
+
+    private void initCellDensityFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCellDensityFieldFocusGained
+        // TODO add your handling code here:
+        if (! initCellDensityFieldModified) {
+            initCellDensityField.setText("");
+        }
+    }//GEN-LAST:event_initCellDensityFieldFocusGained
+
+    private void initCellDensityFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCellDensityFieldFocusLost
+        // TODO add your handling code here:
+        if (initCellDensityField.getText().isEmpty()) {
+            initCellDensityField.setText("Please enter the initial cell density");
+            initCellDensityFieldModified = false;
+            initCellDensity = 0.0;
+        } 
+        else {
+            try {
+                initCellDensity = Double.parseDouble(initCellDensityField.getText());
+                initCellDensityFieldModified = true;
+            }
+            catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+                if (! initCellDensityFieldModified) {
+                    initCellDensityField.setText("Please enter the initial cell density");
+                }
+                else {
+                    initCellDensityField.setText(String.valueOf(initCellDensity));
+                }
+            }
+        }
+    }//GEN-LAST:event_initCellDensityFieldFocusLost
+
+    private void initCheaterFractionFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCheaterFractionFieldFocusGained
+        // TODO add your handling code here:
+        if (! initCheaterFractionFieldModified) {
+            initCheaterFractionField.setText("");
+        }
+    }//GEN-LAST:event_initCheaterFractionFieldFocusGained
+
+    private void initCheaterFractionFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_initCheaterFractionFieldFocusLost
+        // TODO add your handling code here:
+        if (initCheaterFractionField.getText().isEmpty()) {
+            initCheaterFractionField.setText("Please enter the initial cheater fraction");
+            initCheaterFractionFieldModified = false;
+            initCheaterFraction = 0.0;
+        }
+        else {
+            try {
+                initCheaterFraction = Double.parseDouble(initCheaterFractionField.getText());
+                initCheaterFractionFieldModified = true;
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+                if (! initCheaterFractionFieldModified) {
+                    initCheaterFractionField.setText("Please enter the initial cheater fraction");
+                }
+                else {
+                    initCheaterFractionField.setText(String.valueOf(initCheaterFraction));
+                }
+            }
+        }
+    }//GEN-LAST:event_initCheaterFractionFieldFocusLost
+
+    private void coopSpeciesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coopSpeciesComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) coopSpeciesComboBox.getSelectedItem();
+        if (name.equals("Choose Species")) {
+            JOptionPane.showMessageDialog(this, "Please choose a species",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cooperator = system.getSubstance(name);
+        }
+    }//GEN-LAST:event_coopSpeciesComboBoxActionPerformed
+
+    private void cheaterSpeciesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cheaterSpeciesComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) cheaterSpeciesComboBox.getSelectedItem();
+        if (name.equals("Choose Species")) {
+            JOptionPane.showMessageDialog(this, "Please choose a species",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cheater = system.getSubstance(name);
+        }
+    }//GEN-LAST:event_cheaterSpeciesComboBoxActionPerformed
+
+    private void coopParamComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_coopParamComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) coopParamComboBox.getSelectedItem();
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            coopParam = system.getParameter(name);
+            coopParam.setMin(0.0);
+            coopParam.setMax(1.0);
+        }
+    }//GEN-LAST:event_coopParamComboBoxActionPerformed
+
+    private void coopParamMinValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coopParamMinValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(coopParamMinValueField.getText());
+            coopParam.setMin(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_coopParamMinValueFieldFocusLost
+
+    private void coopParamMaxValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coopParamMaxValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double max = Double.parseDouble(coopParamMaxValueField.getText());
+            coopParam.setMax(max);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_coopParamMaxValueFieldFocusLost
+
+    private void cheaterParamComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cheaterParamComboBoxActionPerformed
+        // TODO add your handling code here:
+        String name = (String) cheaterParamComboBox.getSelectedItem();
+        if (name.equals("Choose Parameter")) {
+            JOptionPane.showMessageDialog(this, "Please choose a parameter",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else {
+            cheaterParam = system.getParameter(name);
+            cheaterParam.setMin(0.0);
+            cheaterParam.setMax(1.0);
+        }
+    }//GEN-LAST:event_cheaterParamComboBoxActionPerformed
+
+    private void cheaterParamMinValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cheaterParamMinValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double min = Double.parseDouble(cheaterParamMinValueField.getText());
+            cheaterParam.setMin(min);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_cheaterParamMinValueFieldFocusLost
+
+    private void cheaterParamMaxValueFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cheaterParamMaxValueFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            double max = Double.parseDouble(cheaterParamMaxValueField.getText());
+            cheaterParam.setMax(max);
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_cheaterParamMaxValueFieldFocusLost
+
+    private void isNumPointsFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_isNumPointsFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            isNumPoints = Integer.parseInt(isNumPointsField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_isNumPointsFieldFocusLost
+
+    private void isSimTimeFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_isSimTimeFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            isSimTime = Double.parseDouble(isSimTimeField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_isSimTimeFieldFocusLost
+
+    private void popSizeFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_popSizeFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            subPopSize = (int) Double.parseDouble(popSizeField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_popSizeFieldFocusLost
+
+    private void bsSimTimeFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_bsSimTimeFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            bsSimTime = Double.parseDouble(bsSimTimeField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_bsSimTimeFieldFocusLost
+
+    private void numRoundsFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_numRoundsFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            bsNumRounds = (int) Double.parseDouble(numRoundsField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_numRoundsFieldFocusLost
+
+    private void normalizeIVFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_normalizeIVFieldFocusLost
+        // TODO add your handling code here:
+        try {
+            valueToNormalize = Double.parseDouble(normalizeIVField.getText());
+        }
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this.getRootPane().getParent(),
+                        "Please enter a valid value!");
+        }
+    }//GEN-LAST:event_normalizeIVFieldFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bottleneckLabel;
+    private javax.swing.JCheckBox bsCheckBox;
+    private javax.swing.JTextField bsSimTimeField;
+    private javax.swing.JLabel bsSimTimeLabel;
+    private javax.swing.JPanel buttonPanel;
+    private javax.swing.JLabel cheaterMinValueLabel;
+    private javax.swing.JComboBox cheaterParamComboBox;
+    private javax.swing.JLabel cheaterParamLabel;
+    private javax.swing.JTextField cheaterParamMaxValueField;
+    private javax.swing.JLabel cheaterParamMaxValueLabel;
+    private javax.swing.JTextField cheaterParamMinValueField;
+    private javax.swing.JComboBox cheaterSpeciesComboBox;
+    private javax.swing.JLabel cheaterSpeciesLabel;
+    private javax.swing.JPanel checkBoxPanel;
+    private javax.swing.JPanel controlPanel;
+    private javax.swing.JLabel coopMaxValueLabel;
+    private javax.swing.JLabel coopMinValueLabel;
+    private javax.swing.JComboBox coopParamComboBox;
+    private javax.swing.JLabel coopParamLabel;
+    private javax.swing.JTextField coopParamMaxValueField;
+    private javax.swing.JTextField coopParamMinValueField;
+    private javax.swing.JComboBox coopSpeciesComboBox;
+    private javax.swing.JLabel coopSpeciesLabel;
+    private javax.swing.JLabel emptyLabel1;
+    private javax.swing.JLabel emptyLabel2;
+    private javax.swing.JLabel emptyLabel3;
+    private javax.swing.JTextField initCellDensityField;
+    private javax.swing.JLabel initCellDensityLabel;
+    private javax.swing.JTextField initCheaterFractionField;
+    private javax.swing.JCheckBox isCheckBox;
+    private javax.swing.JLabel isLabel;
+    private javax.swing.JTextField isNumPointsField;
+    private javax.swing.JLabel isNumPointsLabel;
+    private javax.swing.JTextField isSimTimeField;
+    private javax.swing.JLabel isSimTimeLabel;
+    private javax.swing.JLabel isbsLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JPanel labelPanel;
+    private javax.swing.JCheckBox logScaleCheckBox;
+    private javax.swing.JLabel logScaleLabel;
+    private javax.swing.JComboBox metricComboBox;
+    private javax.swing.JLabel metricLabel;
+    private javax.swing.JCheckBox normalizeIVCheckBox;
+    private javax.swing.JTextField normalizeIVField;
+    private javax.swing.JPanel normalizeIVPanel;
+    private javax.swing.JPanel normalizeIVValuesPanel;
+    private javax.swing.JTextField numRoundsField;
+    private javax.swing.JLabel numRoundsLabel;
+    private javax.swing.JButton plotButton;
+    private javax.swing.JComboBox popSizeComboBox;
+    private javax.swing.JTextField popSizeField;
+    private javax.swing.JLabel popSizeLabel;
+    private javax.swing.JPanel popSizePanel;
+    private javax.swing.JButton runButton;
+    private javax.swing.JCheckBox saCheckBox;
+    private javax.swing.JLabel saLabel;
+    private javax.swing.JLabel saNumPointsLabel;
+    private javax.swing.JTextField saNumPointsTextField;
+    private javax.swing.JLabel saTimeLabel;
+    private javax.swing.JTextField saTimeTextField;
+    private javax.swing.JLabel saVarMaxLabel;
+    private javax.swing.JTextField saVarMaxTextField;
+    private javax.swing.JLabel saVarMinLabel;
+    private javax.swing.JTextField saVarMinTextField;
+    private javax.swing.JComboBox saVariableComboBox;
+    private javax.swing.JLabel saVariableLabel;
+    private javax.swing.JCheckBox saveDataCheckBox;
+    private javax.swing.JLabel simLabel;
+    private javax.swing.JLabel systemLabel;
+    private javax.swing.JLabel systemNameLabel;
+    private javax.swing.JLabel valueLabel;
+    private javax.swing.JPanel valuePanel;
     // End of variables declaration//GEN-END:variables
 }

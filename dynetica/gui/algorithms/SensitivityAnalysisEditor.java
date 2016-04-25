@@ -298,7 +298,7 @@ public class SensitivityAnalysisEditor extends javax.swing.JPanel {
     }// GEN-LAST:event_minFieldFocusLost
 
     private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_plotButtonActionPerformed
-        new dynetica.gui.plotting.SensitivityPlaneWindow(sa).show();
+        new dynetica.gui.plotting.SensitivityPlaneWindow(sa).setVisible(true);
     }// GEN-LAST:event_plotButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteButtonActionPerformed
