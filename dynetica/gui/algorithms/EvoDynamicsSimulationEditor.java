@@ -55,7 +55,7 @@ public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
      */
     public EvoDynamicsSimulationEditor(ReactiveSystem sys) {
         system = sys;
-        sa = new SensitivityAnalysis(sys);
+        sa = new SensitivityAnalysis(sys, true);
         substances = sys.getSubstances();
         parameters = sys.getParameters();
         setUpLists();
@@ -552,18 +552,19 @@ public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
         });
         valuePanel.add(numRoundsField);
 
-        normalizeIVPanel.setLayout(new java.awt.GridLayout(1, 2));
+        normalizeIVPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 0));
 
         normalizeIVCheckBox.setText("Normalize Initial Values");
         normalizeIVPanel.add(normalizeIVCheckBox);
-
-        normalizeIVValuesPanel.setLayout(new java.awt.GridLayout(1, 2));
 
         valueLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         valueLabel.setText("Value: ");
         normalizeIVValuesPanel.add(valueLabel);
 
         normalizeIVField.setText("1.0");
+        normalizeIVField.setMinimumSize(new java.awt.Dimension(14, 16));
+        normalizeIVField.setPreferredSize(new java.awt.Dimension(34, 18));
+        normalizeIVField.setSize(new java.awt.Dimension(34, 20));
         normalizeIVField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 normalizeIVFieldFocusLost(evt);
@@ -676,18 +677,19 @@ public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
         // Sensitivity Analysis
         if (saCheckBox.isSelected()) {
             sa.setPlotOnComplete(false);
-            sa.start();
+            sa.run();
         }
         // Invasion Simulation
         if (isCheckBox.isSelected()) {
             is = new InvasionSimulation(system, cooperator, cheater, coopParam, 
-            cheaterParam, initCellDensity, initCheaterFraction, isNumPoints, isSimTime);
-            is.start();
+            cheaterParam, initCellDensity, initCheaterFraction, isNumPoints, 
+                    isSimTime, true);
+            is.run();
         }
         // Bottleneck Simulation
         if (bsCheckBox.isSelected()) {
             bns = new BottleNeckSimulation(system, cooperator, cheater, subPopSize,
-                    initCheaterFraction, bsSimTime, bsNumRounds);
+                    initCheaterFraction, bsSimTime, bsNumRounds, true);
             if (((String) popSizeComboBox.getSelectedItem())
                     .equalsIgnoreCase("Mean")) {
                 bns.setPoisson(true);

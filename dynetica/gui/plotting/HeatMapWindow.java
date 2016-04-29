@@ -24,7 +24,7 @@ public class HeatMapWindow extends javax.swing.JFrame {
         initComponents();
         this.hm = hm;
         figurePanel.add(this.hm, java.awt.BorderLayout.CENTER);
-        this.setSize(500, 450);
+        this.setSize(500, 500);
         //this.hm.setSize(500, 400);
     }
 
@@ -44,7 +44,7 @@ public class HeatMapWindow extends javax.swing.JFrame {
         saveDataItem = new javax.swing.JMenuItem();
         closeItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
-        logicalCheckBox = new javax.swing.JCheckBoxMenuItem();
+        binaryCheckBox = new javax.swing.JCheckBoxMenuItem();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -76,13 +76,13 @@ public class HeatMapWindow extends javax.swing.JFrame {
 
         viewMenu.setText("View");
 
-        logicalCheckBox.setText("Logical");
-        logicalCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        binaryCheckBox.setText("Binary");
+        binaryCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logicalCheckBoxActionPerformed(evt);
+                binaryCheckBoxActionPerformed(evt);
             }
         });
-        viewMenu.add(logicalCheckBox);
+        viewMenu.add(binaryCheckBox);
 
         jMenuBar1.add(viewMenu);
 
@@ -112,10 +112,10 @@ public class HeatMapWindow extends javax.swing.JFrame {
         
     }//GEN-LAST:event_saveDataItemActionPerformed
 
-    private void logicalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logicalCheckBoxActionPerformed
+    private void binaryCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_binaryCheckBoxActionPerformed
         // update the figure according to the state of the checkbox
-        this.hm.updateLogical(logicalCheckBox.getState());
-    }//GEN-LAST:event_logicalCheckBoxActionPerformed
+        this.hm.updateLogical(binaryCheckBox.getState());
+    }//GEN-LAST:event_binaryCheckBoxActionPerformed
 
     private void closeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeItemActionPerformed
         // TODO add your handling code here:
@@ -123,12 +123,12 @@ public class HeatMapWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_closeItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBoxMenuItem binaryCheckBox;
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JPanel figurePanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JCheckBoxMenuItem logicalCheckBox;
     private javax.swing.JMenuItem saveDataItem;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables

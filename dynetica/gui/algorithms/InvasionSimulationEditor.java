@@ -390,7 +390,7 @@ public class InvasionSimulationEditor extends javax.swing.JPanel {
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         // TODO add your handling code here:
         is = new InvasionSimulation(system, cooperator, cheater, coopParam, 
-        cheaterParam, initCellDensity, initCheaterFraction, numPoints, simTime);
+        cheaterParam, initCellDensity, initCheaterFraction, numPoints, simTime, false);
         is.start();
     }//GEN-LAST:event_runButtonActionPerformed
 

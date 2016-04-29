@@ -32,11 +32,15 @@ public class BottleNeckSimulation implements Runnable {
 
     boolean normalizeIV = false;
     double normalizedIV;
+    
+    // added by Billy Wan (2016)
+    // indicator of whether this is part of evolutionary dynamics simulation
+    boolean evo = false;
 
     Thread simulationThread = null;
 
     public BottleNeckSimulation(ReactiveSystem sys, Substance co, Substance ch,
-            int pop, double initFrac, double time, int rounds) {
+            int pop, double initFrac, double time, int rounds, boolean evo) {
         system = sys;
         cooperator = co;
         cheater = ch;
@@ -44,6 +48,7 @@ public class BottleNeckSimulation implements Runnable {
         initialCheaterFraction = initFrac;
         subsimulationTime = time;
         numRounds = rounds;
+        this.evo = evo;
     }
 
     public void run() {
@@ -241,7 +246,7 @@ public class BottleNeckSimulation implements Runnable {
                 .setSamplingStep(subsimulationTime / algorithm.getIterations());
         int iterations = algorithm.getIterations();
         for (int i = 0; i < iterations; i++) {
-            if (simulationThread == null) {
+            if (!evo && simulationThread == null) {
                 break;
             }
             algorithm.update();

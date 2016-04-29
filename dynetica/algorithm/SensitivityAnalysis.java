@@ -28,9 +28,14 @@ public class SensitivityAnalysis implements Runnable {
 
     double[] xValues;
     double[][] yValues;
-
-    public SensitivityAnalysis(ReactiveSystem sys) {
+    
+    // added by Billy Wan (2016)
+    // indicator of whether this is part of evolutionary dynamics simulation
+    boolean evo = false;
+    
+    public SensitivityAnalysis(ReactiveSystem sys, boolean evo) {
         system = sys;
+        this.evo = evo;
     }
 
     public SensitivityAnalysis(Variable v, ArrayList<AbstractMetric> list,
@@ -65,7 +70,7 @@ public class SensitivityAnalysis implements Runnable {
             oldValue = ((Substance) variable).getInitialValue();
         }
         for (int i = 0; i <= numSimulations; i++) {
-            if (simulationThread == null) {
+            if (!evo && simulationThread == null) {
                 System.out
                         .println("Sensitivity analysis stopped at round " + i);
                 break;
@@ -108,7 +113,7 @@ public class SensitivityAnalysis implements Runnable {
         algorithm.setSamplingStep(time / algorithm.getIterations());
         int iterations = algorithm.getIterations();
         for (int i = 0; i < iterations; i++) {
-            if (simulationThread == null) {
+            if (!evo && simulationThread == null) {
                 break;
             }
             algorithm.update();

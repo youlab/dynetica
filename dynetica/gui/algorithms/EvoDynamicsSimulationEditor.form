@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[500, 800]"/>
@@ -604,9 +604,9 @@
                 </Component>
                 <Container class="javax.swing.JPanel" name="normalizeIVPanel">
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-                    <Property name="columns" type="int" value="2"/>
-                    <Property name="rows" type="int" value="1"/>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
+                    <Property name="alignment" type="int" value="0"/>
+                    <Property name="verticalGap" type="int" value="0"/>
                   </Layout>
                   <SubComponents>
                     <Component class="javax.swing.JCheckBox" name="normalizeIVCheckBox">
@@ -616,10 +616,7 @@
                     </Component>
                     <Container class="javax.swing.JPanel" name="normalizeIVValuesPanel">
 
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-                        <Property name="columns" type="int" value="2"/>
-                        <Property name="rows" type="int" value="1"/>
-                      </Layout>
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
                       <SubComponents>
                         <Component class="javax.swing.JLabel" name="valueLabel">
                           <Properties>
@@ -630,6 +627,15 @@
                         <Component class="javax.swing.JTextField" name="normalizeIVField">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="1.0"/>
+                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                              <Dimension value="[14, 16]"/>
+                            </Property>
+                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                              <Dimension value="[34, 18]"/>
+                            </Property>
+                            <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                              <Dimension value="[34, 20]"/>
+                            </Property>
                           </Properties>
                           <Events>
                             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="normalizeIVFieldFocusLost"/>

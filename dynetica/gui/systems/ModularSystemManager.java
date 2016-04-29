@@ -1011,7 +1011,7 @@ public class ModularSystemManager extends javax.swing.JFrame {
 		ApplicationFrame frame = new ApplicationFrame("Sensitivity Analysis");
 		frame.getContentPane().add(
 				new SensitivityAnalysisEditor(new SensitivityAnalysis(
-						currentSystem)));
+						currentSystem, false)));
 		frame.pack();
 		frame.setVisible(true);
 	}// GEN-LAST:event_psaItemActionPerformed

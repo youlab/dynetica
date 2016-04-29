@@ -38,12 +38,12 @@
             <Property name="text" type="java.lang.String" value="View"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="logicalCheckBox">
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="binaryCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Logical"/>
+                <Property name="text" type="java.lang.String" value="Binary"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logicalCheckBoxActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="binaryCheckBoxActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

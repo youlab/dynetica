@@ -205,7 +205,7 @@ public class BottleNeckEditor extends javax.swing.JPanel {
         double initFrac = Double.parseDouble(fractionField.getText());
         double simTime = Double.parseDouble(timeField.getText());
         bns = new BottleNeckSimulation(system, cooperator, cheater, subpopSize,
-                initFrac, simTime, rounds);
+                initFrac, simTime, rounds, false);
         if (((String) fixedMeanChoice.getSelectedItem())
                 .equalsIgnoreCase("Mean")) {
             bns.setPoisson(true);

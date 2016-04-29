@@ -23,13 +23,16 @@ public class InvasionSimulation implements Runnable {
     private int numPoints;
     private double simTime;
     private boolean finished;
+    // added by Billy Wan (2016)
+    // indicator of whether this is part of evolutionary dynamics simulation
+    private boolean evo = false;
     private HeatMap hm;
     
     private Thread simulationThread = null;
     
     public InvasionSimulation(ReactiveSystem sys, Substance coop, Substance cheater,
             Parameter coopParam, Parameter cheaterParam, double initCD,
-            double initCheaterFrac, int numPts, double time) {
+            double initCheaterFrac, int numPts, double time, boolean evo) {
         this.system = sys;
         this.cooperator = coop;
         this.cheater = cheater;
@@ -40,6 +43,7 @@ public class InvasionSimulation implements Runnable {
         this.numPoints = numPts;
         this.simTime = time;
         this.finished = false;
+        this.evo = evo;
         
         this.algorithm = sys.getAlgorithm();
     }
@@ -82,6 +86,7 @@ public class InvasionSimulation implements Runnable {
             colors[i] = thisColor;
         }
         
+        simulationThread = null;
         hm = new HeatMap(cheaterFitness, colors);
         hm.setTitle("Invasion Simulation Plot for " + system.getName());
         hm.setXAxisTitle(coopParam.getName());
@@ -101,7 +106,7 @@ public class InvasionSimulation implements Runnable {
                 .setSamplingStep(simTime / algorithm.getIterations());
         int iterations = algorithm.getIterations();
         for (int i = 0; i < iterations; i++) {
-            if (simulationThread == null) {
+            if (!evo && simulationThread == null) {
                 break;
             }
             algorithm.update();
