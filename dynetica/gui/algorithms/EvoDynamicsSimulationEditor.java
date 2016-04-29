@@ -699,7 +699,7 @@ public class EvoDynamicsSimulationEditor extends javax.swing.JPanel {
                 bns.setNormalize(true);
                 bns.setNormalizedIV(valueToNormalize);
             }
-            bns.start();
+            bns.run();
         }
     }//GEN-LAST:event_runButtonActionPerformed
 
