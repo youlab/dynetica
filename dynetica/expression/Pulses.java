@@ -31,7 +31,12 @@ public class Pulses extends FunctionExpression {
         double T0 = variables[1].getValue();
         double T1 = variables[2].getValue();
         double T2 = variables[3].getValue();
-        double n = Math.floor((T - T0) / T1);
+        // Modified by Billy Wan May 2016
+        // to avoid n < 0 (going back in time)
+        double n = 0;
+        if (T > T0) {
+            n = Math.floor((T - T0) / T1);
+        }
         if ((T >= n * T1 + T0) && (T < T0 + n * T1 + T2))
             value = 1.0;
         else
