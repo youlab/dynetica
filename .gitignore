@@ -1,0 +1,10 @@
+/build/
+.classpath
+.project
+.idea
+*.iml
+jsbml.log
+*.class
+.DS_Store
+/test/
+nbproject/private/

@@ -1,0 +1,5 @@
+version = 1.2
+codeName = Resurrection
+lookAndFeel = com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+workingDirectory = C:\Lingchong\Dynetica
+home = .\
