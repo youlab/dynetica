@@ -1,0 +1,43 @@
+Todo list (5/7/2005)
+
+NOTE: to implement a new mathematical function (e.g. Fun(GeneralExpression a)):
+(1) Create a class Fun
+(2) Define a constructor and the methods compute(), and toString()
+(3) Define an index number for this function in the class ExpressionConstants
+(4) Insert the function name and index in the the exprMap of ExpressionConstants
+(5) Update ExpressionBuilder in appropriate places (usually just one line of code).
+
+
+0. DOCUMENTATION FOR DEVELOPERS.
+
+1. Implement numerical algorithm for solving SDEs
+2. Implement Compartment -- facilitates modeling of cell-cell communication dynamics.
+3. Implement algorithms to analyze simulation results (Steady state analysis; pattern recognition; sensitivity analysis).
+4. Delay differential equations.
+5. Logic expressions (Unfinished).
+6. Customized mathematical functions. (probably uncessary, if we keep expanding the mathematical function library)
+7. GUI
+   (a) display entity information when pointing the node
+   (b) select a group of nodes to define motifs/modules. Collapse/expand modules
+   (c) Line width/color in time courses display. Selectable/Editable
+   (d) Better display of time course data
+   (e) Allow undo.
+   (f) Warn if overwriting or exiting/closing without saving.
+   (g) Implement an installer for various platforms
+   (i) Allow openning of input files by clicking them.
+   (j) SBML compatibility.
+
+8. Advanced analysis
+   (a) Interfacing with bifurcation analysis tools -- e.g. AUTO.
+   (b) Interfacing with Excel, Matlab or Mathematica.
+
+9. Update the user manual on-line.
+
+10. Expand capability of doing sensitivity analysis.
+    (a) store intermediate time courses.
+    (b) allow changes of multiple parameters
+    (c) Use the FAST algorithm (a stochastic algorithm to determine the gloabal sensitivity on parameters).
+
+11. Downstream analaysis of output. For example:
+ 	(a) distribution
+	(b) frequency analysis
