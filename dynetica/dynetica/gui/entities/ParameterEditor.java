@@ -19,6 +19,8 @@ public class ParameterEditor extends javax.swing.JPanel {
     public ParameterEditor(dynetica.entity.Parameter p) {
         parameter = p;
         initComponents();
+       //6/2016. Added by LY to enable copy/cut/paste in Dynetica.
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);               
     }
 
     /**

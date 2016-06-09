@@ -28,6 +28,8 @@ public class MichaelisMentenReactionEditor extends javax.swing.JPanel {
         reaction = r;
         initComponents();
         updateListModels();
+         //6/2016. Added by LY to enable copy/cut/paste in Dynetica.
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);              
     }
 
     // update the substancelistModel and parameterListModel everytime the

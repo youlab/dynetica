@@ -28,6 +28,9 @@ public class ProgressiveReactionEditor extends javax.swing.JPanel {
         updateListModels();
         tabbedInfoPane.setTitleAt(0, "Variables");
         tabbedInfoPane.setTitleAt(1, "Annotation");
+
+        //6/2016. Added by LY to enable copy/cut/paste in Dynetica.
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);       
         
     }
 

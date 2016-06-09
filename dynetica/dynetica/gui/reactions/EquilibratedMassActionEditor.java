@@ -20,6 +20,9 @@ public class EquilibratedMassActionEditor extends javax.swing.JPanel {
             dynetica.reaction.EquilibratedMassAction reaction) {
         this.reaction = reaction;
         initComponents();
+         //6/2016. Added by LY to enable copy/cut/paste in Dynetica.
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);       
+       
     }
 
     /**

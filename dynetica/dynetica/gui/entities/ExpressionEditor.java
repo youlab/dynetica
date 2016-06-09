@@ -19,6 +19,9 @@ public class ExpressionEditor extends javax.swing.JPanel {
     public ExpressionEditor(dynetica.entity.ExpressionVariable e) {
         expression = e;
         initComponents();
+ 
+        //6/2016. Added by LY to enable copy/cut/paste in Dynetica.
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);       
     }
 
     /**

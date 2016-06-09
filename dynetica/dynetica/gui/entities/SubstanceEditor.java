@@ -19,6 +19,11 @@ import dynetica.expression.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.text.*;
+
 public class SubstanceEditor extends javax.swing.JPanel {
 
     private dynetica.entity.Substance substance;
@@ -26,6 +31,7 @@ public class SubstanceEditor extends javax.swing.JPanel {
     public SubstanceEditor(dynetica.entity.Substance substance) {
         this.substance = substance;
         initComponents();
+        dynetica.gui.DyneticaGUITools.installContextMenu(this);
     }
 
     /**

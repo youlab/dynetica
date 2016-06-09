@@ -230,7 +230,7 @@ public class ExpressionParser {
                             doNonPara(tempOp);                           
                             operatorStack.pop();
                             
-                        System.out.println(operatorStack.isEmpty());
+//                        System.out.println(operatorStack.isEmpty());
                         
                         } 
                         else if (tempType == 5) {
