@@ -207,9 +207,12 @@ public class ExpressionConstants {
     }
 
     public static int functionType(String name) {
+   // the function type might be improved
+   // It's unclear if current implementation might cause parsing errors sometimes.
+        
         int type = 0;
         if (exprMap.containsKey(name)) {
-            type = ((Integer) exprMap.get(name)).intValue();
+            type = ((Integer) exprMap.get(name));
             if (type == 0 || type == 100)
                 return 1; // left or right parenthesis.
             else if (type == 99)
@@ -226,7 +229,7 @@ public class ExpressionConstants {
             else if (type >= 41 && type <= 49)
                 return 7; // non parameter, such as rand();
             
-// LY modified this out (6/2016): for now, treat logical operations as functional expressions.
+// LY modified this  (6/2016): for now, treat logical operations as functional expressions.
             else if (type >= 50 && type <= 59)
                 return 3; // logical expressions treated as binary expressions
             

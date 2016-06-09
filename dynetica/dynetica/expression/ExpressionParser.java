@@ -23,7 +23,16 @@
 //           and reporting errors in the specified rate expression.
 //
 // bug (LY, 6/2016): when an expression starts with a '-' sign, the parser seems to break. 
+
+// Bugs. Parser fails at:
+
+// rand() + 1  (1 + rand() is OK; step(A,B) + 1 is OK) -- this is now fixed (LY 6/2016). 
+
+// A * B-C * D (B-C is treated as a variable)
+// A * B- C * D
+// - rand()   (1 - rand() is OK)
 //
+// Need to clean the Parser to get rid of parsing of logical operators as separate tasks.
 
 package dynetica.expression;
 
@@ -34,9 +43,9 @@ import dynetica.system.*;
 public class ExpressionParser {
     public static Stack operandStack = new Stack();
     public static Stack operatorStack = new Stack();
-    private static ExpressionConstants exprBuilder = ExpressionConstants
+    private static final ExpressionConstants exprBuilder = ExpressionConstants
             .getInstance();
-    private static ExpBuilder expBu = ExpBuilder.getInstance();
+    private static final ExpBuilder expBu = ExpBuilder.getInstance();
 
     // Rewrite by Apirak Hoonlor, 07/05/01. To fix min, max and scientific
     // notation.
@@ -64,11 +73,13 @@ public class ExpressionParser {
                     && !(isIfOp(inputStr, i))) {
                 int j = i;
                 while (i < inputStr.length()
-                        && (Character.isLetterOrDigit(inputStr.charAt(i)) || isValidChar(inputStr
-                                .charAt(i))))
+                        && (Character.isLetterOrDigit(inputStr.charAt(i)) 
+                            || isValidChar(inputStr.charAt(i))))
                     i++;
                 
                 String name = inputStr.substring(j, i).trim();
+//Output for debug
+//                System.out.println(name);
                 
                 if ((ExpressionConstants.isFunction(name))
                         || (ExpBuilder.isCustomFunc(name))) {
@@ -120,13 +131,14 @@ public class ExpressionParser {
                             "Empty substance name:" + inputStr);
 
                 String substanceName = inputStr.substring(j + 1, i - 1);
-                if (exprBuilder.isFunction(substanceName))
+                if (ExpressionConstants.isFunction(substanceName))
                     throw new IllegalExpressionException(
                             "You used function name: " + substanceName
                                     + " as substance name");
 
                 if (system.contains(substanceName))
                     operandStack.push(system.getSubstance(substanceName));
+                
                 else {
                     System.out
                             .println("Warning: The system doesn't have the specified substance: "
@@ -139,7 +151,7 @@ public class ExpressionParser {
                 }
             }
 
-            else if (exprBuilder.isOperator(c) || exprBuilder.isCompareOp(c)
+            else if (ExpressionConstants.isOperator(c) || ExpressionConstants.isCompareOp(c)
                     || isIfOp(inputStr, i)) {
                 int opType = 0;
                 int tempType = 0;
@@ -152,21 +164,30 @@ public class ExpressionParser {
                     break;
                 case ')':
                     String op = (String) operatorStack.peek();
-                    if (exprBuilder.isFunction(op))
-                        opType = exprBuilder.functionType(op);
+ //OUTPUT_FOR_DEBUG                   
+ //                   System.out.println(op);
+                    
+                    if (ExpressionConstants.isFunction(op))
+                        opType = ExpressionConstants.functionType(op);
                     else
-                        opType = expBu.functionType();
+                        opType = ExpBuilder.functionType();
+                    
                     while (op != null && op.compareTo("(") != 0) {
                         if (opType == 4) {
                             doUnary(op);
                             operatorStack.pop();
-
-                        } else if (opType == 7) {
+                        } 
+                        
+                        else if (opType == 7) {
                             doNonPara(op);
                             operatorStack.pop();
-                        } else if (opType == 2) {
+                        } 
+                        
+                        else if (opType == 2) {
                             commaList = doComma();
-                        } else if (opType == 5) {
+                        } 
+                        
+                        else if (opType == 5) {
                             doMulti(op, commaList);
                             operatorStack.pop();
                         } 
@@ -177,33 +198,45 @@ public class ExpressionParser {
                         } 
   */       
                         else {
-                            // System.out.println(op);
                             doBinary(op);
                             operatorStack.pop();
                         }
+                        
                         op = (String) operatorStack.peek();
-                        if (exprBuilder.isFunction(op))
-                            opType = exprBuilder.functionType(op);
+                        if (ExpressionConstants.isFunction(op))
+                            opType = ExpressionConstants.functionType(op);
                         else
-                            opType = expBu.functionType();
+                            opType = ExpBuilder.functionType();
                     }
                     //
                     // pop off the left parenthesis.
                     //
                     operatorStack.pop();
+                    
                     if (!operatorStack.empty()) {
                         String tempOp = (String) operatorStack.peek();
-                        if (exprBuilder.isFunction(tempOp))
-                            tempType = exprBuilder.functionType(tempOp);
+
+//OUTPUT for Debug                        
+//                        System.out.println(tempOp);
+                        
+                        if (ExpressionConstants.isFunction(tempOp))
+                            tempType = ExpressionConstants.functionType(tempOp);
                         else
-                            tempType = expBu.functionType();
+                            tempType = ExpBuilder.functionType();
+                        
+//OUTPUT for Debug                        
+//                        System.out.println(tempType);
+                        
                         if (tempType == 4) {
                             doUnary(tempOp);
                             operatorStack.pop();
                         } 
-                        else if (opType == 7) {
-                            doNonPara(tempOp);
+                        else if (tempType == 7) {
+                            doNonPara(tempOp);                           
                             operatorStack.pop();
+                            
+                        System.out.println(operatorStack.isEmpty());
+                        
                         } 
                         else if (tempType == 5) {
                             doMulti(tempOp, commaList);
@@ -217,11 +250,13 @@ public class ExpressionParser {
                                 operatorStack.pop();
                             }
                         }
-                    } else if (operatorStack.empty() && commaList.size() != 0) {
+                    } 
+                    else if (operatorStack.empty() && !commaList.isEmpty()) {
                         throw new IllegalExpressionException(
                                 "Incorrect uses of parameter without function!!");
                     }
                     break;
+                    
                 case '}':
                     String ope = (String) operatorStack.peek();
                     if (exprBuilder.isFunction(ope))
@@ -233,13 +268,17 @@ public class ExpressionParser {
                             doUnary(ope);
                             operatorStack.pop();
 
-                        } else if (opType == 7) {
+                        } 
+                        else if (opType == 7) {
                             doNonPara(ope);
                             operatorStack.pop();
-                        } else if (opType == 2) {
-
+                        } 
+                        
+                        else if (opType == 2) {
                             commaList = doComma();
-                        } else if (opType == 5) {
+                        } 
+                        
+                        else if (opType == 5) {
                             doMulti(ope, commaList);
                             operatorStack.pop();
 
@@ -277,8 +316,12 @@ public class ExpressionParser {
                 case '/':
                 case '^':
                 case ',':
+//OUTPUT_for_DEBUG                    
+//                   System.out.println("Processing " + c);
+                    
                     processOp(String.valueOf(c));
                     break;
+                    
                 case '<':
                     if (i < inputStr.length()) {
                         if (inputStr.charAt(i + 1) == '=') {
@@ -292,6 +335,7 @@ public class ExpressionParser {
                                 "Missing Paramiters for Logical function!!");
                     }
                     break;
+                    
                 case '>':
                     if (i < inputStr.length()) {
                         if (inputStr.charAt(i + 1) == '=') {
@@ -385,10 +429,13 @@ public class ExpressionParser {
         while (!operatorStack.empty()) {
             int type = 0;
             String op = (String) operatorStack.peek();
-            if (exprBuilder.isFunction(op))
-                type = exprBuilder.functionType(op);
+            
+            if (ExpressionConstants.isFunction(op))
+                type = ExpressionConstants.functionType(op);
+            
             else
-                type = expBu.functionType();
+                type = ExpBuilder.functionType();
+            
             if (op.length() <= 1) {
 
 //LY (6/2016): curently logical operations are treated as normal operations with two or multiple arguments.
@@ -396,10 +443,12 @@ public class ExpressionParser {
 //                    doBinary(op);
 //                else
                     doBinary(op);
-            } 
+            }
+            
             else {
                 if (type == 4)
                     doUnary(op);
+                
                 else if (type == 7)
                     doNonPara(op);
                 
@@ -505,20 +554,20 @@ public class ExpressionParser {
         newList.add(0, test1);
         String op = (String) operatorStack.peek();
         int opType;
-        if (exprBuilder.isFunction(op))
-            opType = exprBuilder.functionType(op);
+        if (ExpressionConstants.isFunction(op))
+            opType = ExpressionConstants.functionType(op);
         else
-            opType = expBu.functionType();
+            opType = ExpBuilder.functionType();
         while (opType == 2) {
             test2 = (GeneralExpression) operandStack.peek();
             operandStack.pop();
             newList.add(0, test2);
             operatorStack.pop();
             op = (String) operatorStack.peek();
-            if (exprBuilder.isFunction(op))
-                opType = exprBuilder.functionType(op);
+            if (ExpressionConstants.isFunction(op))
+                opType = ExpressionConstants.functionType(op);
             else
-                opType = expBu.functionType();
+                opType = ExpBuilder.functionType();
         }
         return newList;
     }
@@ -530,29 +579,40 @@ public class ExpressionParser {
 
     private static void processOp(String theOp)
             throws IllegalExpressionException {
+        
         String before;
+        
         if (!operatorStack.empty()) {
             before = (String) operatorStack.peek();
+//            System.out.println(before);
+
             if ((!before.equalsIgnoreCase("("))
                     && (!before.equalsIgnoreCase("{"))
                     && !((getPrecedence(theOp) == 1) && (getPrecedence(before) == 1))
                     && getPrecedence(theOp) <= getPrecedence(before)) {
-                if (exprBuilder.isLogicOp(before)) {
-                    if (!before.equalsIgnoreCase("if"))
+                if (ExpressionConstants.isLogicOp(before)) {
+                   if (!before.equalsIgnoreCase("if"))
 //LY (6/2016): curently logical operations are treated as normal operations with two or multiple arguments.
                         doBinary(before);
-                } else
+                } 
+                
+                else {
                     doBinary(before);
+                }
+                
                 operatorStack.pop();
+                
                 if (getPrecedence(theOp) == 1) {
                     before = (String) operatorStack.peek();
                     while ((!before.equalsIgnoreCase("("))
                             && (!before.equalsIgnoreCase(","))) {
-                        if (exprBuilder.isLogicOp(before)) {
+                        if (ExpressionConstants.isLogicOp(before)) {
 //LY (6/2016): curently logical operations are treated as normal operations with two or multiple arguments.
                         doBinary(before);
 
-                        } else
+                        } 
+                        
+                        else
                             doBinary(before);
                         operatorStack.pop();
                         before = (String) operatorStack.peek();
@@ -601,8 +661,10 @@ public class ExpressionParser {
             return true;
         case '~':
             return true;
-        case '-':
-            return true;
+// LY note (6/2016). Unclear why '-' is treated as a valid character in name. 
+// This should be removed. 
+//        case '-':
+//            return true;
         default:
             return false;
         }
