@@ -25,11 +25,6 @@
 // bug (LY, 6/2016): when an expression starts with a '-' sign, the parser seems to break. 
 
 // Bugs. Parser fails at:
-
-// rand() + 1  (1 + rand() is OK; step(A,B) + 1 is OK) -- this is now fixed (LY 6/2016). 
-
-// A * B-C * D (B-C is treated as a variable)
-// A * B- C * D
 // - rand()   (1 - rand() is OK)
 //
 // Need to clean the Parser to get rid of parsing of logical operators as separate tasks.
