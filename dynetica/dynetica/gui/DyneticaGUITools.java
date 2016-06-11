@@ -22,8 +22,8 @@ public class DyneticaGUITools {
         if (c instanceof JTextComponent) {
             c.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseReleased(final MouseEvent e) {
- //                   if (e.isPopupTrigger()) {
+                public void mousePressed(final MouseEvent e) {
+                    if (e.isPopupTrigger()) {
                         final JTextComponent component = (JTextComponent)e.getComponent();
                         final JPopupMenu menu = new JPopupMenu();
                         JMenuItem item;
@@ -41,7 +41,7 @@ public class DyneticaGUITools {
                         menu.add(item);
                         menu.show(e.getComponent(), e.getX(), e.getY());
                     }
-  //              }
+                }
             });
         } else if (c instanceof Container)
             installContextMenu((Container) c);
