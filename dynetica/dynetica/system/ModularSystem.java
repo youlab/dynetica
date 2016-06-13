@@ -469,7 +469,14 @@ public class ModularSystem extends ReactiveSystem {
                 
             }
         }
-        List<ExpressionVariable> sorted = topoSort(toSort);
+        
+        //
+        // LY note.  6/2016
+        // The sorting based on dependencies prevented saving of expression variables mutually dependent (maps).
+        // For now, I'll just skip the sorting to fix the bug. The sorting might be useful later; so I'm keeping the sorting function.
+        
+//        List<ExpressionVariable> sorted = topoSort(toSort);
+        List<ExpressionVariable> sorted = toSort;
         for (int i = 0; i < sorted.size(); i++){
             ExpressionVariable ev = sorted.get(i);
             str.append(ev.getCompleteInfo()).append(NEWLINE);
@@ -520,6 +527,10 @@ public class ModularSystem extends ReactiveSystem {
 
     }
     
+    //
+    // LY Note: 
+    // 6/2016. I suspect the topoSort function generates a mysterious bug to prevent Dynetica to save ExpressionVariables that depend on each other.
+    //
     public List<ExpressionVariable> topoSort(List<ExpressionVariable> evList){
         Map<ExpressionVariable, List<ExpressionVariable>> evDependencies = 
                 new HashMap<>();

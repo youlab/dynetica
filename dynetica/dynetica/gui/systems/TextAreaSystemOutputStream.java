@@ -42,14 +42,14 @@ public class TextAreaSystemOutputStream extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed"
-    // desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         sysOutputArea = new javax.swing.JTextArea();
         sysOutLabel = new javax.swing.JLabel();
 
-        setSize(new java.awt.Dimension(200, 300));
+        setSize(new java.awt.Dimension(400, 600));
         setLayout(new java.awt.BorderLayout());
 
         sysOutputArea.setColumns(20);
@@ -61,12 +61,10 @@ public class TextAreaSystemOutputStream extends javax.swing.JPanel {
         sysOutLabel.setText("Output Infomation");
         add(sysOutLabel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
-     // Variables declaration - do not modify//GEN-BEGIN:variables
-
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel sysOutLabel;
     private javax.swing.JTextArea sysOutputArea;
-
     // End of variables declaration//GEN-END:variables
 
     public static void createAndShowGui() {
