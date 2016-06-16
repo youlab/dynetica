@@ -16,12 +16,14 @@ public class IfThenElse extends FunctionExpression{
     
     public static int parameter_num = 3;
 
-    /** Creates a new instance of Pulses */
+    /** Creates a new instance of Pulses
+     * @param a */
     public IfThenElse(GeneralExpression[] a) {
         super(a);
         type = ExpressionConstants.IFTHENELSE;
     }
 
+    @Override
     public void compute() {
         double condition = variables[0].getValue();
         if (condition > 0) 

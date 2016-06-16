@@ -29,6 +29,11 @@
 //
 // Need to clean the Parser to get rid of parsing of logical operators as separate tasks.
 
+//
+// Todo: Need to re-organize the parser to make precedence intuitive. 
+// A good starting point is just to use the java convention to avoid any confusion.
+//
+
 package dynetica.expression;
 
 import java.util.*;

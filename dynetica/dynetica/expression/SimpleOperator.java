@@ -37,6 +37,11 @@ public class SimpleOperator extends Expression {
         case '^':
             type = ExpressionConstants.POW;
             break;
+
+//added by LY. 6/2016 to implement assignment (a = b).
+        case '=':
+            type = ExpressionConstants.ASSIGNMENT;
+            break;
         default:
             System.out.println("Unknown operator:" + c);
         }
@@ -68,17 +73,18 @@ public class SimpleOperator extends Expression {
         }
     }
 
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (a.getType() < getType())
-            sb.append("(" + a + ")");
+            sb.append("(").append(a).append(")");
         else
             sb.append(a);
 
-        sb.append(" " + operator + " ");
+        sb.append(" ").append(operator).append(" ");
 
         if (b.getType() <= getType())
-            sb.append("(" + b + ")");
+            sb.append("(").append(b).append(")");
         else
             sb.append(b);
         return sb.toString();

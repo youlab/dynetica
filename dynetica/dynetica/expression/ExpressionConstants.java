@@ -15,6 +15,7 @@ public class ExpressionConstants {
 
     public static final int LEFT_PAREN = 0; // (
     public static final int RIGHT_PAREN = 100; // )
+   
 
     // binary expressions
     public static final int SUM = 1; // a + b
@@ -22,6 +23,9 @@ public class ExpressionConstants {
     public static final int MULTIPLY = 3; // a * b
     public static final int DIVIDE = 4; // a / b
     public static final int POW = 5; // a ^ b
+    
+    // added by LY: 6/2016
+    public static final int ASSIGNMENT = 6; // a = b
 
     // unary expressions.
 
@@ -102,6 +106,10 @@ public class ExpressionConstants {
         exprMap.put("*", new Integer(MULTIPLY));
         exprMap.put("/", new Integer(DIVIDE));
         exprMap.put("^", new Integer(POW));
+        
+        //added by LY, 6/2016
+        exprMap.put("=", new Integer(ASSIGNMENT));
+        
         exprMap.put(",", new Integer(COMMA));
     
         /* 
